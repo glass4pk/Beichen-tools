@@ -3,8 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import axios from 'axios'
+import ElementUi from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import globalVar from './common/globalVar'
+// import Vuex from 'vuex'
 
+// Vue.use(Vuex)
+// 添加全局变量GLOBAL
+Vue.prototype.GLOBAL = globalVar
+window.axios = axios
 Vue.config.productionTip = false
+Vue.use(ElementUi)
+Vue.prototype.MainHome = 'PairingWork'
 
 /* eslint-disable no-new */
 new Vue({

@@ -196,7 +196,7 @@ if (!function_exists("chineseToArray")) {
         $newArray = [];
         for ($i = 0;$i < count($a1); $i++) {
             $t1 = $a1[$i];
-            if ($t1[0] == " ") {
+            if (isset($t1[0]) && $t1[0] == " ") {
                 $t1 = substr($t1,1);
             }
             if (!isHasQita($t1)) {

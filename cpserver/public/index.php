@@ -13,7 +13,8 @@
 namespace think;
 define('ROOT_PATH',dirname(__DIR__).DIRECTORY_SEPARATOR);
 define('EXTEND_PATH',ROOT_PATH . 'extend' . DIRECTORY_SEPARATOR);
-define('UPLOADS',ROOT_PATH . 'uploads' . DIRECTORY_SEPARATOR );
+define('UPLOADS',ROOT_PATH . 'uploads' . DIRECTORY_SEPARATOR);
+define('PUBLIC_PATH',ROOT_PATH . 'public' . DIRECTORY_SEPARATOR);
 // define('PHPEXCEL_ROOT', EXTEND_PATH . DIRECTORY_SEPARATOR . "PHPExcel");
 // 加载基础文件
 require __DIR__ . '/../thinkphp/base.php';
