@@ -14,7 +14,7 @@
                             <router-link to="/pairing/createtask">新建匹配</router-link>
                         </el-menu-item>
                         <el-menu-item index='3' id='cpresult' @click="goTo('PairingResult')">
-                            <router-link to='/pairing/exportdata'>匹配结果</router-link>
+                            <router-link to='/pairing/pairingresult'>匹配结果</router-link>
                         </el-menu-item>
                     </el-menu>
                 </div>

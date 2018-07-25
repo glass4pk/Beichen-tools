@@ -1,14 +1,15 @@
 <template>
-    <div>
-        <a>ExportDATA</a>
+    <div id='pairingresult'>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'ExportData',
+  name: 'PairingResult',
   data () {
-    return {}
+    return {
+    }
   },
   methods: {
   }

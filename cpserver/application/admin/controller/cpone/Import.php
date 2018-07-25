@@ -11,15 +11,16 @@ class Import extends ApiCommon
 {
 
     /**
-     * static function
+     * static function,保存数据到数据库中的cp_user表中
      *
      * @return boolean
      */
-    public static function saveToDataBase($data)
+    public static function saveToDataBase($data,$dataID)
     {
         $obj = []; 
         $obj['error'] = []; // 导入失败名单
         $obj['Have'] = [];
+        $obj['dataID'] = $dataID;
         $isOk = false;
         $allRows = $data->getHighestRow(); // 取得总行数
         $allColumms = $data->getHighestColumn(); // 取得总列数
@@ -100,7 +101,8 @@ class Import extends ApiCommon
                     
                     $a = 1;
                 }
-                $userData['is_map'] = 0;
+                $userData['status'] = 1;
+                $userData['data_id'] = $dataID;
                 $userid = $userModel->saveUser($userData);
                 if (!$userid) {
                     // 保存失败
@@ -110,16 +112,14 @@ class Import extends ApiCommon
                     if ($userid == 'Have') {
                         array_push($obj['Have'],$userData['phone']);
                     } else {
-                        $partnerAttentionModel->savePartnerAttention($userid,$partnerAttention);
-                        $userAttentionModel->saveUserAttention($userid,$userAttention);
-                        $userPromoteSectionModel->saveUserPormoteSection($userid,$userPromoteSection);
+                        $partnerAttentionModel->savePartnerAttention($userid,$partnerAttention,$dataID);
+                        $userAttentionModel->saveUserAttention($userid,$userAttention,$dataID);
+                        $userPromoteSectionModel->saveUserPormoteSection($userid,$userPromoteSection,$dataID);
                     }
                     
                 }
             }
         }
-
-        
         return $obj;
     }
 }

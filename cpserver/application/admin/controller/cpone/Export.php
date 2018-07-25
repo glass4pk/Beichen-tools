@@ -14,17 +14,64 @@ class Export extends ApiCommon
      * 导出数据到excel中
      *
      * @return void
-     */ 
+     */
     public function exportToExcel()
     {
-        $userModel = model('cpone.User');
-        $partnerAttentionModel = model('cptone.PartnerAttention');
-        $userAttentionModel = model('cptone.UserAttention'); 
-        $userPromoteSection = model('cptone.UserPromoteSection');
+        $param = $this->param;
+        if (!isset($param['taskID'])) {
+            return ;
+        }
+        $taskID = $param['taskID'];
+        $cpTaskListModel = model('cpone.CpTaskList');
+        $dataID = $cpTaskListModel->getDataIdByTaskId($taskID);
+        $data = [];
+        $data = $this->getDataFromDb($taskID, $dataID);
+        $title = ['cpid','提交时间','userid','partner_id','匹配分数','姓名','性别','身份','手机','你是哪一期的学员？','你最近关注的领域是？','你希望TA关注哪些领域？','你想在哪些板块提升自己？','你希望匹配到的是男生还是女生呢？','你可以接受随机配对，了解一个陌生惊喜的朋友吗？','你为什么想要报名这次活动？','省(由IP计算所得)','市(由IP计算所得)','我的备注','渠道'];
+        // 建立PHPExcel对象
+        $PHPExcel = new Excel();
+        $fileName = getMd5String(); // 获取随机文件名
+        $savePath = PUBLIC_PATH . 'download' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR;
+        $PHPExcel->saveToExcel($title,$data,$fileName,$savePath);
+        return resultArray(['data' => $fileName.'.xlsx']);
+    }
+
+    /**
+     * 根据taskID返回数据集给前端
+     * @author jack <chengjunjie.jack@qq.com>
+     * @return mixed
+     */
+    public function exportToJson()
+    {
+        $param = $this->param;
+        if (!isset($param['taskID'])) {
+            return ;
+        }
+        $taskID = $param['taskID'];
+        $cpTaskListModel = model('cpone.CpTaskList');
+        $dataID = $cpTaskListModel->getDataIdByTaskId($taskID);
+        $data = [];
+        $data = $this->getDataFromDb($taskID, $dataID);
+        $keys = ['cpid','submit_time','userid','partner_id','score','name','sex','identity','phone','term','uAttention','pAttention','promote_section','match_sex','march_random','reason_come_here','province','city','my_remarks','channel'];
+        $data = $this->addKeyAdapter($keys, $data);
+        return resultArray(['data' => $data]);
+    }
+
+    /**
+     * 根据taskID返回数据集
+     *
+     * @param int $taskID
+     * @return void
+     */
+    public function getDataFromDb($taskID, $dataID)
+    {
+        $userModel = model('cpone.CpResultUser');
+        $partnerAttentionModel = model('cpone.PartnerAttention');
+        $userAttentionModel = model('cpone.UserAttention'); 
+        $userPromoteSection = model('cpone.UserPromoteSection');
         
-        $userPromoteSection = $userPromoteSection->getPromoteSection();
-        $userAttention = $userAttentionModel->getAttention();
-        $partnerAttention = $partnerAttentionModel->getAttention();
+        $userPromoteSection = $userPromoteSection->getPromoteSection($dataID);
+        $userAttention = $userAttentionModel->getAttention($dataID);
+        $partnerAttention = $partnerAttentionModel->getAttention($dataID);
 
         $uAs = []; // 用户自己关注的领域
         $pAs = []; // 用户希望对方关注的领域
@@ -51,13 +98,11 @@ class Export extends ApiCommon
                 $pAs[$attention['userid']] = $pAs[$attention['userid']].";".$attention['attention'];
             }
         }
-        // 建立PHPExcel对象
-        $PHPExcel = new Excel();
+
         // The export DATA => $data;
         $data = [];
-        $title = ['cpid','提交时间','userid','partner_id','匹配分数','姓名','性别','身份','手机','你是哪一期的学员？','你最近关注的领域是？','你希望TA关注哪些领域？','你想在哪些板块提升自己？','你希望匹配到的是男生还是女生呢？','你可以接受随机配对，了解一个陌生惊喜的朋友吗？','你为什么想要报名这次活动？','省(由IP计算所得)','市(由IP计算所得)','我的备注','渠道'];
         
-        $usersData = $userModel->getMapedUser();
+        $usersData = $userModel->getMapedUser($taskID);
         $usersDataArray = $usersData->toArray();
         $userList = [];
         $doneList = [];
@@ -121,7 +166,7 @@ class Export extends ApiCommon
         }
 
         // 添加没有匹配的人的名单
-        $usersData = $userModel->getUnmapedUser();
+        $usersData = $userModel->getUnmapedUser($taskID);
         $usersDataArray = $usersData->toArray();
         foreach ($usersData as $user) {
             $temp = [];
@@ -148,15 +193,25 @@ class Export extends ApiCommon
             array_push($data,$temp);
             $i++;
         }
-
-        $fileName = getMd5String(); // 获取随机文件名
-        $savePath = PUBLIC_PATH . 'download' . DIRECTORY_SEPARATOR . 'export' . DIRECTORY_SEPARATOR;
-        $PHPExcel->saveToExcel($title,$data,$fileName,$savePath);
-        return resultArray(['data' => $fileName.'.xlsx']);
+        return $data;
     }
 
-    public function func1($temp)
+    /**
+     * 适配器：为数组添加键
+     *
+     * @param array $data
+     * @return array
+     */
+    public function addKeyAdapter($keys, $data)
     {
-
+        $result = [];
+        foreach ($data as $one) {
+            $temp = [];
+            foreach ($one as $k => $v) {
+                $temp[$keys[$k]] = $v;
+            }
+            array_push($result,$temp);
+        }
+        return $result;
     }
 }

@@ -6,7 +6,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/pairing/importdata'
     },
     {
       path: '/home',
@@ -36,9 +36,27 @@ export default new Router({
           component: require('@/pages/Pairing/ImportData').default
         },
         {
-          path: 'exportdata',
-          name: 'ExportData',
-          component: require('@/pages/Pairing/ExportData').default
+          path: '/pairing/pairingresult',
+          name: 'PairingResult',
+          redirect: '/pairing/pairingresult/exportdata',
+          component: require('@/pages/Pairing/PairingResult/PairingResult').default,
+          children: [
+            {
+              path: '/pairing/pairingresult/exportdata',
+              name: 'ExportData',
+              component: require('@/pages/Pairing/PairingResult/ExportData').default
+            },
+            {
+              path: '/pairing/pairingresult/editcp',
+              name: 'EditCp',
+              component: require('@/pages/Pairing/PairingResult/EditCp').default
+            },
+            {
+              path: '/pairing/pairingresult/changcp',
+              name: 'ChangeCp',
+              component: require('@/pages/Pairing/PairingResult/ChangeCp').default
+            }
+          ]
         },
         {
           path: 'createtask',

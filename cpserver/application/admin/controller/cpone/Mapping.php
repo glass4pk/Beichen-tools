@@ -10,20 +10,28 @@ use think\Db;
 
 class Mapping  extends ApiCommon
 {
-    private $userModel;
+    public $userModel;
     private $partnerAttentionModel;
     private $userAttentionModel;
+    private $taskID;
+    private $dataID;
     
-    public function __construct()
+    public function __construct($taskID,$dataID)
     {
-        $this->userModel = model('cpone.User');
+        $this->dataID = $dataID;
+        $this->taskID = $taskID;
+        $this->userModel = model('cpone.CpResultUser');
         $this->partnerAttentionModel = model('cpone.PartnerAttention');
         $this->userAttentionModel = model('cpone.UserAttention'); 
     }
 
-    public static function start()
+    public static function start($taskID,$dataID)
     {
-        $mapping = new Mapping();
+        $mapping = new Mapping($taskID,$dataID);
+        // 将User表中的数据copy到cp_result_user中
+        if (!$mapping->userModel->copyDataFromUser($taskID,$dataID)) {
+            return false; // 拷贝失败
+        }
         // 优先把男生配完，男生配女生 （除希望对方是同性外）
         $mapping->getUsersDiff("在职人士",3);
         $mapping->getUsersDiff("在校学生",3);        
@@ -75,7 +83,7 @@ class Mapping  extends ApiCommon
         $mapping->getUsersAllOkCantRandomCrossTerm("在职人士");
         $mapping->getUsersAllOkCantRandomCrossTerm("在校学生");
 
-        return resultArray(['data' =>'success']);
+        return true;
     }
 
     /**
@@ -88,18 +96,18 @@ class Mapping  extends ApiCommon
     public function getUsersDiff($identity,$term=0)
     { 
         // 希望对方是异性
-        $usersMale = $this->userModel->getUsers(['term' => $term,'match_sex' => 2,'sex' => 1,'identity' => $identity]); // 男生   
-        $usersFeMale = $this->userModel->getUsers(['term' => $term,'match_sex' => 1,'sex' => 2,'identity' => $identity]); // 女生
+        $usersMale = $this->userModel->getUsers(['term' => $term,'match_sex' => 2,'sex' => 1,'identity' => $identity, 'task_id' => $this->taskID]); // 男生   
+        $usersFeMale = $this->userModel->getUsers(['term' => $term,'match_sex' => 1,'sex' => 2,'identity' => $identity, 'task_id' => $this->taskID]); // 女生
         // 对方性别的都可以
-        $usersMaleAllSex = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'sex' => 1,'identity' => $identity]); // 男生
-        $usersFeMaleAllSex = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'sex' => 2,'identity' => $identity]); // 女生
+        $usersMaleAllSex = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'sex' => 1,'identity' => $identity, 'task_id' => $this->taskID]); // 男生
+        $usersFeMaleAllSex = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'sex' => 2,'identity' => $identity, 'task_id' => $this->taskID]); // 女生
         // 合并
         $usersMale = $usersMale->merge($usersMaleAllSex);
         $usersFeMale = $usersFeMale->merge($usersFeMaleAllSex);
         
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         // 转为以userId为键的数组
         $uAs = [];
         $pAs = [];
@@ -212,7 +220,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }
@@ -228,11 +236,11 @@ class Mapping  extends ApiCommon
     public function getUsersSame($identity,$term=0,$sex)
     { 
         // 希望CP是同性
-        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity,'match_random' => 0]);
+        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity, 'task_id' => $this->taskID, 'match_random' => 0]);
            
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         // 转为以userId为键的数组
         $uAs = [];
         $pAs = [];
@@ -343,7 +351,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }   
@@ -359,11 +367,11 @@ class Mapping  extends ApiCommon
     public function getUsersSameCrossTerm($identity,$sex)
     { 
         // 希望CP是同性
-        $users = $this->userModel->getUsers(['match_sex' => $sex,'sex' => $sex,'identity' => $identity,'match_random' => 0]);
+        $users = $this->userModel->getUsers(['match_sex' => $sex,'sex' => $sex,'identity' => $identity, 'task_id' => $this->taskID, 'match_random' => 0]);
         
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         // 转为以userId为键的数组
         $uAs = [];
         $pAs = [];
@@ -474,7 +482,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }
@@ -489,11 +497,11 @@ class Mapping  extends ApiCommon
     public function getUsersSameDe($identity,$term=0,$sex)
     { 
         // 希望CP是同性
-        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity]);
+        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity, 'task_id' => $this->taskID]);
            
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         // 转为以userId为键的数组
         $uAs = [];
         $pAs = [];
@@ -604,7 +612,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }   
@@ -620,11 +628,11 @@ class Mapping  extends ApiCommon
     public function getUsersSameCrossTermDe($identity,$sex)
     { 
         // 希望CP是同性
-        $users = $this->userModel->getUsers(['match_sex' => $sex,'sex' => $sex,'identity' => $identity]);
+        $users = $this->userModel->getUsers(['match_sex' => $sex, 'sex' => $sex, 'identity' => $identity, 'task_id' => $this->taskID]);
         
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         // 转为以userId为键的数组
         $uAs = [];
         $pAs = [];
@@ -735,7 +743,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }
@@ -749,12 +757,12 @@ class Mapping  extends ApiCommon
      */
     public function getUsersMatchSexYes($identity,$term=0)
     {
-        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'identity' => $identity]);
+        $users = $this->userModel->getUsers(['term' => $term,'match_sex' => 0,'identity' => $identity, 'task_id' => $this->taskID]);
         // ,'match_random' => 0
 
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         
         // 转为以userId为键的数组
         $uAs = [];
@@ -867,7 +875,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }
@@ -890,11 +898,11 @@ class Mapping  extends ApiCommon
         //      * coding...
         //      */
         // } 
-        $users = $this->userModel->getUsers(['term' => $term,'match_random' => 1,'identity' => $identity]);
+        $users = $this->userModel->getUsers(['term' => $term,'match_random' => 1,'identity' => $identity, 'task_id' => $this->taskID]);
         
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         
         // 转为以userId为键的数组
         $uAs = [];
@@ -1007,7 +1015,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }
@@ -1028,11 +1036,11 @@ class Mapping  extends ApiCommon
         //      * coding...
         //      */
         // } 
-        $users = $this->userModel->getUsers(['match_random' => 1,'identity' => $identity]);
+        $users = $this->userModel->getUsers(['match_random' => 1,'identity' => $identity, 'task_id' => $this->taskID]);
         
         // 获取目前关注的领域和希望对方关注的领域
-        $userAttention = $this->userAttentionModel->getAttention();
-        $partnerAttention = $this->partnerAttentionModel->getAttention();
+        $userAttention = $this->userAttentionModel->getAttention($this->dataID);
+        $partnerAttention = $this->partnerAttentionModel->getAttention($this->dataID);
         
         // 转为以userId为键的数组
         $uAs = [];
@@ -1145,7 +1153,7 @@ class Mapping  extends ApiCommon
         }
 
         foreach ($cpResult as $userIdCp) {
-            $this->userModel->mapOver($userIdCp);
+            $this->userModel->mapOver($userIdCp, $this->taskID);
         }
         return resultArray(['data' => $cpResult]);
     }

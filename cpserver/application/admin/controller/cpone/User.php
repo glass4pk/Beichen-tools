@@ -53,7 +53,7 @@ class User extends AdminApiCommon
      *
      * @return void
      */
-    public function getUser()
+    public function getUserById()
     {
         if (!$this->request->isGet()) {
             return resultArray(['error' => '禁止post']);
@@ -105,20 +105,46 @@ class User extends AdminApiCommon
             return resultArray(['error' => '禁止post']);
         }
         $param = $this->param;
+        $userModel = model('cpone.User');
+        // 构建查询条件列表
+        $search_arr = [];
+        // 每页默认的数量
+        $pageNums = 10;
         // // 验证参数
         // $validate = Validate::make(['userid' => 'require']);
         // if (!$validate->check($param)) {
         //     return resultArray(['error' => '缺少userid']);
         // }
+        
+        // 如果url参数中含有phone或name则只查询这两个参数，其余忽略。而且只能同时查询一个参数，优先级phone -> name;
+        if (Request::has('phone') || Request::has('name')) {
+            $Obj = [];
+            $Obj['data'] = [];
+            $Obj['getAllNums'] = 0;
+            if (Request::has('phone')) {
+                $result = $userModel->getUsers(['phone' => $param['phone']], $pageNums);
+                $Obj['data'] = $result;
+                $Obj['getAllNums'] = 1;
+                if ($result) {
+                    return resultArray(['data' => $Obj]);
+                } else {
+                    return resultArray(['error' => $userModel->getError()]);
+                }
+            }
+            if (Request::has('name')) {
+                $result = $userModel->getUsers(['name' => $param['name']], $pageNums);
+                $Obj['data'] = $result;
+                $Obj['getAllNums'] = 1;
+                if ($result) {
+                    return resultArray(['data' => $Obj]);
+                } else {
+                    return resultArray(['error' => $userModel->getError()]);
+                }
+            }
+        }
 
-        // 构建查询条件列表
-        $search_arr = [];
-        // 每页默认的数量
-        $pageNums = 10;
         if (Request::has('page')) {
             $search_arr['page'] =  $param['page'];
-        } else {
-            $search_arr['page'] =  1;
         }
         if (Request::has('sex')) {
             $search_arr['sex'] = $param['sex'];
@@ -138,7 +164,13 @@ class User extends AdminApiCommon
         if (Request::has('city')) {
             $search_arr['city'] = $param['city'];
         }
-        $userModel = model('cpone.User');
+        if (Request::has('dataID')) {
+            $search_arr['dataID'] = $param['dataID'];
+        }
+        if (Request::has('taskID')) {
+            $search_arr['dataID'] = $param['taskID'];
+        }
+
         $result = $userModel->searchUser($search_arr, $pageNums);
         if ($result) {
             return resultArray(['data' => $result]);
@@ -147,43 +179,4 @@ class User extends AdminApiCommon
         }
     }
 
-    /**
-     * 根据用户的姓名查询用户
-     *
-     * @return json
-     */
-    public function getUserByName()
-    {
-        if (!$this->request->isGet()) {
-            return ;
-        }
-        $param = $this->param;
-        if (!isset($param['name'])) {
-            return resultArray(['error' => '缺少name参数']);
-        }
-        $name = $param['name'];
-        $userModel = model('cpone.User');
-        $result = $userModel->getUserByName($name);
-        return resultArray(['data' => $result]);
-    }
-
-    /**
-     * 根据用户的手机号查询用户信息
-     *
-     * @return json
-     */
-    public function getUserByPhone()
-    {
-        if (!$this->request->isGet()) {
-            return ;
-        }
-        $param = $this->param;
-        if (!isset($param['phone'])) {
-            return resultArray(['error' => '缺少phone参数']);
-        }
-        $phone = $param['phone'];
-        $userModel = model('cpone.User');
-        $result = $userModel->getUserByPhone($Phone);
-        return resultArray(['data' => $result]);
-    }
 }

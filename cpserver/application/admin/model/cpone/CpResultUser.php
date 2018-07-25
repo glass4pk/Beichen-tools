@@ -1,32 +1,65 @@
 <?php
 /**
- * cp_user表中的数据是没有进行匹配的
+ * 匹配完成的数据集
  * author: jack
  */
 namespace app\admin\model\cpone;
 
 use app\admin\model\Common;
 use think\Exception;
+use think\Db;
 
-class User extends Common
+class CpResultUser extends Common
 {
-    protected $name = 'cp_user';
+    protected $name = 'cp_result_user';
+    // 将User表中的数据copy到cp_result_user中
+    public function copyDataFromUser($taskID,$dataID)
+    {
+        $oldData = Db::query('select * from cp_user where data_id='.$dataID); // 转为数组
+        // 对每个元素插入键task_id
+        for ($i = 0;$i < count($oldData); $i++) {
+            $oldData[$i]['task_id'] = $taskID;
+            $oldData[$i]['is_map'] = 0;
+        }
+        $isSuccess = false;
+        try {
+            Db::name($this->name)->insertAll($oldData);
+            $isSuccess = true;
+        } catch (Exception $e) {
+            $isSuccess = false;
+        } finally {
+            return $isSuccess; 
+        }
+    }
 
-    /**
-     * 通过
+     /**
+     * 通过userid和taskID获取用户
      *
      * @param [type] $userid
      * @return void
      */
-    public function getUser($userid)
+    public function getUser($userid, $taskID)
     {
         $data;
         $userid=(string)$userid;
         if ($userid!=null) {
-            $data=$this->where('userid',$userid)->select(); // 后期修改
+            $data=$this->where('userid',$userid)->where('task_id', $taskID)->select(); // 后期修改
             return $data;
         }
         return NULL;
+    }
+
+    /**
+     * 更新用户的cp
+     *
+     * @param array $array
+     * @return void
+     */
+    public function mapOver($array, $taskID)
+    {
+        $this->where('userid',$array[0])->where('task_id', $taskID)->update(['partner_id' => $array[1],'is_map' => 1,'score'=>$array[2]]);
+        $this->where('userid',$array[1])->where('task_id', $taskID)->update(['partner_id' => $array[0],'is_map' => 1,'score'=>$array[2]]);
+        return true;
     }
 
     /**
@@ -54,7 +87,7 @@ class User extends Common
      * @param array $data
      * @return void
      */
-    public function saveUser($data)
+    public function saveUser($data, $taskID)
     {
         $result = false;
         if (!$data) {
@@ -62,14 +95,14 @@ class User extends Common
         }
         try {
             // 查询是否存在记录
-            $isHave = $this->where('phone',$data['phone'])->where('data_id',$data['data_id'])->select();
+            $isHave = $this->where('phone',$data['phone'])->where('data_id',$data['data_id'])->where('task_id', $taskID)->select();
             if (count($isHave) !=0) {
                 // 比较期数和提交时间
                 $t =  $isHave[0]->toArray();
                 if ($t['submit_timestamp'] < $data['submit_timestamp']) {
                     // 同一期的重复提交
                     if ($t['term'] == $data['term']) {                     
-                        $this->where('userid',$t['userid'])->where('data_id',$data['data_id'])->update($data);
+                        $this->where('userid',$t['userid'])->update($data);
                         $result = 'Have';
                     } else {}
                 }
@@ -80,7 +113,7 @@ class User extends Common
             } else {
                 $result = $this->insert($data);
                 if ($result) { // 返回插入成功的userid
-                    $result = $this->where('name',$data['name'])->where('phone',$data['phone'])->where('data_id',$data['data_id'])->select()[0]['userid'];
+                    $result = $this->where('name',$data['name'])->where('phone',$data['phone'])->where('task_id', $taskID)->select()[0]['userid'];
                 }
             }
         } catch (Exception $e) {
@@ -91,13 +124,33 @@ class User extends Common
     }
 
     /**
-     * 根据dataID获取用户的总数
-     * @param  int $dataID
+     * 获取已经配对的用户
+     *
      * @return void
      */
-    public function getUserNums($dataID)
+    public function getMapedUser($taskID)
     {
-        $result = $this->where('data_id', $dataID)->select()->count('id');
+        $result = $this->where('is_map',1)->where('task_id', $taskID)->select();
+        return $result;
+    }
+
+    /**
+     * 获取没有配对的用户
+     */
+    public function getUnmapedUser($taskID)
+    {
+        $result = $this->where('is_map',0)->where('task_id', $taskID)->select();
+        return $result;
+    }
+
+    /**
+     * 获取用户的总数
+     *
+     * @return void
+     */
+    public function getUserNums($taskID)
+    {
+        $result = $this->where('task_id', $taskID)->select()->count('id');
         return $result;
     }
 
@@ -106,7 +159,7 @@ class User extends Common
      *
      * @return void
      */
-    public function changeUserInfo($param)
+    public function changeUserInfo($param, $taskID)
     {
         /**
          * code
@@ -117,14 +170,13 @@ class User extends Common
      * 删除用户
      *
      * @param string $userid
-     * @param int $dataID
      * @return void
      */
-    public function deleteUser( $userid, $dataID)
+    public function deleteUser($userid, $taskID)
     {
         $data;
         try {
-            $data = $this->where('userid',$userid)->where('data_id', $dataID)->delete();
+            $data = $this->where('userid',$userid)->where('task_id', $taskID)->delete();
         } catch(Exception $e) {
             $this->error = $e->getMessage();
         } finally {
@@ -135,7 +187,7 @@ class User extends Common
     /**
      * 搜寻用户的信息
      */
-    public function searchUser($search_arr, $pageNums)
+    public function searchUser($search_arr, $pageNums, $taskID)
     {
 
         $userNums = 0;
@@ -193,13 +245,6 @@ class User extends Common
             $tmp[2] = $search_arr['dataID'];
             array_push($searchArray,$tmp);
         }
-        if (isset($search_arr['taskID'])) {
-            $tmp = [];
-            $tmp[0] = 'task_id';
-            $tmp[1] = '=';
-            $tmp[2] = $search_arr['taskID'];
-            array_push($searchArray,$tmp);
-        }
         if (false) {
             // 查询条件为空
             $data = $this->where('status',1)->select();
@@ -207,9 +252,9 @@ class User extends Common
         } else {
             $userNums = $this->where($searchArray)->count();
             if (isset($search_arr['page'])) {
-                $data=$this->where($searchArray)->order('submit_time',$sort)->page($search_arr['page'])->limit($pageNums)->field('partner_id',true)->select();
+                $data=$this->where($searchArray)->where('task_id', $taskID)->order('submit_time',$sort)->page($search_arr['page'])->limit($pageNums)->field('partner_id',true)->select();
             } else {
-                $data=$this->where($searchArray)->order('submit_time',$sort)->field('partner_id',true)->select();     
+                $data=$this->where($searchArray)->where('task_id', $taskID)->order('submit_time',$sort)->field('partner_id',true)->select();     
             }
         }
         // ->field(['act_id'=>'id'])
@@ -221,23 +266,23 @@ class User extends Common
 
     /**
      * 根据用户的姓名查询用户
+     *  
      * @param string $name
-     * @param int $dataID
      * @return void
      */
-    public function getUserByName($name,$dataID)
+    public function getUserByName($name, $taskID)
     {
-        return $this->where('name',$name)->where('data_id', $dataID)->select();
+        return $this->where('name',$name)->where('task_id', $taskID)->select();
     }
 
     /**
      * 根据用户的手机号码查询用户
+     *
      * @param string $phone
-     * @param int $dataID
      * @return void
      */
-    public function getUserByPhone($phone,$dataID)
+    public function getUserByPhone($phone, $taskID)
     {
-        return $this->where('phone',$phone)->where('data_id', $dataID)->select();
+        return $this->where('task_id', $taskID)->where('phone',$phone)->select();
     }
 }

@@ -11,18 +11,19 @@ class PartnerAttention extends Common
 {
     protected $name = 'cp_partner_attention';
 
-    public function getPartner($userid)
+    // 获取
+    public function getPartner($userid, $dataID)
     {
         $data;
         $userid=(string)$userid;
         if ($userid!=null) {
-            $data=$this->where('userid',$userid)->select(); // 后期修改
+            $data=$this->where('userid',$userid)->where('data_id', $dataID)->select(); // 后期修改
             return $data;
         }
         return NULL;
     }
 
-    public function savePartnerAttention($userid,$data)
+    public function savePartnerAttention($userid,$data,$dataID)
     {
         $result = false;
         $temp = [];
@@ -33,6 +34,7 @@ class PartnerAttention extends Common
             foreach ($data as $temp1) {
                 $temp['userid'] = $userid;
                 $temp['attention'] = $temp1;
+                $temp['data_id'] = $dataID;
                 $result = $this->insert($temp);
             }
         } catch (Exception $e) {
@@ -47,9 +49,9 @@ class PartnerAttention extends Common
      *
      * @return void
      */
-    public function getAttention()
+    public function getAttention($dataID)
     {
-        $result = $this->select();
+        $result = $this->where('data_id', $dataID)->select();
         if ($result) {
             return $result;
         }

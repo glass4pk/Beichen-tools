@@ -14,7 +14,7 @@ class Db extends ApiCommon
         if (!$this->request->isPost()) {
             return ;
         }
-        $dbModel = model('data.Data');
+        $dbModel = model('cpone.Data');
         $result = $dbModel->deleteAll();
         return resultArray(['data' => 'success']);
     }

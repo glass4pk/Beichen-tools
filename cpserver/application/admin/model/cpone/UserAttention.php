@@ -17,12 +17,12 @@ class UserAttention extends Common
      * @param string $userid
      * @return void
      */
-    public function getUserAttention($userid)
+    public function getUserAttention($userid, $dataID)
     {
         $data;
         $userid=(string)$userid;
         if ($userid!=null) {
-            $data=$this->where('userid',$userid)->select(); // 后期修改
+            $data=$this->where('userid',$userid)->where('data_id', $dataID)->select(); // 后期修改
             return $data;
         }
         return NULL;
@@ -35,7 +35,7 @@ class UserAttention extends Common
      * @param array $data
      * @return void
      */
-    public function saveUserAttention($userid,$data)
+    public function saveUserAttention($userid,$data,$dataID)
     {
         $result = false;
         $temp = [];
@@ -46,6 +46,7 @@ class UserAttention extends Common
             foreach ($data as $temp1) {
                 $temp['userid'] = $userid;
                 $temp['attention'] = $temp1;
+                $temp['data_id'] = $dataID;
                 $result = $this->insert($temp);
             }
         } catch (Exception $e) {
@@ -60,9 +61,9 @@ class UserAttention extends Common
      *
      * @return void
      */
-    public function getAttention()
+    public function getAttention($dataID)
     {
-        $result = $this->select();
+        $result = $this->where('data_id', $dataID)->select();
         if ($result) {
             return $result;
         }

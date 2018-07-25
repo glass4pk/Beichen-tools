@@ -1,5 +1,5 @@
 <template>
-    <div id='cphome'>
+    <div id='importdata'>
       <el-container style='padding:0px 4px 4px 0px;font-size: 12px'>
         <el-button plain size='mini' style='margin:0 5px 0 5px' @click="deleteAllDialog = true">清空数据</el-button>
         <el-upload
@@ -83,7 +83,7 @@
           <div class='input_11'>
             <el-input
               placeholder="请输入数字"
-              v-model="search_end_term"
+              v-model="search_term_end"
               width='20px'
               size='mini'
               >
@@ -103,11 +103,11 @@
               type='primary'
               size='mini'>
             搜索</el-button>
-            <el-button
+            <!-- <el-button
               @click='exportExcel'
               type='primary'
               size='mini'
-              >导出</el-button>
+              >导出</el-button> -->
           </div>
                       <!-- @change="handleChange" -->
         </div>
@@ -188,7 +188,7 @@
 
 <script>
 import axios from 'axios'
-import citypOptions from '../../common/ChinaCity'
+// import citypOptions from '../../common/ChinaCity'
 export default {
   name: 'ImportData',
   data () {
@@ -197,128 +197,94 @@ export default {
       loadingfullscreen: false,
       fileUploadResult: false,
       fileUploadState: 0, // -1正在上传 0没有 1为成功上传
-      uploadUrl: this.GLOBAL.WEB_URL,
       totalnums: 0, // 用户总数
-      currentPage: 1,
       tableData: [],
       dialogTableData: [],
       dialogFromVisibel: false,
       sexOptions: [
         {label: '男', value: 1},
-        {label: '女', value: 2}
+        {label: '女', value: 2},
+        {label: '全部', value: 0}
       ],
       identityOptions: [
         {label: '在校学生', value: '在校学生'},
-        {label: '在职人士', value: '在职人士'}
+        {label: '在职人士', value: '在职人士'},
+        {label: '全部', value: '全部'}
       ],
       search_phone: '',
       search_name: '',
       search_sex: '',
       search_identity: '',
-      province: '',
-      city: '',
+      search_page: 0,
+      search_province: '',
+      search_city: '',
       citypoptions: [],
       search_term_start: '',
-      search_end_term: ''
+      search_term_end: '',
+      dataID: 0
     }
   },
   created () {
-    var _this = this
-    // 获取用户的总数
-    axios.get(_this.GLOBAL.WEB_URL + '/getallnums').then(
-      (response) => {
-        if (response.data.errcode !== 0) {
-          _this.$message = response.data['errmsg']
-        } else {
-          _this.totalnums = response.data['data']
-          console.log('getnums')
-        }
-      }
-    ).catch((error) => {
-      if (error) {
-        _this.$message.error('请求失败')
-      }
-    })
-    // 获取用户信息
-    axios.get(_this.GLOBAL.WEB_URL + '/getUsers?page=' + _this.currentPage).then(
-      (response) => {
-        if (response.data.errcode !== 0) {
-          _this.$message = response.data['errmsg']
-        } else {
-          var tmp = response.data['data']
-          for (var i = 0; i < tmp.length; i++) {
-            tmp[i]['sex'] = (tmp[i]['sex'] === 1) ? '男' : '女'
-          }
-          _this.tableData = response.data['data']
-        }
-      }
-    ).catch((error) => {
-      if (error) {
-        console.log(error)
-        _this.$message.error('获取用户信息失败')
-      }
-    })
-    console.log(11)
-    _this.citypoptions = citypOptions()
-    console.log(_this.citypoptions)
-    alert('111111111')
+    this.flushAll(this.dataID)
   },
   methods: {
-    // 搜索
-    search () {
+    flushAll (dataID, page = 1) {
+      // 刷新页面所有的信息
+      var searchUrl = ''
       var _this = this
-      alert('1')
-      alert(_this.search_name)
+      searchUrl = searchUrl + '?dataID=' + dataID
+      searchUrl = searchUrl + '&page=' + page
+      if (_this.search_phone !== '') {
+        searchUrl = searchUrl + '&phone=' + _this.search_phone
+      }
       if (_this.search_name !== '') {
-        // 只根据查询id和name
-        alert('2')
-        if (_this.search_name !== '') {
-          axios.get(_this.GLOBAL.WEB_URL + '/getusers?page=1&name=' + _this.search_name).then(
-            (response) => {
-              if (response.data.errcode !== 0) {
-              } else {
-                var tmp = response.data['data']
-                for (var i = 0; i < tmp.length; i++) {
-                  tmp[i]['sex'] = (tmp[i]['sex'] === 1) ? '男' : '女'
-                }
-                _this.tableData = response.data['data']
-              }
-            }
-          ).catch()
-        }
-      } else {
-        alert('3')
-        var searchUrl = ''
-        if (_this.search_sex !== '') {
+        searchUrl = searchUrl + '&name=' + _this.search_name
+      }
+      if (_this.search_sex !== '') {
+        if (_this.search_sex !== 0) {
           searchUrl = searchUrl + '&sex=' + _this.search_sex
         }
-        if (_this.search_identity !== '') {
+      }
+      if (_this.search_identity !== '') {
+        if (_this.search_identity !== '全部') {
           searchUrl = searchUrl + '&identity=' + _this.search_identity
         }
-        if (_this.search_term_start !== '') {
-          searchUrl = searchUrl + '&term_start=' + _this.search_term_start
-        }
-        if (_this.search_term_end !== '') {
-          searchUrl = searchUrl + '&term_end=' + _this.search_term_end
-        }
-        axios.get(_this.GLOBAL.WEB_URL + '/getusers?page=1' + searchUrl).then(
-          (response) => {
-            if (response.data['errcode'] === 0) {
-              var tmp = response.data['data']
-              for (var i = 0; i < tmp.length; i++) {
-                tmp[i]['sex'] = (tmp[i]['sex'] === 1) ? '男' : '女'
-              }
-              _this.tableData = response.data['data']
-            }
-          }
-        ).catch(
-          (error) => {
-            if (error) {
-              //
-            }
-          }
-        )
       }
+      if (_this.search_term_start !== '') {
+        searchUrl = searchUrl + '&term_start=' + _this.search_term_start
+      }
+      if (_this.search_term_end !== '') {
+        searchUrl = searchUrl + '&term_end=' + _this.search_term_end
+      }
+      // type参数(预留)
+      if (searchUrl === '') {
+        searchUrl = '/getusers'
+      } else {
+        searchUrl = '/getusers' + searchUrl
+      }
+      axios.get(_this.GLOBAL.WEB_URL + searchUrl).then(
+        (response) => {
+          if (response.data['errcode'] === 0) {
+            var tmp = response.data['data']['data']
+            for (var i = 0; i < tmp.length; i++) {
+              tmp[i]['sex'] = (tmp[i]['sex'] === 1) ? '男' : '女'
+            }
+            _this.tableData = tmp
+            _this.totalnums = response.data['data']['userNums']
+          }
+        }
+      ).catch(
+        (error) => {
+          if (error) {
+            console.log(error)
+          }
+        }
+      )
+    },
+    // 搜索
+    search () {
+      //
+      this.flushAll(this.dataID)
     },
     // 清除所有的用户
     cleanAllUsers () {
@@ -348,37 +314,28 @@ export default {
       console.log(err)
       this.loadingfullscreen = false
       this.$message.error('文件' + file.name + '上传失败')
+      this.flushAll(this.dataID) // 刷新用户列表
     },
     // 上传成功
     handleUploadSuccess (response, file) {
+      alert('11')
+      console.log(response.data)
+      if (response.errcode === 0) {
+        this.$message('文件上传成功')
+        this.dataID = response.data['dataID']
+        alert(this.dataID)
+      } else {
+        this.$message('文件上传失败')
+      }
       this.loadingfullscreen = false
-      this.$message('文件上传成功')
+      this.flushAll(this.dataID) // 刷新用户列表
     },
     // 文件上传中
     handleOnProgress (event, file) {
     },
     // 页数改变
     handleCurrentChange (val) {
-      var _this = this
-      // 获取用户信息
-      axios.get(_this.GLOBAL.WEB_URL + '/getUsers?page=' + val).then(
-        (response) => {
-          if (response.data.errcode !== 0) {
-            _this.$message({message: response.data['errmsg'], type: 'success'})
-          } else {
-            var tmp = response.data['data']
-            for (var i = 0; i < tmp.length; i++) {
-              tmp[i]['sex'] = (tmp[i]['sex'] === 1) ? '男' : '女'
-            }
-            _this.tableData = response.data['data']
-          }
-        }
-      ).catch((error) => {
-        if (error) {
-          console.log(error)
-          _this.$message({message: '获取用户信息失败', type: 'error'})
-        }
-      })
+      this.flushAll(this.dataID, val)
     },
     // 点击查看
     handleClick (row) {
@@ -403,26 +360,28 @@ export default {
         }
       })
     },
+    // 删除所有的数据，目前暂时不完善这个功能
     confireDeleteAll () {
-      var _this = this
-      axios.post(_this.GLOBAL.WEB_URL + '/deleteall').then(
-        (response) => {
-          if (response.data.errcode === 0) {
-            _this.deleteAllDialog = false
-            _this.$message({message: '成功删除', type: 'success'})
-          } else {
-            _this.deleteAllDialog = false
-            _this.$message({message: '删除失败', type: 'error'})
-          }
-        }
-      ).catch(
-        (error) => {
-          if (error) {
-            _this.$message({message: '删除失败', type: 'warning'})
-            _this.deleteAllDialog = false
-          }
-        }
-      )
+      // var _this = this
+      // axios.post(_this.GLOBAL.WEB_URL + '/deleteall').then(
+      //   (response) => {
+      //     if (response.data.errcode === 0) {
+      //       _this.deleteAllDialog = false
+      //       _this.$message({message: '成功删除', type: 'success'})
+      //     } else {
+      //       _this.deleteAllDialog = false
+      //       _this.$message({message: '删除失败', type: 'error'})
+      //     }
+      //   }
+      // ).catch(
+      //   (error) => {
+      //     if (error) {
+      //       _this.$message({message: '删除失败', type: 'warning'})
+      //       _this.deleteAllDialog = false
+      //     }
+      //   }
+      // )
+      this.flushAll(this.dataID)
     },
     downloadFile () {
       window.location.href = this.GLOBAL.WEB_URL + '/download/' + '未来大学行动CP模板.xlsx'
@@ -432,7 +391,7 @@ export default {
 </script>
 
 <style scoped>
-#cphome{
+#importdata{
   font-size: 10px;
   padding:1px;
   text-align: left;
