@@ -33,7 +33,7 @@ class Excel
             $this->isOk = true;
         } catch (Exception $e) {
             $this->error = $e->getMessage();
-            $this->isOk = false;
+            $this->isOk = $e->getMessage();
         } finally {
             return $this->isOk;
         }

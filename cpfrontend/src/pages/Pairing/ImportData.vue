@@ -3,7 +3,7 @@
       <el-container style='padding:0px 4px 4px 0px;font-size: 12px'>
         <el-button plain size='mini' style='margin:0 5px 0 5px' @click="deleteAllDialog = true">清空数据</el-button>
         <el-upload
-        action='http://web.yes-go.cn/upload/file'
+        action='http://dev.yes-go.cn/upload/file'
         :before-upload='handleBeforeUpload'
         :on-success='handleUploadSuccess'
         :on-progress='handleOnProgress'
