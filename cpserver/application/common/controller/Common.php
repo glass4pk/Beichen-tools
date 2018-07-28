@@ -10,6 +10,7 @@ namespace app\common\controller;
 use think\Controller;
 use think\Request;
 use think\facade\Log;
+use think\facade\Session;
 
 class Common extends Controller
 {
@@ -17,7 +18,8 @@ class Common extends Controller
     public $header;
     public $userId=1;
     public $userName='testhyc';
-
+    private $authKey = 'Beichen.jack';
+    
     public function __construct()
     {
         parent::__construct();
@@ -67,5 +69,33 @@ class Common extends Controller
         }
     }
 
+    /**
+     * 创建TOKEN，
+     *
+     * @param string $authKey 加密种子
+     * @return void
+     */
+    public function createToken($authKey = 'Beichen.jack')
+    {
+        // 获取获取加密后的session
+        $this->authKey = $authKey;
+        $sessionValue = encryptSession($authKey);
+        session('TOKEN', $sessionValue);
+    }
+
+    /**
+     * 判断TOKEN
+     *
+     * @return boolean
+     */
+    public function checkToken()
+    {
+        if (!Session::has('TOKEN')) {
+            return -1; // 不存在TOKEN
+        }
+        $token = Session::get('TOKEN');
+        // 解密token
+        $authKey = $this->authKey;
+        return decryptSession($authKey);
+    }
 }
- 

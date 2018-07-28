@@ -143,3 +143,43 @@ if (!function_exists('getMd5String')) {
         return md5(date('Y/m/d h:i:sa').$seed);
     }
 }
+
+if (!function_exists('encryptSession')) {
+    /**
+     * session加密函数
+     *
+     * @param string $authKey 加密种子
+     * @return string
+     */
+    function encryptSession($authKey = 'H.dev_BEICHEN')
+    {
+        // 对于session进行加密
+        $code = md5(chr(mt_rand(0xB0, 0xF7)) . chr(mt_rand(0xA1, 0xFE)) . chr(mt_rand(0xB0, 0xF7)) . chr(mt_rand(0xA1, 0xFE)) . chr(mt_rand(0xB0, 0xF7)) . chr(mt_rand(0xA1, 0xFE)));
+        $timestamp = strottime('now');
+        $authCode = substr(md5($code . $authKey . $timestamp),10,6);
+        return $code . $authCode . $timestamp;
+    }
+}
+
+if (!function_exists('decryptSession')) {
+    /**
+     * session解密函数
+     *
+     * @param string $session
+     * @param string $authKey 解密种子
+     * @return boolean
+     */
+    function decryptSession($session, $authKey = 'H.dev_BEICHEN')
+    {
+        if ($strlength($session) != 48) {
+            return false;
+        }
+        $code = substr($session, 0, 32);
+        $timestamp = substr($session, 38);
+        $authCode = substr(md5($code . $authKey . $timestamp),10,6);
+        if ($authCode == substr($session, 32, 6)) {
+            return true;
+        }
+        return false;
+    }
+}
