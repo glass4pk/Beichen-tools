@@ -82,54 +82,104 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row class='ps-main-title'>
+        <el-row class='ps-main-title ps-createproject-commited-elements'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div style="padding: 6px 0px 0px 6px"><span>已添加的元素</span></div>
                     <div class="ps-main-content">
-                        <div class='ps-row'>
-                            <div class='on-same-line'>元素类型：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>用户固有信息</span>
+                        <!-- <div class='ps-row'>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>元素类型：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>用户固有信息</span>
+                                </div>
                             </div>
-                            <div class='on-same-line'>元素名称：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>微信昵称</span>
-                            </div>
-                        </div>
-                        <div class='ps-row'>
-                            <div class='on-same-line'>元素宽度：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>150</span>px
-                            </div>
-                            <div class='on-same-line'>元素高度：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>150</span>px
-                            </div>
-                            <div class='on-same-line'>字体大小：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>150</span>px
-                            </div>
-                            <div class='on-same-line'>字体颜色：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                #<span>150</span>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>元素名称：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>微信昵称</span>
+                                </div>
                             </div>
                         </div>
                         <div class='ps-row'>
-                            <div class='on-same-line'>坐标X：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>200</span>px
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>元素宽度：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>150</span>px
+                                </div>
                             </div>
-                            <div class='on-same-line'>坐标Y：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>200</span>px
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>元素高度：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>150</span>px
+                                </div>
+                            </div>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>字体大小：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>150</span>px
+                                </div>
+                            </div>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>字体颜色：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    #<span>150</span>
+                                </div>
                             </div>
                         </div>
                         <div class='ps-row'>
-                            <div class='on-same-line'>字数限制：</div>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                <span>12</span>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>坐标X：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>200</span>px
+                                </div>
                             </div>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>坐标Y：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>200</span>px
+                                </div>
+                            </div>
+                        </div>
+                        <div class='ps-row'>
+                            <div class='on-same-line ps-createproject-commited-elements-container'>
+                                <div class='on-same-line'>字数限制：</div>
+                                <div class='on-same-line ps-createproject-commited-elements-content'>
+                                    <span>12</span>
+                                </div>
+                            </div>
+                        </div> -->
+                        <div v-for='element in elements' v-bind:key='element' class='ps-createproject-commited-elements-container'>
+                            <table style="border:1px solid #b5b9be; border-radius: 4px;/*黑色1像素粗边框*/">
+                                <tr>
+                                    <td style="width: 80px;" class='ps-row'>元素类型：</td>
+                                    <td style="width: 120px" class='ps-row'>{{element.type}}</td>
+                                    <td style="width: 80px" class='ps-row'>元素名称：</td>
+                                    <td style="width: 120px" class='ps-row'>{{element.name}}</td>
+                                    <td style="width: 80px" class='ps-row'></td>
+                                    <td style="width: 80px" class='ps-row'></td>
+                                </tr>
+                                <tr class='ps-row'>
+                                    <td class='ps-row'>元素宽度：</td>
+                                    <td class='ps-row'>{{element.width}} px</td>
+                                    <td class='ps-row'>元素高度：</td>
+                                    <td class='ps-row'>{{element.height}} px</td>
+                                    <td class='ps-row'>字体大小：</td>
+                                    <td class='ps-row'>{{element.font_size}} px</td>
+                                    <td class='ps-row'>字体颜色：</td>
+                                    <td class='ps-row'># {{element.font_color}}</td>
+                                </tr>
+                                <tr>
+                                    <td class='ps-row'>坐标X：</td>
+                                    <td class='ps-row'>{{element.coordinate_x}} px</td>
+                                    <td class='ps-row'>坐标Y：</td>
+                                    <td class='ps-row'>{{element.coordinate_y}} px</td>
+                                </tr>
+                                <tr>
+                                    <td class='ps-row'>字数限制：</td>
+                                    <td class='ps-row'>{{element.max_num}}</td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -148,9 +198,9 @@
                     <div class='on-same-line ps-create-dialog-row-col' style="padding: 0px 20px 0px 0px">
                         <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素类型</span></div>
                         <div class='on-same-line' style="position: relative">
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select v-model="elementType" placeholder="请选择">
                                 <el-option
-                                v-for="item in options"
+                                v-for="item in elementTypeOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -161,14 +211,17 @@
                     <div class='on-same-line ps-create-dialog-row-col' style="padding: 0px 20px 0px 0px;">
                         <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素名称</span></div>
                         <div class='on-same-line'>
-                            <el-select v-model="value" placeholder="请选择">
+                            <el-select v-model="elementName" placeholder="请选择"  v-show="checkElementTypeSelect">
                                 <el-option
-                                v-for="item in options"
+                                v-for="item in elementNameoptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                                 </el-option>
                             </el-select>
+                        </div>
+                        <div class='on-same-line' v-show="checkElementTypeInput">
+                           <el-input v-model="elementName"></el-input>
                         </div>
                     </div>
                 </div>
@@ -222,18 +275,18 @@
                 </div>
                 <!-- 第四行 -->
                 <div class='ps-create-dialog-row'>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
+                    <div class='on-same-line' style="padding: 0px 20px 0px 0px" v-show="isDiaplayText">
                         <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>字数限制</span></div>
                         <div class='on-same-line'>
                             <el-input size='mini' style="width: 40px;"></el-input>
                         </div>
                     </div>
-                    <div class='on-same-line'  style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 40px 0px 20px"><span>形状</span></div>
+                    <div class='on-same-line'  style="padding: 0px 20px 0px 0px" v-show="isDiaplayShape">
+                        <div class='on-same-line' style="padding: 0px 40px 0px 0px"><span>形状</span></div>
                         <div class='on-same-line'>
-                            <el-select v-model="value" placeholder="请选择" disabled>
+                            <el-select v-model="elementWeiXinHeadPicShape" placeholder="请选择" id='ps-createproject-committing-elements-dialog-select-1'>
                                 <el-option
-                                v-for="item in options"
+                                v-for="item in elementWeiXinHeadPicShapeOptions"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
@@ -261,9 +314,49 @@ export default {
       pic: '',
       psAddElementVisuality: false,
       psCreateProjectItemName: null,
-      elements: [],
+      elements: [1],
       psCreateElementTitle: null,
-      psCreateElementShapeVisuality: false
+      psCreateElementShapeVisuality: false,
+      elementType: null, // 用户选择的元素类型
+      elementTypeOption: [
+        {label: '用户固有信息', value: '0'},
+        {label: '单行文本信息', value: '1'},
+        {label: '多行文本信息', value: '2'}
+      ],
+      elementName: null,
+      elementNameoptions: [
+        {label: '微信昵称', value: '1'},
+        {label: '微信头像', value: '2'}
+      ],
+      elementWeiXinHeadPicShape: null,
+      elementWeiXinHeadPicShapeOptions: [
+        {label: '正方形', value: '1'},
+        {label: '长方形', value: '2'}
+      ],
+      checkElementTypeSelect: false,
+      checkElementTypeInput: false
+    }
+  },
+  computed: {
+    isDiaplayShape () {
+      if (this.elementType === '0' && this.elementName === '2') return true
+      else return false
+    },
+    isDiaplayText () {
+      if (this.elementType === '0') return false
+      else return true
+    }
+  },
+  watch: {
+    elementType: function (val) {
+      this.elementName = null
+      if (this.elementType === '0') {
+        this.checkElementTypeInput = false
+        this.checkElementTypeSelect = true
+      } else {
+        this.checkElementTypeInput = true
+        this.checkElementTypeSelect = false
+      }
     }
   },
   created () {
@@ -275,6 +368,10 @@ export default {
     psCreateElement ($type) {
       this.psAddElementVisuality = true
       this.psCreateElementTitle = $type
+      this.elementType = null // 选择清空
+      if ($type !== '微信头像') {
+        document.getElementById('ps-createproject-committing-elements-dialog-select-1').removeAttribute('disabled')
+      }
     }
   }
 }
@@ -299,7 +396,7 @@ export default {
 border-radius: 4px;
 }
 .bg-purple-dark {
-background: #b5b9be;
+background: #c9c9c9;
 }
 .bg-purple {
 background: #d3dce6;
@@ -320,10 +417,11 @@ background-color: #f9fafc;
 }
 .ps-main-content{
     font-size: 14px;
-    padding: 10px;
+    /* padding: 10px; */
+    padding: 5px 10px 5px 10px;
 }
 .ps-main-content .ps-row{
-    padding: 5px 0px 10px 10px;
+    padding: 5px 5px 5px 5px;
 }
 .ps-pic-container{
     padding: 10px;
@@ -331,7 +429,7 @@ background-color: #f9fafc;
 .img-show-container{
     width: 240px;
     height: 240px;
-    background-color: white;
+    background-color: rgb(255, 255, 255);
 }
 .ps-img-container{
     position: relative;
@@ -355,5 +453,12 @@ background-color: #f9fafc;
 #ps-createproject .el-dialog{
     border-radius: 10px;
     padding: 0px 0px 0px 20px;
+}
+
+.ps-createproject-commited-elements .ps-createproject-commited-elements-container{
+    margin: 10px 0px 10px 0px;
+}
+.ps-createproject-commited-elements-table-row{
+    margin: 5px 0px 10px 10px;
 }
 </style>
