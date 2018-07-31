@@ -9,7 +9,6 @@ namespace app\admin\controller;
 
 use think\facade\Request;
 use think\Db;
-use app\common\adapter\AuthAdapter;
 use app\common\controller\Common;
 use think\facade\Log;
 

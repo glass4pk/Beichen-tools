@@ -11,6 +11,7 @@ export default new Router({
     {
       path: '/home',
       name: 'Home',
+      redirect: '/home/login',
       component: require('@/pages/Home/Home').default,
       children: [
         {
@@ -62,6 +63,29 @@ export default new Router({
           path: 'createtask',
           name: 'CreateData',
           component: require('@/pages/Pairing/CreateTask').default
+        }
+      ]
+    },
+    {
+      path: '/ps',
+      name: 'PhotoComposite',
+      redirect: '/ps/list',
+      component: require('@/pages/PhotoComposite/PhotoComposite').default,
+      children: [
+        {
+          path: '/ps/info',
+          name: 'ProjectInfo',
+          component: require('@/pages/PhotoComposite/ProjectInfo').default
+        },
+        {
+          path: '/ps/list',
+          name: 'ProjectList',
+          component: require('@/pages/PhotoComposite/ProjectList').default
+        },
+        {
+          path: '/ps/create',
+          name: 'CreateProject',
+          component: require('@/pages/PhotoComposite/CreateProject').default
         }
       ]
     }
