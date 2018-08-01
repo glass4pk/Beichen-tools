@@ -7,7 +7,8 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row class='ps-main-title' style="padding: 0px">
+        <!-- // 创建项目的基本信息 -->
+        <el-row class='ps-main-title' style="padding: 0px" v-show='createProjectBasicInfo'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div class="ps-main-content">
@@ -25,19 +26,14 @@
                                         <!-- <div class="img-show-container">
                                             <img v-bind:src='pic'>
                                         </div> -->
-                                        <div>
-                                            <el-upload
-                                            class="upload-demo"
-                                            ref="upload"
-                                            action="https://jsonplaceholder.typicode.com/posts/"
-                                            :on-remove="handleRemove"
-                                            :file-list="fileList"
-                                            accept="image/*"
-                                            :limit="limit"
-                                            :auto-upload="false">
-                                            <el-button slot="trigger" size="small" type="primary">选取图片</el-button>
+                                        <div class="box" id="uploadBox">
+                                            <input
+                                            id='input101'
+                                            type='file'
+                                            name='file_background'
+                                            @change="uploadfile($event,'background')"/>
+                                            <el-button @inpubutton='shout'>选取图片</el-button>
                                             <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
-                                            </el-upload>
                                         </div>
                                     </div>
                                 </div>
@@ -49,17 +45,14 @@
                                         <!-- <div class="img-show-container" >
                                             <img v-bind:src='pic'>
                                         </div> -->
-                                        <div>
-                                            <el-upload
-                                            class="upload-demo"
-                                            ref="upload"
-                                            action="https://jsonplaceholder.typicode.com/posts/"
-                                            :on-remove="handleRemove"
-                                            :file-list="fileList"
-                                            :auto-upload="false">
-                                            <el-button slot="trigger" size="small" type="primary">选取图片</el-button>
+                                        <div class="box" id="uploadBox">
+                                            <input
+                                            id='input101'
+                                            type='file'
+                                            name='file_cover'
+                                            @change="uploadfile($event,'cover')"/>
+                                            <el-button @inpubutton='shout'>选取图片</el-button>
                                             <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
-                                            </el-upload>
                                         </div>
                                     </div>
                                 </div>
@@ -85,15 +78,16 @@
                                 </div>
                             </div>
                             <div class="ps-row"></div>
-                        </div>         
+                        </div>
                     </div>
                 </div>
             </el-col>
         </el-row>
-        <el-row class='ps-main-title ps-createproject-commited-elements'>
+        <!-- // 已经添加的项目元素 -->
+        <el-row class='ps-main-title ps-createproject-commited-elements' v-show='createProjectElements'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
-                    <div style="padding: 6px 0px 0px 6px"><span>页面可编辑元素已添加的元素</span></div>
+                    <div style="padding: 6px 0px 0px 6px"><span>页面可编辑元素</span></div>
                     <div class="ps-main-content">
                         <div class='ps-row'>
                             <div>
@@ -117,9 +111,9 @@
                                     <table style="border:1px solid #b5b9be; border-radius: 4px;/*黑色1像素粗边框*/">
                                         <tr>
                                             <td style="width: 80px;" class='ps-row'>元素类型：</td>
-                                            <td style="width: 120px" class='ps-row'>{{element.type}}</td>
+                                            <td style="width: 120px" class='ps-row'>{{element.elementTypeForLook}}</td>
                                             <td style="width: 80px" class='ps-row'>元素名称：</td>
-                                            <td style="width: 120px" class='ps-row'>{{element.name}}</td>
+                                            <td style="width: 120px" class='ps-row'>{{element.element_name}}</td>
                                             <td style="width: 80px" class='ps-row'></td>
                                             <td style="width: 80px" class='ps-row'></td>
                                         </tr>
@@ -141,22 +135,25 @@
                                         </tr>
                                         <tr>
                                             <td class='ps-row'>字数限制：</td>
-                                            <td class='ps-row'>{{element.max_num}}</td>
+                                            <td class='ps-row'>{{element.word_maxnum}}</td>
                                         </tr>
                                     </table>
                                 </div>
                                 <div class='on-same-line' id='project-list-added-element-s1'>
                                     <el-button icon='el-icon-edit' circle></el-button>
-                                    <el-button icon='el-icon-share' circle></el-button>
                                     <el-button icon='el-icon-delete' circle></el-button>
                                 </div>
                             </div>
                         </div>
 
                     </div>
+                    <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
+                        <el-button @click="psCreateProjectAddElements">提交</el-button>
+                    </div>
                 </div>
             </el-col>
         </el-row>
+        <!-- // 添加项目元素 -->
         <el-dialog
             id="ps-createproject"
             v-bind:title='psCreateElementTitle'
@@ -279,12 +276,17 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'CreateProject',
   data () {
     return {
+      projectID: null, // 项目id
+      createProjectBasicInfo: true,
+      createProjectElements: false,
       pic: '',
-      psAddElementVisuality: false,
+      uploadFile: [],
+      psAddElementVisuality: false, // dislog是否显示
       psCreateProjectItemName: null,
       elements: [],
       elementsTemp: [], // 缓存空间
@@ -344,8 +346,48 @@ export default {
   methods: {
     // 提交项目
     psCreateProjectSubmit () {
-      console.log(this.fileList)
-      alert('This')
+    //   console.log(file)
+      var _this = this
+      var formdata = new FormData()
+      // 添加背景图片和添加封面
+      for (var one = 0; one < this.uploadFile.length; one++) {
+        formdata.append(this.uploadFile[one]['type'], this.uploadFile[one]['file'])
+      }
+      formdata.append('name', this.psCreateProjectItemName)
+      formdata.append('background_width', this.background_width)
+      formdata.append('background_height', this.background_height)
+      axios({
+        url: 'http://127.0.0.1/ps/create',
+        method: 'post',
+        data: formdata
+      }).then(
+        (response) => {
+          if (response.data['errcode'] === 0) {
+            alert('提交成功')
+            _this.createProjectElements = true
+            _this.createProjectBasicInfo = false
+          } else {
+            alert('提交失败')
+          }
+        }
+      ).catch(
+        (error) => {
+          if (error) {
+            // code
+            alert('提交失败')
+            _this.createProjectElements = true
+            _this.createProjectBasicInfo = false
+          }
+        }
+      )
+    },
+    // 上传图片并暂时缓存
+    uploadfile (event, type) {
+      var temp = {}
+      temp['file'] = event.target.files[0]
+      temp['type'] = type
+      this.uploadFile.push(temp)
+      console.log(this.uploadFile)
     },
     // 上传图片
     psCreateProjectUploadPic () {
@@ -360,17 +402,56 @@ export default {
         document.getElementById('ps-createproject-committing-elements-dialog-select-1').removeAttribute('disabled')
       }
     },
+    // 上传所有的元素
+    psCreateProjectAddElements () {
+      // code
+      var _this = this
+      console.log(_this.elements)
+      axios({
+        url: 'http://127.0.0.1/ps/addelements',
+        method: 'post',
+        data: _this.elements
+      }).then(
+        (response) => {
+          if (response.data['errcode'] === 0) {
+            alert('提交成功')
+            _this.createProjectElements = false
+            _this.createProjectBasicInfo = false
+          } else {
+            alert('提交失败')
+          }
+        }
+      ).catch(
+        (error) => {
+          if (error) {
+            // code
+            alert('提交失败')
+            _this.createProjectElements = false
+            _this.createProjectBasicInfo = false
+          }
+        }
+      )
+    },
     // 确认创建元素
     confirmAddElement () {
+      if (this.elementType === null || this.elementName === null || this.elementCoordinateX === null || this.elementCoordinateY === null || this.elementFontSize === null) {
+        this.$message('请填写！')
+        this.psAddElementVisuality = false
+        this.flushElementTemp()
+        return
+      }
       var temp = [] // 元素缓存，类型array
+      alert(this.elementName)
       if (this.elementType === '用户固有信息') {
-        temp['element_type'] = this.elementName // elementName存元素类型
-        if (this.elementType === '4') {
+        temp['element_type'] = this.elementName // elementName存元素类型 这个是存储到数据库的
+        temp['elementTypeForLook'] = '用户固有信息' // 这个是存给用户看的，不存储到数据库
+        if (this.elementName === '4') {
           temp['element_name'] = '微信昵称'
-        } else if (this.elementsType === '5') {
+        } else if (this.elementName === '5') {
           temp['element_name'] = '微信头像'
         }
       } else {
+        temp['elementTypeForLook'] = (this.elementType === '2') ? '单行文本信息' : (this.elementType === '3') ? '多行文本信息' : null
         temp['element_type'] = this.elementType // elementName存元素名称
         temp['element_name'] = this.elementName
       }
@@ -383,8 +464,51 @@ export default {
       temp['font_size'] = this.elementFontSize
       temp['font_color'] = this.elementFontColor
       console.log(temp)
-      this.elements.push(temp)
-      alert('confirmAddElement')
+      this.elements.push(temp) // 添加到elements中
+      // 已添加的元素
+      this.psAddElementVisuality = false
+      this.flushElementTemp()
+    },
+    // 刷新用户上次输入的信息
+    flushElementTemp () {
+      // code
+      this.elementName = null // elementName存元素类型 这个是存储到数据库的
+      this.elementType = null // elementName存元素名称
+      this.background_width = null
+      this.background_height = null
+      this.elementCoordinateX = null
+      this.elementCoordinateY = null
+      this.elementWordsNums = null
+      this.elementShape = null
+      this.elementFontSize = null
+      this.elementFontColor = null
+    },
+    // 刷新data里面的所有数据
+    flushAllData () {
+      // code
+      this.projectID = null // 项目id
+      this.createProjectBasicInfo = false
+      this.createProjectElements = true
+      this.pic = ''
+      this.uploadFile = []
+      this.psAddElementVisuality = false // dislog是否显示
+      this.psCreateProjectItemName = null
+      this.elements = []
+      this.elementsTemp = [] // 缓存空间
+      this.psCreateElementTitle = null
+      this.psCreateElementShapeVisuality = false
+      this.elementType = null // 用户选择的元素类型
+      this.elementName = null
+      this.elementShape = null
+      this.checkElementTypeSelect = false
+      this.checkElementTypeInput = false
+      this.fileList = [] // 上传图片文件列表
+      this.background_width = null // 背景图片宽度
+      this.background_height = null // 背景图片高度
+      this.elementCoordinateX = null // 坐标X
+      this.elementCoordinateY = null // 坐标Y
+      this.elementFontColor = null // 字体颜色
+      this.elementFontSiez = null // 字体大小
     }
   }
 }
@@ -478,4 +602,22 @@ background-color: #f9fafc;
 #project-list-added-element-s1 .el-button{
     border: 1px solid #fff;
 }
+ .box{
+     position: relative;
+     width: 96px;
+     height: 40px;
+     line-height: 40px;
+     background-color: rgb(255, 255, 255);
+     color: #fff;
+     text-align: center;
+}
+#input101{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    opacity: 0;
+}
+
 </style>

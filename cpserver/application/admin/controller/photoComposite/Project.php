@@ -40,7 +40,7 @@ class Project extends AdminApiCommon
         //     return resultArray(['error' => '请不要重复提交']);
         // }
         $createTimeStamp = strtotime('now');
-        $description = $param['description'] ?? NULL ;
+        $description = $param['description'] ?? NULL;
         $array['name'] = $param['name'];
         $array['create_timestamp'] = $createTimeStamp;
         $array['create_time'] = date('Y-m-d H:i:s', $createTimeStamp);
@@ -215,5 +215,18 @@ class Project extends AdminApiCommon
         }
         // 返回错误信息
         return resultArray(['error' => $projectModel->getError()]);
+    }
+
+    /**
+     * 添加多个元素
+     *
+     * @return void
+     */
+    public function addElements()
+    {
+        // code
+        $param = $this->param;
+        $i = 1;
+        $i++;
     }
 }

@@ -7,6 +7,8 @@ import axios from 'axios'
 import ElementUi from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import globalVar from './common/globalVar'
+import fs from 'fs'
+// import formdata from 'form-data'
 // import Vuex from 'vuex'
 
 // Vue.use(Vuex)
@@ -14,6 +16,8 @@ import globalVar from './common/globalVar'
 Vue.prototype.GLOBAL = globalVar
 window.axios = axios
 Vue.config.productionTip = false
+Vue.use(fs)
+// Vue.use(formdata)
 Vue.use(ElementUi)
 Vue.prototype.MainHome = 'PairingWork'
 
