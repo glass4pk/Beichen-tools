@@ -88,6 +88,11 @@ export default new Router({
           component: require('@/pages/PhotoComposite/CreateProject').default
         }
       ]
+    },
+    {
+      path: '/weixin/share',
+      name: 'PsSharePage',
+      component: require('@/pages/PhotoComposite/Weixin/PsSharePage').default
     }
   ]
 })

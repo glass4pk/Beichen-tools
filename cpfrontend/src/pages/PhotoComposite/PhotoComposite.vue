@@ -70,7 +70,7 @@ export default {
 }
 .ps-main{
   padding: 0px 20px 0px 20px;
-  background-color: rgb(238, 238, 238);
+  background-color: rgb(255, 255, 255);
 }
 .ps-aside-menu{
   width: 100%;

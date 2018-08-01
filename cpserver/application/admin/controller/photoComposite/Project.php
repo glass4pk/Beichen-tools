@@ -151,4 +151,69 @@ class Project extends AdminApiCommon
         }
         return resultArray(['data' => 'success']);
     }
+
+    /**
+     * 查询项目
+     *
+     * @return json
+     */
+    public function searchProjects()
+    {
+        if ($this->request->isGet()) {
+            return ;
+        }
+        $parm = $this->param;
+        /**
+         * validate验证器，验证param
+         * code
+         */
+
+        $eachPageNums = 10; // 每页十个
+        // 数据库查询条件
+        $searchArr = [];
+        $searchArr['page'] = 1;
+        // 如果请求字段有page，则替换掉默认的page值
+        if (isset($param['page'])) {
+            $searchArr['page'] = intval($param['page']);
+        }
+        /**
+         * 其他请求字段
+         * code
+         */
+
+        $projectModel = model('photoComposite.Project');
+        $result = $projectModel->searchProjects($searchArr);
+        if (!$result) {
+            // 查到正确结果
+            return resultArray(['data' => $result]);
+        }
+        // 返回错误信息
+        return resultArray(['error' => $projectModel->getError()]);
+    }
+
+    /**
+     * 获取project的详细信息
+     *
+     * @return json
+     */
+    public function getProjectInfo()
+    {
+        if (!$this->request->isGet()) {
+            return ;
+        }
+
+        $param = $this->param;
+        if (!isset($param['itemid'])) {
+            return ;
+        }
+        $searchArr['itemid'] = intval($parm['itemid']);
+        $projectModel = model('photoComposite.Project');
+        $result = $projectModel->getProjectInfo($searchArr);
+        if (!$result) {
+            // 查到正确结果
+            return resultArray(['data' => $result]);
+        }
+        // 返回错误信息
+        return resultArray(['error' => $projectModel->getError()]);
+    }
 }
