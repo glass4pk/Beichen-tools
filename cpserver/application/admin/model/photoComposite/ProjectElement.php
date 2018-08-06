@@ -17,8 +17,9 @@ class ProjectElement extends Common
      */
     public function addElement($array)
     {
-        // 检测item_id是否存在
+        // 检测id是否存在
         if (!isset($array['item_id'])) return false;
+        unset($array['id']);
         $projectModel = model('photoComposite.Project');
         $searchResult = $projectModel->checkItemId($array['item_id']);
         if (!is_int($searchResult)) { // 没有返回数字，查询失败
@@ -27,11 +28,39 @@ class ProjectElement extends Common
         $result = false;
         try {
             // 返回自增主键
-            $result = $this->insert($array, false, true);
+            $result = $this->insertGetId($array);
         } catch (Exception $e) {
             $this->error = $e->getMessage();
         } finally {
             return $result;
+        }
+    }
+
+    /**
+     * 删除一条记录，成功返回true，失败返回false
+     *
+     * @param array $param 删除条件
+     * @return void
+     */
+    public function deleteElementById($param)
+    {
+        // // 检测item_id是否存在
+        // if (!isset($array['item_id'])) return false;
+        // $projectModel = model('photoComposite.Project');
+        // $searchResult = $projectModel->checkItemId($array['item_id']);
+        // if (!is_int($searchResult)) { // 没有返回数字，查询失败
+        //     return false;
+        // }
+        // $result = false;
+        $isOk = false;
+        try {
+            $result = $this->where($param)->delete();
+            $isOk = true;
+        } catch (Exception $e) {
+            $this->error = $e->getMessage();
+            $isOk = false;
+        } finally {
+            return $isOk;
         }
     }
 
@@ -49,7 +78,7 @@ class ProjectElement extends Common
         $result['text'] = [];
         $result['pic'] = [];
 
-        $searchResult = $this->where(['item_id' => intval($itemId)])->select();
+        $searchResult = $this->where(['id' => intval($itemId)])->select();
         if (!$searchResult) {
             return false;
         }
@@ -74,5 +103,20 @@ class ProjectElement extends Common
             }
         }
         return $result;
+    }
+
+    /**
+     * 获取项目project的所有元素
+     *
+     * @param array $searchArr
+     * @return void
+     */
+    public function getProjectElements($searchArr) {
+        $isOk = false;
+        $result = $this->where(['item_id' => $searchArr['itemid']])->select();
+        if ($result) {
+            return $result;
+        }
+        return $isOk;
     }
 }

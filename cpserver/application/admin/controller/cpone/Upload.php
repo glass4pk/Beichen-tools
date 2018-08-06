@@ -28,12 +28,12 @@ class Upload extends AdminApiCommon
         }
         $temp = date('Y-m-d h:i:sa',time());
         $fileName = $temp . '_' .$file->getInfo()['name']; // 获取文件名
-        $info = $file->validate(['ext'=>'xlsx,xls'])->move(ROOT_PATH . DIRECTORY_SEPARATOR . 'uploads');
+        $info = $file->validate(['ext'=>'xlsx,xls'])->move(UPLOADS);
         if (!$info) {
             return resultArray(['error' =>  $file->getError()]);
         }
         // 缓存文件
-        $filePath = ROOT_PATH . 'uploads'. DIRECTORY_SEPARATOR .$info->getSaveName(); // 缓存文件的路径
+        $filePath = UPLOADS . $info->getSaveName(); // 缓存文件的路径
         $excel = new Excel();
         $result = $excel->open($filePath); // 待测试
         if (!$result) {

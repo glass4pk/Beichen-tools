@@ -41,38 +41,39 @@
                         </div>
                         <div class='ps-row'>
                             <div class='on-same-line' style="padding: 0px 0px 0px 30px">
-                                <el-table>
+                                <el-table
+                                    size='mini'
+                                    :data='items'>
                                     <el-table-column
-                                    prop='date'
+                                    prop='id'
                                     label="项目ID"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='date'
+                                    prop='name'
                                     label="项目名称"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='date'
+                                    prop='background'
                                     label="项目背景缩略图"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='date'
+                                    prop='pepoplenum'
                                     label="参与人数"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='date'
+                                    prop='channel'
                                     label="分享渠道"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='date'
                                     label="操作"
                                     width="180">
                                     <template slot-scope="scope">
-                                        <el-button @click="psProListLook" type="text" size="small">查看项目</el-button>
+                                        <el-button @click="psProListLook(scope.$index, scope.row)" type="text" size="small">查看项目</el-button>
                                     </template>
                                     </el-table-column>
                                 </el-table>
@@ -84,7 +85,7 @@
                                 style='float:right;'
                                 layout="total, prev, pager, next"
                                 @current-change="handleCurrentChange"
-                                :page-size="10"
+                                :page-size="20"
                                 :total='totalnums'>
                             </el-pagination>
                         </div>
@@ -112,14 +113,16 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'ProjectList',
   data () {
     return {
+      totalnums: null, // 所有数据总数
       pic: '',
       psProListLookChannelVisuality: true,
       psProjectListItemName: null,
-      elements: [1],
+      items: [], // 获取到的所有总数
       psCreateElementShapeVisuality: false,
       elementType: null, // 用户选择的元素类型
       elementTypeOption: [
@@ -155,8 +158,22 @@ export default {
     }
   },
   created () {
+    this.getItems()
   },
   methods: {
+    getItems ($param = null) {
+      // code
+      var _this = this
+      axios.get(_this.GLOBAL.WEB_URL + '/ps/searchproject').then(
+        (response) => {
+          if (response.data['errcode'] === 0) {
+            _this.items = response.data.data
+            _this.totalnums = _this.items.length
+            console.log(_this.items)
+          }
+        }
+      )
+    },
     // 创建新项目
     createNewProject () {
       this.$router.push({path: '/ps/create'})
@@ -170,6 +187,11 @@ export default {
       if ($type !== '微信头像') {
         document.getElementById('ps-projectlist-committing-elements-dialog-select-1').removeAttribute('disabled')
       }
+    },
+    psProListLook (index, row) {
+      alert(index)
+      alert(row['id'])
+      this.$router.push({path: '/ps/info', query: {'id': row['id']}})
     }
   }
 }
@@ -267,5 +289,11 @@ background-color: #f9fafc;
 }
 #projectlist .el-pagination .btn-next{
     background-color: #c9c9c9;
+}
+.el-table--mini td{
+    padding: 2px 0px
+}
+.el-table--mini th{
+    padding: 2px 0px
 }
 </style>

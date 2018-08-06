@@ -33,52 +33,52 @@ class Mapping  extends ApiCommon
             return false; // 拷贝失败
         }
         // 优先把男生配完，男生配女生 （除希望对方是同性外）
-        $mapping->getUsersDiff("在职人士",3);
-        $mapping->getUsersDiff("在校学生",3);        
-        $mapping->getUsersDiff("在职人士",2);
-        $mapping->getUsersDiff("在校学生",2);
+        $mapping->getUsersDiff("在职人士");
+        $mapping->getUsersDiff("在校学生");        
+        // $mapping->getUsersDiff("在职人士",2);
+        // $mapping->getUsersDiff("在校学生",2);
 
         // 匹配是希望对方是同性的，如果同一期没有匹配结果则可以跨期匹配，优先顺序：大期->小期
-        $mapping->getUsersSame("在职人士",3,2);
-        $mapping->getUsersSame("在职人士",3,1);
-        $mapping->getUsersSame("在校学生",3,2);
-        $mapping->getUsersSame("在校学生",3,1);
+        $mapping->getUsersSame("在职人士",2);
+        $mapping->getUsersSame("在职人士",1);
+        $mapping->getUsersSame("在校学生",2);
+        $mapping->getUsersSame("在校学生",1);
 
         $mapping->getUsersSameCrossTerm("在职人士",1);
         $mapping->getUsersSameCrossTerm("在校学生",1);
         $mapping->getUsersSameCrossTerm("在职人士",2);
         $mapping->getUsersSameCrossTerm("在校学生",2);
 
-        $mapping->getUsersSameDe('在校学生',3,1);
+        $mapping->getUsersSameDe('在校学生',1);
         $mapping->getUsersSameCrossTermDe('在校学生',1);
-        $mapping->getUsersSameDe('在校学生',3,2);
+        $mapping->getUsersSameDe('在校学生',2);
         $mapping->getUsersSameCrossTermDe('在校学生',2);
-        $mapping->getUsersSameDe('在职人士',3,1);
+        $mapping->getUsersSameDe('在职人士',1);
         $mapping->getUsersSameCrossTermDe('在职人士',1);
-        $mapping->getUsersSameDe('在职人士',3,2);
+        $mapping->getUsersSameDe('在职人士',2);
         $mapping->getUsersSameCrossTermDe('在职人士',2);
 
-        $mapping->getUsersSameDe('在校学生',2,1);
-        $mapping->getUsersSameDe('在职人士',2,2);
-        $mapping->getUsersSameDe('在职人士',2,1);
-        $mapping->getUsersSameDe('在校学生',2,2);
+        $mapping->getUsersSameDe('在校学生',1);
+        $mapping->getUsersSameDe('在职人士',2);
+        $mapping->getUsersSameDe('在职人士',1);
+        $mapping->getUsersSameDe('在校学生',2);
 
-        $mapping->getUsersSame("在职人士",2,2);
-        $mapping->getUsersSame("在职人士",2,1);
-        $mapping->getUsersSame("在校学生",2,2);
-        $mapping->getUsersSame("在校学生",2,1);
+        $mapping->getUsersSame("在职人士",2);
+        $mapping->getUsersSame("在职人士",1);
+        $mapping->getUsersSame("在校学生",2);
+        $mapping->getUsersSame("在校学生",1);
         
 
         //////////////////
-        $mapping->getUsersMatchSexYes("在校学生",3);
-        $mapping->getUsersMatchSexYes("在职人士",3);
-        $mapping->getUsersMatchSexYes("在职人士",2);
-        $mapping->getUsersMatchSexYes("在校学生",2);
+        $mapping->getUsersMatchSexYes("在校学生");
+        // $mapping->getUsersMatchSexYes("在职人士");
+        // $mapping->getUsersMatchSexYes("在职人士");
+        $mapping->getUsersMatchSexYes("在校学生");
 
-        $mapping->getUsersAllOkCantRandom("在职人士",3);
-        $mapping->getUsersAllOkCantRandom("在职人士",2);
-        $mapping->getUsersAllOkCantRandom("在校学生",3);
-        $mapping->getUsersAllOkCantRandom("在校学生",2);
+        $mapping->getUsersAllOkCantRandom("在职人士");
+        // $mapping->getUsersAllOkCantRandom("在职人士");
+        // $mapping->getUsersAllOkCantRandom("在校学生");
+        $mapping->getUsersAllOkCantRandom("在校学生");
 
         $mapping->getUsersAllOkCantRandomCrossTerm("在职人士");
         $mapping->getUsersAllOkCantRandomCrossTerm("在校学生");
@@ -233,7 +233,7 @@ class Mapping  extends ApiCommon
      * @param integer $term
      * @return void
      */
-    public function getUsersSame($identity,$term=0,$sex)
+    public function getUsersSame($identity,$sex,$term=0)
     { 
         // 希望CP是同性
         $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity, 'task_id' => $this->taskID, 'match_random' => 0]);
@@ -494,7 +494,7 @@ class Mapping  extends ApiCommon
      * @param integer $term
      * @return void
      */
-    public function getUsersSameDe($identity,$term=0,$sex)
+    public function getUsersSameDe($identity,$sex,$term=0)
     { 
         // 希望CP是同性
         $users = $this->userModel->getUsers(['term' => $term,'match_sex' => $sex,'sex' => $sex,'identity' => $identity, 'task_id' => $this->taskID]);

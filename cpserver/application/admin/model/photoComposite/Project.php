@@ -29,7 +29,7 @@ class Project extends Common
     }
 
     /**
-     * 检测item_id是否存在
+     * 检测id是否存在
      * 不存在返回false，成功返回数字，出现异常，返回异常详情（字符串类型）  
      *
      * @param int $itemId
@@ -39,7 +39,7 @@ class Project extends Common
     {
         $result = false;
         try {
-            $result = $this->where(['item_id' => intval($itemId)])->find()['item_id'];
+            $result = $this->where(['id' => intval($itemId)])->find()['id'];
         } catch (Exception $e) {
             $result = $e->getMessage();
         } finally {
@@ -57,11 +57,27 @@ class Project extends Common
     {
         $result = false;
         try {
-            $result = $this->where(['item_id' => intval($itemId)])->find()['status'];
+            $result = $this->where(['id' => intval($itemId)])->find()['status'];
         } catch (Excepiton $e) {
             // code
         } finally {
             return $result;
         }
+    }
+
+    // 查询所有项目
+    public function searchProjects()
+    {
+        // code
+        $result = $this->where(['status' => 1])->select();
+        return $result;
+    }
+
+    // 获取项目的基本信息
+    public function getProjectBasicInfo($searchArr)
+    {
+        $itemId = $searchArr['itemid'];
+        $result = $this->where(['id' => $itemId])->field(['create_user_id'],true)->select();
+        return $result;
     }
 }

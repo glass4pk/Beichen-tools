@@ -179,10 +179,13 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'ProjectInfo',
   data () {
     return {
+      itemId: null, // 项目id
+      itemInfo: [],
       pic: '',
       psProListLookChannelVisuality: true,
       psProjectListItemName: null,
@@ -206,6 +209,9 @@ export default {
       ]
     }
   },
+  created () {
+    this.getItemId()
+  },
   computed: {
     checkElementType () {
       // this.elementName = null
@@ -221,9 +227,21 @@ export default {
       else return true
     }
   },
-  created () {
-  },
   methods: {
+    getItemId () {
+      this.itemId = this.$route.query.id
+    },
+    // 获取项目的所有信息
+    getItemInfo () {
+      var _this = this
+      axios.get(this.GLOBAL.WEB_URL + '/ps/getinfo?itemid=' + _this.itemId).then(
+        (response) => {
+          if (response.data['errcode' === 0]) {
+            _this.itemInfo = response.data.data
+          }
+        }
+      )
+    },
     psProjectListSubmit () {
       alert('This')
     },

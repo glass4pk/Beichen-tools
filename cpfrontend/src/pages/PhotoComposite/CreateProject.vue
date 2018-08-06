@@ -18,7 +18,31 @@
                                 <div class='on-same-line' style="padding: 0px 0px 0px 20px">
                                     <el-input size='mini' v-model='psCreateProjectItemName'></el-input>
                                 </div>
+                                 <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
+                                    <el-button @click="psCreateProjectSubmit">提交</el-button>
+                                </div>
                             </div>
+                            <!-- <div class='ps-row'>
+                                <div class='on-same-line'>项目描述</div>
+                                <div class='on-same-line' style="padding: 0px 0px 0px 20px">
+                                    <el-input size='mini' v-model='psCreateProjectItemName'></el-input>
+                                </div>
+                            </div> -->
+                            <div class="ps-row">
+
+                            </div>
+                            <div class="ps-row"></div>
+                        </div>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
+        <!-- // 固定信息-添加图片 -->
+        <el-row class='ps-main-title' v-show='createProjectElements_pic'>
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <div class="ps-main-content">
+                        <div>
                             <div class='ps-row'>
                                 <div class='on-same-line ps-img-container' style="padding: 0px 10px 0px 0px">
                                     <div class='on-same-line ps-img-container-name'>背景图片</div>
@@ -74,7 +98,7 @@
                                     <div class='on-same-line'>px</div>
                                 </div>
                                 <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
-                                    <el-button @click="psCreateProjectSubmit">提交</el-button>
+                                    <el-button @click="createProjectElementsPic">提交</el-button>
                                 </div>
                             </div>
                             <div class="ps-row"></div>
@@ -282,7 +306,8 @@ export default {
   data () {
     return {
       projectID: null, // 项目id
-      createProjectBasicInfo: true,
+      createProjectBasicInfo: true, // true,
+      createProjectElements_pic: false,
       createProjectElements: false,
       pic: '',
       uploadFile: [],
@@ -316,7 +341,9 @@ export default {
       elementCoordinateX: null, // 坐标X
       elementCoordinateY: null, // 坐标Y
       elementFontColor: null, // 字体颜色
-      elementFontSiez: null // 字体大小
+      elementFontSiez: null, // 字体大小
+      element_width: null,
+      element_height: null
     }
   },
   computed: {
@@ -344,18 +371,12 @@ export default {
   created () {
   },
   methods: {
-    // 提交项目
+    // 提交项目基本信息
     psCreateProjectSubmit () {
     //   console.log(file)
       var _this = this
       var formdata = new FormData()
-      // 添加背景图片和添加封面
-      for (var one = 0; one < this.uploadFile.length; one++) {
-        formdata.append(this.uploadFile[one]['type'], this.uploadFile[one]['file'])
-      }
       formdata.append('name', this.psCreateProjectItemName)
-      formdata.append('background_width', this.background_width)
-      formdata.append('background_height', this.background_height)
       axios({
         url: 'http://127.0.0.1/ps/create',
         method: 'post',
@@ -364,8 +385,10 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             alert('提交成功')
-            _this.createProjectElements = true
+            _this.createProjectElements_pic = true
+            _this.createProjectElements = false
             _this.createProjectBasicInfo = false
+            _this.projectID = response.data['data']
           } else {
             alert('提交失败')
           }
@@ -375,8 +398,6 @@ export default {
           if (error) {
             // code
             alert('提交失败')
-            _this.createProjectElements = true
-            _this.createProjectBasicInfo = false
           }
         }
       )
@@ -389,9 +410,52 @@ export default {
       this.uploadFile.push(temp)
       console.log(this.uploadFile)
     },
-    // 上传图片
-    psCreateProjectUploadPic () {
-      this.$refs.upload.submit() // 上传图片
+    // 提交项目图片
+    createProjectElementsPic () {
+    //   console.log(file)
+      var _this = this
+      var len = this.uploadFile.length // 文件数量
+      if (len === 0 || len < 2) {
+        alert('请选择两张图片')
+        return
+      }
+      alert('正在上传' + len + '个文件：')
+      for (var i = 0; i < len; i++) {
+        // 逐个上传文件
+        var formdata = new FormData()
+        // 添加背景图片和添加封面
+        formdata.append('type', _this.uploadFile[i]['type'])
+        formdata.append('image', _this.uploadFile[i]['file'])
+        formdata.append('item_id', _this.projectID)
+        axios({
+          url: 'http://127.0.0.1/ps/addpic',
+          method: 'post',
+          data: formdata,
+          enctype: 'multipart/form-data'
+        }).then(
+          (response) => {
+            if (response.data['errcode'] === 0) {
+              alert('提交成功' + response.data.data)
+              _this.createProjectElements = true
+              _this.createProjectBasicInfo = false
+              _this.createProjectElements_pic = false
+              _this.uploadFile = []
+            } else {
+              alert('提交失败,请重新选择图片')
+              _this.uploadFile = []
+            }
+          }
+        ).catch(
+          (error) => {
+            if (error) {
+              alert('提交失败,请重新选择图片')
+              _this.uploadFile = []
+              _this.createProjectElements = true
+              _this.createProjectBasicInfo = false
+            }
+          }
+        )
+      }
     },
     // 创建元素
     psCreateElement ($type) {
@@ -407,9 +471,18 @@ export default {
       // code
       var _this = this
       console.log(_this.elements)
+      //   console.log(JSON.stringify(_this.elements[0]))
+      // array转为json
+      //   len = _this.elements.length
+      //   var json = {}
+      //   for (var i = 0; i < len; i++) {
+      //     json[i] = {}
+      //     for (var j = 0;)
+      //   }
       axios({
         url: 'http://127.0.0.1/ps/addelements',
         method: 'post',
+        // data: JSON.stringify(_this.elements)
         data: _this.elements
       }).then(
         (response) => {
@@ -417,6 +490,7 @@ export default {
             alert('提交成功')
             _this.createProjectElements = false
             _this.createProjectBasicInfo = false
+            _this.createProjectElements_pic = false
           } else {
             alert('提交失败')
           }
@@ -435,12 +509,12 @@ export default {
     // 确认创建元素
     confirmAddElement () {
       if (this.elementType === null || this.elementName === null || this.elementCoordinateX === null || this.elementCoordinateY === null || this.elementFontSize === null) {
-        this.$message('请填写！')
+        this.$message('请填写完整！')
         this.psAddElementVisuality = false
         this.flushElementTemp()
         return
       }
-      var temp = [] // 元素缓存，类型array
+      var temp = {} // 元素缓存，类型obj
       alert(this.elementName)
       if (this.elementType === '用户固有信息') {
         temp['element_type'] = this.elementName // elementName存元素类型 这个是存储到数据库的
@@ -455,14 +529,20 @@ export default {
         temp['element_type'] = this.elementType // elementName存元素名称
         temp['element_name'] = this.elementName
       }
-      temp['width'] = this.background_width
-      temp['height'] = this.background_height
+      temp['width'] = this.element_width
+      temp['height'] = this.element_height
       temp['coordinate_x'] = this.elementCoordinateX
       temp['coordinate_y'] = this.elementCoordinateY
       temp['word_maxnum'] = this.elementWordsNums
       temp['shape'] = this.elementShape
       temp['font_size'] = this.elementFontSize
       temp['font_color'] = this.elementFontColor
+      if (!this.projectID) {
+        alert('没有选择项目')
+        this.psAddElementVisuality = false
+        return
+      }
+      temp['item_id'] = this.projectID
       console.log(temp)
       this.elements.push(temp) // 添加到elements中
       // 已添加的元素
@@ -482,6 +562,8 @@ export default {
       this.elementShape = null
       this.elementFontSize = null
       this.elementFontColor = null
+      this.element_width = null
+      this.element_height = null
     },
     // 刷新data里面的所有数据
     flushAllData () {

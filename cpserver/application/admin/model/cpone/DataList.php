@@ -7,7 +7,7 @@ use think\Db;
 
 class DataList extends Common
 {
-    protected $name = 'data_list';
+    protected $name = 'cp_data_list';
 
     /**
      * 在数据库中插入新的记录，返回新记录的data_id

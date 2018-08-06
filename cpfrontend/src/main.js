@@ -20,7 +20,6 @@ Vue.use(fs)
 // Vue.use(formdata)
 Vue.use(ElementUi)
 Vue.prototype.MainHome = 'PairingWork'
-
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

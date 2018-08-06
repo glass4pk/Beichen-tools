@@ -1,10 +1,11 @@
 <?php
 /**
- * 图片合成元素添加类
+ * 图片合成元素添加类（对外接口）
  * @author jack <chengjunjie.jack@gmail.com>
  */
 namespace app\admin\controller\photoComposite;
 
+use think\Request;
 use app\admin\controller\AdminApiCommon;
 use think\Validate;
 
@@ -59,55 +60,55 @@ class Project extends AdminApiCommon
     }
 
     /**
-     * 添加文字元素
+     * 添加多个文字元素
      *
      * @return json 返回数据
      */
-    public function addTextElement()
+    public function addTextElements()
     {
+        // 已经添加元素的数据库记录id
+        // return 'hello world!';
+        $addedId = [];
+        $isOk = true;
         if (!$this->request->isPost()) {
             return ;
         }
-        $param = $this->param;
-        // 验证
-        $rule = ['id' => 'require|max:20', 'type' => 'require', 'content' => 'max:255',
-                 'height' => 'require|float', 'width' => 'require|float', 'coordinate_x' =>'require|float', 'coordinate_y' => 'require|float',
-                 'font_family' => 'require', 'font_size' => 'require|float', 'font_color' => 'require' 
-                ];
-        $validate = Validate::make($rule);
-        if (!$validate->check($param)) {
-            return resultArray(['error' => '提交数据错误']);
+        $params = $this->param;
+        try {
+            // 多次添加元素，一旦出现一次失败，则删除刚添加成功的元素
+            foreach ($params as $param) {
+                if ($isOk) {
+                    if ($param['element_type'] == 2 || $param['element_type'] == 3) {
+                        $result = ProjectAddElement::addTextElement($param);
+                    } else if ($param['element_type'] == 4 || $param['element_type'] == 5) {
+                        $result = ProjectAddElement::addWeixinElement($param);
+                    }
+                    if (!$result) {
+                        $isOk = false;
+                    } else {
+                        array_push($addedId, $result);
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            if (!$isOk) {
+                // 删除数据库中添加的元素
+                foreach ($addedId as $id) {
+                    ProjectAddElement::deleteElementById($id);
+                }
+            }
+            if ($isOk) {
+                return resultArray(['data' => 'success']);
+            } else {
+                return resultArray(['error' => '失败']);
+            }
         }
-        // 验证type
-        if ($param['type'] != 1 && $param['type'] != 2) {
-            return resultArray(['error' => 'type error!']);
-        }
-
-        // 验证当前的session
-        // code
-
-        $inputArray = [];
-        if (isset($param['id'])) $inputArray['item_id'] = $param['id'];
-        if (isset($param['element_type'])) $inputArray['element_type'] = $param['type']; // 1为单行文本，2为多行文本
-        if (isset($param['element_content'])) $inputArray['content'] = $param['content'];
-        if (isset($param['height'])) $inputArray['height'] = $param['height'];
-        if (isset($param['width'])) $inputArray['width'] = $param['width'];
-        if (isset($param['coordinate_x'])) $inputArray['coordinate_x'] = $param['coordinate_x'];
-        if (isset($param['coordinate_y'])) $inputArray['coordinate_y'] = $param['coordinate_y'];
-        if (isset($param['font_family'])) $inputArray['font_family'] = $param['font_family'];
-        if (isset($param['font_size'])) $inputArray['font_size'] = $param['font_size'];
-        if (isset($param['font_color'])) $inputArray['font_color'] = $param['font_color'];
-
-        $itemElementModel = model('photoComposite.ProjectElement');
-        $result = $itemElementModel->addElement($inputArray);
-        if (!$result) {
-            return resultArray(['error' => $itemElementModel->getError()]);
-        }
-        return resultArray(['data' => 'success']);
     }
 
     /**
-     * 添加图片元素
+     * 添加单个图片元素
      * 
      */
     public function addPicElement()
@@ -116,40 +117,48 @@ class Project extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        // 验证
-        $rule = ['id' => 'require|max:20', 'type' => 'require','height' => 'float', 'width' => 'float',
-                 'coordinate_x' =>'loat', 'coordinate_y' => 'float'];
-        $validateParam = Validate::make($rule);
-        if (!$validateParam->check($param)) {
-            return resultArray(['error' => '提交数据错误']);
-        }
-        if (!isset($param['type']) && ( intval($param['type']) == 3 || intval($param['type']) == 4)) return false;
-        $type = intval($param['type']); // 背景图：3, 封面：4
-        // 获取文件
+        $fileName = $param['type'];
+        $param['name'] = $param['type'];
+        $param['type'] = 1;
+        $isOk = false;
+        $file = null;
         $file = request()->file('image');
-        // 移动到uploads目录下
-        $info = $file->validate(['ext' => 'jpeg,png,gif,jpg'])->move(UPLOADS);
-        if (!$info) {
-            //return resultArray(['error' => $info->getError()]);
+        try {
+            $file = request()->file('image');
+            $a = $_FILES;
+            $isOK = true;
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            if ($isOk) {
+                return resultArray(['error' => '添加失败请重试']);
+            }
         }
-        $fileName = $file->getInfo()['name'];
-        $filePath = $info->getSaveName();
-        
-        $inputArray = [];
-        if (isset($param['id'])) $inputArray['item_id'] = $param['id'];
-        $inputArray['element_type'] = $type;
-        $inputArray['element_content'] = $filePath;
-        if (isset($param['height'])) $inputArray['height'] = $param['height'];
-        if (isset($param['width'])) $inputArray['width'] = $param['width'];
-        if (isset($param['coordinate_x'])) $inputArray['coordinate_x'] = $param['coordinate_x'];
-        if (isset($param['coordinate_y'])) $inputArray['coordinate_y'] = $param['coordinate_y'];
-
-        $itemElementModel = model('photoComposite.ProjectElement');
-        $result = $itemElementModel->addElement($inputArray);
-        if (!$result) {
-            return resultArray(['error' => $itemElementModel->getError()]);
+        // 已经添加元素的数据库记录id
+        $addedId = [];
+        try {
+            $result = ProjectAddElement::addPicElement($param, $file);
+            if (!$result) {
+                $isOk = false;
+            } else {
+                $isOk = true;
+                array_push($addedId, $result);
+            }
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            if (!$isOk) {
+                // 删除数据库中添加的元素
+                foreach ($addedId as $id) {
+                    ProjectAddElement::deleteElementById($id);
+                }
+            }
+            if ($isOk) {
+                return resultArray(['data' =>  $param['name']]);
+            } else {
+                return resultArray(['error' => '失败']);
+            }
         }
-        return resultArray(['data' => 'success']);
     }
 
     /**
@@ -159,36 +168,16 @@ class Project extends AdminApiCommon
      */
     public function searchProjects()
     {
-        if ($this->request->isGet()) {
+        if (!$this->request->isGet()) {
             return ;
         }
-        $parm = $this->param;
-        /**
-         * validate验证器，验证param
-         * code
-         */
-
-        $eachPageNums = 10; // 每页十个
-        // 数据库查询条件
-        $searchArr = [];
-        $searchArr['page'] = 1;
-        // 如果请求字段有page，则替换掉默认的page值
-        if (isset($param['page'])) {
-            $searchArr['page'] = intval($param['page']);
-        }
-        /**
-         * 其他请求字段
-         * code
-         */
-
-        $projectModel = model('photoComposite.Project');
-        $result = $projectModel->searchProjects($searchArr);
-        if (!$result) {
-            // 查到正确结果
+        $param = $this->param;
+        $result = ProjectSearchElement::searchProjects($param);
+        if ($result) {
             return resultArray(['data' => $result]);
+        } else {
+            return resultArray(['error' => $result]);
         }
-        // 返回错误信息
-        return resultArray(['error' => $projectModel->getError()]);
     }
 
     /**
@@ -201,32 +190,20 @@ class Project extends AdminApiCommon
         if (!$this->request->isGet()) {
             return ;
         }
-
         $param = $this->param;
-        if (!isset($param['itemid'])) {
-            return ;
+        $validate = Validate::make([
+            'itemid' => 'require|max:20'
+        ]);
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
         }
-        $searchArr['itemid'] = intval($parm['itemid']);
-        $projectModel = model('photoComposite.Project');
-        $result = $projectModel->getProjectInfo($searchArr);
-        if (!$result) {
-            // 查到正确结果
+        $searchArr = [];
+        $searchArr['itemid'] = $param['itemid'];
+        $result = ProjectSearchElement::getProjectInfo($searchArr);
+        if ($result) {
             return resultArray(['data' => $result]);
+        } else {
+            return resultArray(['error' => '失败']);
         }
-        // 返回错误信息
-        return resultArray(['error' => $projectModel->getError()]);
-    }
-
-    /**
-     * 添加多个元素
-     *
-     * @return void
-     */
-    public function addElements()
-    {
-        // code
-        $param = $this->param;
-        $i = 1;
-        $i++;
     }
 }

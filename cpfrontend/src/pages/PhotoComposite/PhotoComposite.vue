@@ -64,7 +64,7 @@ export default {
 .aside{
   background-color: rgb(84, 92, 100);
   width: 155px;
-  min-height: 800px;
+  min-height: 100%;
   font-size: 14px;
   text-align: left;
 }

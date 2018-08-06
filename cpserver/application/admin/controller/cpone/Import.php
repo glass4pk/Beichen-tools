@@ -63,7 +63,8 @@ class Import extends ApiCommon
                             $userData['phone'] = $temp;
                             break;
                         case 5:
-                            $userData['term'] = stringToNum($temp);
+                            // $userData['term'] = stringToNum($temp);
+                            $userData['term'] = $temp;
                             break;
                         case 6:
                             $userAttention = chineseToArray($temp);
