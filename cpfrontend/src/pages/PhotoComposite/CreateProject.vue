@@ -8,7 +8,7 @@
             </el-col>
         </el-row>
         <!-- // 创建项目的基本信息 -->
-        <el-row class='ps-main-title' style="padding: 0px" v-show='createProjectBasicInfo'>
+        <el-row class='ps-main-title' style="padding: 0px">
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div class="ps-main-content">
@@ -18,9 +18,6 @@
                                 <div class='on-same-line' style="padding: 0px 0px 0px 20px">
                                     <el-input size='mini' v-model='psCreateProjectItemName'></el-input>
                                 </div>
-                                 <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
-                                    <el-button @click="psCreateProjectSubmit">提交</el-button>
-                                </div>
                             </div>
                             <!-- <div class='ps-row'>
                                 <div class='on-same-line'>项目描述</div>
@@ -29,7 +26,6 @@
                                 </div>
                             </div> -->
                             <div class="ps-row">
-
                             </div>
                             <div class="ps-row"></div>
                         </div>
@@ -38,7 +34,7 @@
             </el-col>
         </el-row>
         <!-- // 固定信息-添加图片 -->
-        <el-row class='ps-main-title' v-show='createProjectElements_pic'>
+        <el-row class='ps-main-title'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div class="ps-main-content">
@@ -59,6 +55,9 @@
                                             <el-button @inpubutton='shout'>选取图片</el-button>
                                             <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
                                         </div>
+                                    </div>
+                                    <div class='on-same-line' stype='padding: 0px 0px 0px 20px'>
+                                        <a></a>
                                     </div>
                                 </div>
                             </div>
@@ -97,9 +96,6 @@
                                     </div>
                                     <div class='on-same-line'>px</div>
                                 </div>
-                                <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
-                                    <el-button @click="createProjectElementsPic">提交</el-button>
-                                </div>
                             </div>
                             <div class="ps-row"></div>
                         </div>
@@ -108,7 +104,7 @@
             </el-col>
         </el-row>
         <!-- // 已经添加的项目元素 -->
-        <el-row class='ps-main-title ps-createproject-commited-elements' v-show='createProjectElements'>
+        <el-row class='ps-main-title ps-createproject-commited-elements'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div style="padding: 6px 0px 0px 6px"><span>页面可编辑元素</span></div>
@@ -130,191 +126,52 @@
                             </div>
                         </div>
                         <div class='ps-row'>
-                            <div v-for='element in elements' v-bind:key='element' class='ps-createproject-commited-elements-container' style='vertical-align: top;'>
-                                <div class='on-same-line'>
-                                    <table style="border:1px solid #b5b9be; border-radius: 4px;/*黑色1像素粗边框*/">
-                                        <tr>
-                                            <td style="width: 80px;" class='ps-row'>元素类型：</td>
-                                            <td style="width: 120px" class='ps-row'>{{element.elementTypeForLook}}</td>
-                                            <td style="width: 80px" class='ps-row'>元素名称：</td>
-                                            <td style="width: 120px" class='ps-row'>{{element.element_name}}</td>
-                                            <td style="width: 80px" class='ps-row'></td>
-                                            <td style="width: 80px" class='ps-row'></td>
-                                        </tr>
-                                        <tr class='ps-row'>
-                                            <td class='ps-row'>元素宽度：</td>
-                                            <td class='ps-row'>{{element.width}} px</td>
-                                            <td class='ps-row'>元素高度：</td>
-                                            <td class='ps-row'>{{element.height}} px</td>
-                                            <td class='ps-row'>字体大小：</td>
-                                            <td class='ps-row'>{{element.font_size}} px</td>
-                                            <td class='ps-row'>字体颜色：</td>
-                                            <td class='ps-row'># {{element.font_color}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class='ps-row'>坐标X：</td>
-                                            <td class='ps-row'>{{element.coordinate_x}} px</td>
-                                            <td class='ps-row'>坐标Y：</td>
-                                            <td class='ps-row'>{{element.coordinate_y}} px</td>
-                                        </tr>
-                                        <tr>
-                                            <td class='ps-row'>字数限制：</td>
-                                            <td class='ps-row'>{{element.word_maxnum}}</td>
-                                        </tr>
-                                    </table>
-                                </div>
-                                <div class='on-same-line' id='project-list-added-element-s1'>
-                                    <el-button icon='el-icon-edit' circle></el-button>
-                                    <el-button icon='el-icon-delete' circle></el-button>
-                                </div>
-                            </div>
+                            <ItemElement :elements=elements v-on:deleteItem=deleteItem v-on:edit=edit></ItemElement>
                         </div>
 
-                    </div>
-                    <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
-                        <el-button @click="psCreateProjectAddElements">提交</el-button>
                     </div>
                 </div>
             </el-col>
         </el-row>
-        <!-- // 添加项目元素 -->
-        <el-dialog
-            id="ps-createproject"
-            v-bind:title='psCreateElementTitle'
-            :visible.sync='psAddElementVisuality'
-            :fullscreen=false
-            :center=false
-            width='60%'>
-            <div>
-                <!-- 第一行 -->
-                <div class='ps-create-dialog-row' styple='position: relative'>
-                    <div class='on-same-line ps-create-dialog-row-col' style="padding: 0px; float: top 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素类型</span></div>
-                        <div class='on-same-line' style="position: relative">
-                            <el-select v-model="elementType" placeholder="请选择">
-                                <el-option
-                                v-for="item in elementTypeOption"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                    <div class='on-same-line ps-create-dialog-row-col' style="padding: 0px 20px 0px 0px;">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素名称</span></div>
-                        <div class='on-same-line'>
-                            <el-select v-model="elementName" placeholder="请选择"  v-show="checkElementTypeSelect">
-                                <el-option
-                                v-for="item in elementNameoptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                        <div class='on-same-line' v-show="checkElementTypeInput">
-                           <el-input v-model="elementName"></el-input>
-                        </div>
-                    </div>
-                </div>
-                <!-- 第二行 -->
-                <div class='ps-create-dialog-row'>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素宽度</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model='element_width'></el-input>
-                        </div>
-                        <div class='on-same-line'><span>px</span></div>
-                    </div>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>元素高度</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="element_height"></el-input>
-                        </div>
-                        <div class='on-same-line'><span>px</span></div>
-                    </div>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>字体大小</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="elementFontSize"></el-input>
-                        </div>
-                        <div class='on-same-line'><span>px</span></div>
-                    </div>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>字体颜色：</span></div>
-                        <div class='on-same-line'><span>#</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="elementFontColor"></el-input>
-                        </div>
-                    </div>
-                </div>
-                <!-- 第三行 -->
-                <div class='ps-create-dialog-row'>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 30px 0px 0px"><span>坐标X</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="elementCoordinateX"></el-input>
-                        </div>
-                        <div class='on-same-line'><span>px</span></div>
-                    </div>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px">
-                        <div class='on-same-line' style="padding: 0px 30px 0px 0px"><span>坐标Y</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="elementCoordinateY"></el-input>
-                        </div>
-                        <div class='on-same-line'><span>px</span></div>
-                    </div>
-                </div>
-                <!-- 第四行 -->
-                <div class='ps-create-dialog-row'>
-                    <div class='on-same-line' style="padding: 0px 20px 0px 0px" v-show="isDiaplayText">
-                        <div class='on-same-line' style="padding: 0px 10px 0px 0px"><span>字数限制</span></div>
-                        <div class='on-same-line'>
-                            <el-input size='mini' style="width: 40px;" v-model="elementWordsNums"></el-input>
-                        </div>
-                    </div>
-                    <div class='on-same-line'  style="padding: 0px 20px 0px 0px" v-show="isDiaplayShape">
-                        <div class='on-same-line' style="padding: 0px 40px 0px 0px"><span>形状</span></div>
-                        <div class='on-same-line'>
-                            <el-select v-model="elementShape" placeholder="请选择" id='ps-createproject-committing-elements-dialog-select-1'>
-                                <el-option
-                                v-for="item in elementShapeOptions"
-                                :key="item.value"
-                                :label="item.label"
-                                :value="item.value">
-                                </el-option>
-                            </el-select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <span slot='footer' class='dialog-footer'>
-            <el-button @click='psAddElementVisuality=false'>取消
-            </el-button>
-            <el-button @click='confirmAddElement' type='primary'>保存
-            </el-button>
-            </span>
-        </el-dialog>
+        <div class='on-same-line' style='padding: 5px 10px  0px 0px; float:right; display: inline-block'>
+            <el-button @click="psCreateProjectAddElements">提交</el-button>
+        </div>
+        <AddSingleText ref='singletext' :editForElement=editForElement :elementsTemp=elementsTemp :AddSingleTextVisuality=AddSingleTextVisuality v-on:cancelDialog="cancelDialog" v-on:saveSubmitElement='saveSubmitElement'></AddSingleText>
+        <AddMultipleText ref='multipletext' :editForElement=editForElement :elementsTemp=elementsTemp :AddMultipleTextVisuality=AddMultipleTextVisuality v-on:cancelDialog="cancelDialog" v-on:saveSubmitElement='saveSubmitElement'></AddMultipleText>
+        <AddWeixinHeadimage ref='weixinheadimage' :editForElement=editForElement :elementsTemp=elementsTemp :AddWeixinHeadimageVisuality=AddWeixinHeadimageVisuality v-on:cancelDialog="cancelDialog" v-on:saveSubmitElement='saveSubmitElement'></AddWeixinHeadimage>
+        <AddWeixinNickname ref='weixinnickname' :editForElement=editForElement :elementsTemp=elementsTemp :AddWeixinNicknameVisuality=AddWeixinNicknameVisuality v-on:cancelDialog="cancelDialog" v-on:saveSubmitElement='saveSubmitElement'></AddWeixinNickname>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+import ItemElement from './ItemBox/ItemElement'
+import AddSingleText from './AddItemElement/AddSingleText'
+import AddMultipleText from './AddItemElement/AddMultipleText'
+import AddWeixinHeadimage from './AddItemElement/AddWeixinHeadimage'
+import AddWeixinNickname from './AddItemElement/AddWeixinNickname'
 export default {
   name: 'CreateProject',
+  components: {
+    ItemElement,
+    AddSingleText,
+    AddMultipleText,
+    AddWeixinHeadimage,
+    AddWeixinNickname
+  },
   data () {
     return {
       projectID: null, // 项目id
-      createProjectBasicInfo: true, // true,
-      createProjectElements_pic: false,
-      createProjectElements: false,
+      AddWeixinNicknameVisuality: false,
+      AddSingleTextVisuality: false,
+      AddMultipleTextVisuality: false,
+      AddWeixinHeadimageVisuality: false,
       pic: '',
       uploadFile: [],
-      psAddElementVisuality: false, // dislog是否显示
       psCreateProjectItemName: null,
       elements: [],
-      elementsTemp: [], // 缓存空间
+      index: 0, // 元素唯一标识序号
+      elementsTemp: {}, // 缓存空间
       psCreateElementTitle: null,
       psCreateElementShapeVisuality: false,
       elementType: null, // 用户选择的元素类型
@@ -324,15 +181,6 @@ export default {
         {label: '多行文本信息', value: '3'}
       ],
       elementName: null,
-      elementNameoptions: [
-        {label: '微信昵称', value: '4'},
-        {label: '微信头像', value: '5'}
-      ],
-      elementShape: null,
-      elementShapeOptions: [
-        {label: '正方形', value: '1'},
-        {label: '长方形', value: '2'}
-      ],
       checkElementTypeSelect: false,
       checkElementTypeInput: false,
       fileList: [], // 上传图片文件列表
@@ -385,9 +233,6 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             alert('提交成功')
-            _this.createProjectElements_pic = true
-            _this.createProjectElements = false
-            _this.createProjectBasicInfo = false
             _this.projectID = response.data['data']
           } else {
             alert('提交失败')
@@ -407,6 +252,12 @@ export default {
       var temp = {}
       temp['file'] = event.target.files[0]
       temp['type'] = type
+      // 检测uploadFile是否存在同个元素
+      for (var i = 0; i < this.uploadfile.length; i++) {
+        if (this.uploadfile[i]['type'] === temp['type']) {
+          this.uploadfile.splice(i, 1)
+        }
+      }
       this.uploadFile.push(temp)
       console.log(this.uploadFile)
     },
@@ -436,9 +287,6 @@ export default {
           (response) => {
             if (response.data['errcode'] === 0) {
               alert('提交成功' + response.data.data)
-              _this.createProjectElements = true
-              _this.createProjectBasicInfo = false
-              _this.createProjectElements_pic = false
               _this.uploadFile = []
             } else {
               alert('提交失败,请重新选择图片')
@@ -450,8 +298,6 @@ export default {
             if (error) {
               alert('提交失败,请重新选择图片')
               _this.uploadFile = []
-              _this.createProjectElements = true
-              _this.createProjectBasicInfo = false
             }
           }
         )
@@ -459,11 +305,17 @@ export default {
     },
     // 创建元素
     psCreateElement ($type) {
-      this.psAddElementVisuality = true
-      this.psCreateElementTitle = $type
-      this.elementType = null // 选择清空
-      if ($type !== '微信头像') {
-        document.getElementById('ps-createproject-committing-elements-dialog-select-1').removeAttribute('disabled')
+      if ($type === '微信头像') {
+        this.AddWeixinHeadimageVisuality = true
+      }
+      if ($type === '微信昵称') {
+        this.AddWeixinNicknameVisuality = true
+      }
+      if ($type === '单行文本') {
+        this.AddSingleTextVisuality = true
+      }
+      if ($type === '多行文本') {
+        this.AddMultipleTextVisuality = true
       }
     },
     // 上传所有的元素
@@ -488,9 +340,6 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             alert('提交成功')
-            _this.createProjectElements = false
-            _this.createProjectBasicInfo = false
-            _this.createProjectElements_pic = false
           } else {
             alert('提交失败')
           }
@@ -500,8 +349,6 @@ export default {
           if (error) {
             // code
             alert('提交失败')
-            _this.createProjectElements = false
-            _this.createProjectBasicInfo = false
           }
         }
       )
@@ -512,42 +359,7 @@ export default {
         this.$message('请填写完整！')
         this.psAddElementVisuality = false
         this.flushElementTemp()
-        return
       }
-      var temp = {} // 元素缓存，类型obj
-      alert(this.elementName)
-      if (this.elementType === '用户固有信息') {
-        temp['element_type'] = this.elementName // elementName存元素类型 这个是存储到数据库的
-        temp['elementTypeForLook'] = '用户固有信息' // 这个是存给用户看的，不存储到数据库
-        if (this.elementName === '4') {
-          temp['element_name'] = '微信昵称'
-        } else if (this.elementName === '5') {
-          temp['element_name'] = '微信头像'
-        }
-      } else {
-        temp['elementTypeForLook'] = (this.elementType === '2') ? '单行文本信息' : (this.elementType === '3') ? '多行文本信息' : null
-        temp['element_type'] = this.elementType // elementName存元素名称
-        temp['element_name'] = this.elementName
-      }
-      temp['width'] = this.element_width
-      temp['height'] = this.element_height
-      temp['coordinate_x'] = this.elementCoordinateX
-      temp['coordinate_y'] = this.elementCoordinateY
-      temp['word_maxnum'] = this.elementWordsNums
-      temp['shape'] = this.elementShape
-      temp['font_size'] = this.elementFontSize
-      temp['font_color'] = this.elementFontColor
-      if (!this.projectID) {
-        alert('没有选择项目')
-        this.psAddElementVisuality = false
-        return
-      }
-      temp['item_id'] = this.projectID
-      console.log(temp)
-      this.elements.push(temp) // 添加到elements中
-      // 已添加的元素
-      this.psAddElementVisuality = false
-      this.flushElementTemp()
     },
     // 刷新用户上次输入的信息
     flushElementTemp () {
@@ -569,14 +381,11 @@ export default {
     flushAllData () {
       // code
       this.projectID = null // 项目id
-      this.createProjectBasicInfo = false
-      this.createProjectElements = true
       this.pic = ''
       this.uploadFile = []
-      this.psAddElementVisuality = false // dislog是否显示
       this.psCreateProjectItemName = null
       this.elements = []
-      this.elementsTemp = [] // 缓存空间
+      this.elementsTemp = {} // 缓存空间
       this.psCreateElementTitle = null
       this.psCreateElementShapeVisuality = false
       this.elementType = null // 用户选择的元素类型
@@ -591,6 +400,62 @@ export default {
       this.elementCoordinateY = null // 坐标Y
       this.elementFontColor = null // 字体颜色
       this.elementFontSiez = null // 字体大小
+    },
+    // 子组件取消dialog
+    cancelDialog (index) {
+      switch (index) {
+        case 5:
+          this.AddWeixinHeadimageVisuality = false
+          break
+        case 4:
+          this.AddWeixinNicknameVisuality = false
+          break
+        case 2:
+          this.AddSingleTextVisuality = false
+          break
+        case 3:
+          this.AddMultipleTextVisuality = false
+          break
+        default:
+          break
+      }
+    },
+    saveSubmitElement (data) {
+      this.elements.push(data)
+    },
+    // 修改元素
+    edit (index) {
+      var type = this.elements[index]['element_type']
+      console.log(this.elements[index])
+      switch (type) {
+        case 5:
+          this.$refs.weixinheadimage.change(this.elements[index], index)
+          this.AddWeixinHeadimageVisuality = true
+          alert('fuck')
+          break
+        case 4:
+          this.$refs.weixinnickname.change(this.elements[index], index)
+          this.AddWeixinNicknameVisuality = true
+          break
+        case 2:
+          this.$refs.singletext.change(this.elements[index], index)
+          this.AddSingleTextVisuality = true
+          break
+        case 3:
+          this.$refs.multipletext.change(this.elements[index], index)
+          this.AddMultipleTextVisuality = true
+          break
+        default:
+          break
+      }
+    },
+    // 删除元素
+    deleteItem (index) {
+      this.elements.splice(index, 1)
+    },
+    // 供子组件返回修改后的数据给父组件
+    editForElement (data, index) {
+      this.elements[index] = data
     }
   }
 }

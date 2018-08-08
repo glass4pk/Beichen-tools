@@ -55,9 +55,15 @@
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='background'
+                                    prop='id'
                                     label="项目背景缩略图"
                                     width="180">
+                                    <template slot-scope="scope">
+                                        <div class='scalebackground'>
+                                            <!-- <img :src='scope.row.backgroundpic' title='背景图片'> -->
+                                            <img src='http://127.0.0.1/background.jpg' title='测试图片'  onclick="lookShareChannel(scope.index, scope.row)">
+                                        </div>
+                                    </template>
                                     </el-table-column>
                                     <el-table-column
                                     prop='pepoplenum'
@@ -120,7 +126,7 @@ export default {
     return {
       totalnums: null, // 所有数据总数
       pic: '',
-      psProListLookChannelVisuality: true,
+      psProListLookChannelVisuality: false,
       psProjectListItemName: null,
       items: [], // 获取到的所有总数
       psCreateElementShapeVisuality: false,
@@ -174,19 +180,18 @@ export default {
         }
       )
     },
+    // 查看分享渠道
+    lookShareChannel (index, row) {
+      alert(index)
+      console.log(row)
+    },
     // 创建新项目
     createNewProject () {
+      this.psProListLookChannelVisuality = false
       this.$router.push({path: '/ps/create'})
     },
     psProjectListSubmit () {
       alert('This')
-    },
-    psCreateElement ($type) {
-      this.psProListLookChannelVisuality = true
-      this.elementType = null // 选择清空
-      if ($type !== '微信头像') {
-        document.getElementById('ps-projectlist-committing-elements-dialog-select-1').removeAttribute('disabled')
-      }
     },
     psProListLook (index, row) {
       alert(index)
@@ -216,13 +221,17 @@ export default {
 border-radius: 4px;
 }
 .bg-purple-dark {
-background: #c9c9c9;
+background: #ffffff;
 }
 .bg-purple {
-background: #d3dce6;
+background: #ffffff;
 }
 .bg-purple-light {
-background: #e5e9f2;
+background: #ffffff;
+}
+#photocomposite .el-col {
+border-radius: 6px;
+border: medium solid rgb(165, 165, 165)
 }
 .grid-content {
 border-radius: 4px;
@@ -282,18 +291,30 @@ background-color: #f9fafc;
     margin: 5px 0px 10px 10px;
 }
 #projectlist .el-pagination{
-    background-color: #c9c9c9;
+    background-color: #ffffff;
 }
 #projectlist .el-pagination .btn-prev{
-    background-color: #c9c9c9;
+    background-color: #ffffff;
 }
 #projectlist .el-pagination .btn-next{
-    background-color: #c9c9c9;
+    background-color: #ffffff;
 }
 .el-table--mini td{
     padding: 2px 0px
 }
 .el-table--mini th{
     padding: 2px 0px
+}
+# projectlist .el-pager li{
+}
+.scalebackground{
+    position: relative;
+    height: 50px;
+}
+.scalebackground img{
+    position: absolute;
+    height: 100%;
+    left: 30%;
+    transform: translate(-50%);
 }
 </style>

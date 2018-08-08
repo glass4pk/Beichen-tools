@@ -1,5 +1,5 @@
 <template>
-    <div id='projectlist'>
+    <div id='projectinfo'>
         <el-row class='ps-main-title'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
@@ -12,9 +12,9 @@
                 <div class="grid-content bg-purple-dark">
                     <div class="ps-main-content">
                         <div class='ps-row'>
-                            <div class='on-same-line'>项目名称</div>
+                            <div class='on-same-line'>项目名称：</div>
                             <div class='on-same-line' style="padding: 0px 0px 0px 20px">
-                                Hello World
+                                {{itemInfo.basic[0]['name']}}
                             </div>
                         </div>
                         <div class='ps-row'>
@@ -35,7 +35,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class='ps-row'>
+                        <!-- <div class='ps-row'>
                             <div class='on-same-line'>背景图参数：</div>
                             <div class='on-same-line' style='padding: 5px 5px  0px 0px'>
                                 <div class='on-same-line'>宽</div>
@@ -51,12 +51,12 @@
                                 </div>
                                 <div class='on-same-line'>px</div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="ps-row">
                             <span>页面可编辑元素</span>
                         </div>
                         <div class='ps-row'>
-                            <div v-for='element in elements' v-bind:key='element' class='ps-createproject-commited-elements-container'>
+                            <div v-for='element in itemInfo.elements' v-bind:key='element' class='ps-createproject-commited-elements-container'>
                                 <table style="border:1px solid #b5b9be; border-radius: 4px;/*黑色1像素粗边框*/">
                                     <tr>
                                         <td style="width: 80px;" class='ps-row'>元素类型：</td>
@@ -162,7 +162,7 @@
             </el-col>
         </el-row>
         <el-dialog
-            id="ps-projectlist"
+            id="ps-projectinfo"
             title='分享渠道'
             :visible.sync='psProListLookChannelVisuality'
             :fullscreen=false
@@ -185,11 +185,11 @@ export default {
   data () {
     return {
       itemId: null, // 项目id
-      itemInfo: [],
+      itemInfo: {},
       pic: '',
-      psProListLookChannelVisuality: true,
+      psProListLookChannelVisuality: false,
       psProjectListItemName: null,
-      elements: [1],
+      elements: [],
       psCreateElementShapeVisuality: false,
       elementType: null, // 用户选择的元素类型
       elementTypeOption: [
@@ -209,8 +209,8 @@ export default {
       ]
     }
   },
-  created () {
-    this.getItemId()
+  mounted () {
+    this.getItemInfo()
   },
   computed: {
     checkElementType () {
@@ -228,35 +228,33 @@ export default {
     }
   },
   methods: {
+    // 获取url参数
     getItemId () {
       this.itemId = this.$route.query.id
+      alert(this.itemId)
+      return this.itemId
     },
     // 获取项目的所有信息
     getItemInfo () {
+      this.getItemId()
       var _this = this
-      axios.get(this.GLOBAL.WEB_URL + '/ps/getinfo?itemid=' + _this.itemId).then(
+      axios.get(this.GLOBAL.WEB_URL + '/ps/item/getinfo?itemid=' + _this.itemId).then(
         (response) => {
-          if (response.data['errcode' === 0]) {
+          if (response.data['errcode'] === 0) {
             _this.itemInfo = response.data.data
+            console.log(_this.itemInfo)
           }
         }
       )
     },
     psProjectListSubmit () {
       alert('This')
-    },
-    psCreateElement ($type) {
-      this.psProListLookChannelVisuality = true
-      this.elementType = null // 选择清空
-      if ($type !== '微信头像') {
-        document.getElementById('ps-projectlist-committing-elements-dialog-select-1').removeAttribute('disabled')
-      }
     }
   }
 }
 </script>
 <style>
-#projectlist{
+#projectinfo{
     text-align: left;
 }
 .on-same-line{
@@ -275,13 +273,17 @@ export default {
 border-radius: 4px;
 }
 .bg-purple-dark {
-background: #c9c9c9;
+background: #ffffff;
 }
 .bg-purple {
 background: #d3dce6;
 }
 .bg-purple-light {
 background: #e5e9f2;
+}
+#projectinfo .el-col {
+border-radius: 6px;
+border: medium solid rgb(165, 165, 165)
 }
 .grid-content {
 border-radius: 4px;
@@ -317,36 +319,36 @@ background-color: #f9fafc;
     position: relative;
     top:0px;
 }
-#projectlist .el-input__inner{
+#projectinfo .el-input__inner{
     padding: 0px 5px 0px 5px;
 }
 .ps-create-dialog-row{
     padding: 5px 5px 20px 5px;
 }
-#ps-projectlist .el-dialog__header{
+#ps-projectinfo .el-dialog__header{
     padding: 25px 20px 0px
 }
 .ps-create-dialog-row-col{
     padding: 0px 20px 0px 0px;
 }
-#ps-projectlist .el-dialog{
+#ps-projectinfo .el-dialog{
     border-radius: 10px;
     padding: 0px 0px 0px 20px;
 }
 
-.ps-projectlist-commited-elements .ps-projectlist-commited-elements-container{
+.ps-projectinfo-commited-elements .ps-projectinfo-commited-elements-container{
     margin: 10px 0px 10px 0px;
 }
-.ps-projectlist-commited-elements-table-row{
+.ps-projectinfo-commited-elements-table-row{
     margin: 5px 0px 10px 10px;
 }
-#projectlist .el-pagination{
-    background-color: #c9c9c9;
+#projectinfo .el-pagination{
+    background-color: #ffffff;
 }
-#projectlist .el-pagination .btn-prev{
-    background-color: #c9c9c9;
+#projectinfo .el-pagination .btn-prev{
+    background-color: #ffffff;
 }
-#projectlist .el-pagination .btn-next{
-    background-color: #c9c9c9;
+#projectinfo .el-pagination .btn-next{
+    background-color: #ffffff;
 }
 </style>

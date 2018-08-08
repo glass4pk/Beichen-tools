@@ -62,7 +62,7 @@ export default {
 </script>
 <style scoped>
 .aside{
-  background-color: rgb(84, 92, 100);
+  background-color: rgb(255, 255, 255);
   width: 155px;
   min-height: 100%;
   font-size: 14px;
