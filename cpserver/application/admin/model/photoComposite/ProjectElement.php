@@ -119,4 +119,26 @@ class ProjectElement extends Common
         }
         return $isOk;
     }
+
+    /**
+     * 获取表的所有记录，并以特定结构返回
+     *
+     * @return array
+     */
+    public function getAll()
+    {
+        $result = $this->select();
+        if ($result) {
+            $itemArray = [];
+            foreach ($result as $one) {
+                // code
+                if (!isset($itemArray[$one['item_id']])) {
+                    $itemArray[$one['item_id']] = [];
+                }
+                array_push($itemArray[$one['item_id']],$one);
+            }
+            return $itemArray;
+        }
+        return $result;
+    }
 }

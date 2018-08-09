@@ -31,6 +31,8 @@ class Project extends AdminApiCommon
         $array['description'] = $description;
         $array['status'] = 1;
         $array['create_user_id'] = 0;
+        $array['cover'] = $param['basicinfo']['cover'];
+        $array['background'] = $param['basicinfo']['background'];
 
         $itemModel = model('photoComposite.Project');
         // 保存到ps_item中
@@ -51,103 +53,6 @@ class Project extends AdminApiCommon
         return resultArray(['error' => '提交失败']);
     }
 
-    /**
-     * 添加多个文字元素
-     *
-     * @return json 返回数据
-     */
-    private function addTextElements($param)
-    {
-        // 已经添加元素的数据库记录id
-        // return 'hello world!';
-        $addedId = [];
-        $isOk = true;
-        try {
-            // 多次添加元素，一旦出现一次失败，则删除刚添加成功的元素
-            foreach ($params as $param) {
-                if ($isOk) {
-                    if ($param['element_type'] == 2 || $param['element_type'] == 3) {
-                        $result = ProjectAddElement::addTextElement($param);
-                    } else if ($param['element_type'] == 4 || $param['element_type'] == 5) {
-                        $result = ProjectAddElement::addWeixinElement($param);
-                    }
-                    if (!$result) {
-                        $isOk = false;
-                    } else {
-                        array_push($addedId, $result);
-                    }
-                }
-            }
-        } catch (Exception $e) {
-            $isOk = false;
-        } finally {
-            if (!$isOk) {
-                // 删除数据库中添加的元素
-                foreach ($addedId as $id) {
-                    ProjectAddElement::deleteElementById($id);
-                }
-            }
-            if ($isOk) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-    }
-
-    /**
-     * 添加单个图片元素
-     * 
-     */
-    public function addPicElement()
-    {
-        if (!$this->request->isPost()) {
-            return ;
-        }
-        $param = $this->param;
-        $fileName = $param['type'];
-        $param['name'] = $param['type'];
-        $param['type'] = 1;
-        $isOk = false;
-        $file = null;
-        $file = request()->file('image');
-        try {
-            $file = request()->file('image');
-            $a = $_FILES;
-            $isOK = true;
-        } catch (Exception $e) {
-            $isOk = false;
-        } finally {
-            if ($isOk) {
-                return resultArray(['error' => '添加失败请重试']);
-            }
-        }
-        // 已经添加元素的数据库记录id
-        $addedId = [];
-        try {
-            $result = ProjectAddElement::addPicElement($param, $file);
-            if (!$result) {
-                $isOk = false;
-            } else {
-                $isOk = true;
-                array_push($addedId, $result);
-            }
-        } catch (Exception $e) {
-            $isOk = false;
-        } finally {
-            if (!$isOk) {
-                // 删除数据库中添加的元素
-                foreach ($addedId as $id) {
-                    ProjectAddElement::deleteElementById($id);
-                }
-            }
-            if ($isOk) {
-                return resultArray(['data' =>  $param['name']]);
-            } else {
-                return resultArray(['error' => '失败']);
-            }
-        }
-    }
 
     /**
      * 查询项目
@@ -160,11 +65,13 @@ class Project extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        $result = ProjectSearchElement::searchProjects($param);
+        // $searchArr 查询条件; 默认为空（查询所有数据）
+        $searchArr = [];
+        $result = ProjectSearchElement::searchProjects($searchArr);
         if ($result) {
             return resultArray(['data' => $result]);
         } else {
-            return resultArray(['error' => $result]);
+            return resultArray(['error' => '查询失败']);
         }
     }
 

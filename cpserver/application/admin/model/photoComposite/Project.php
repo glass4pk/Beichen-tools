@@ -65,11 +65,16 @@ class Project extends Common
         }
     }
 
-    // 查询所有项目
-    public function searchProjects()
+    /**
+     * 查询所有项目
+     *
+     * @param array $searchArr 查询条件
+     * @return void
+     */
+    public function searchProjects($searchArr)
     {
         // code
-        $result = $this->where(['status' => 1])->select();
+        $result = $this->where($searchArr)->field(['create_user_id'], true)->select();
         return $result;
     }
 

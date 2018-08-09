@@ -97,9 +97,7 @@ export default {
       if (this.element.element_name === '' || this.element.font_size === '' || this.element.font_color === '' || this.element.coordinate_x === '' || this.element.coordinate_y === '' || this.element.word_maxnum === '') {
         alert('请填写完整')
       } else {
-        alert(this.type)
         if (this.type === 1) {
-          alert('1')
           this.$emit('saveSubmitElement', this.element)
         } else {
         }

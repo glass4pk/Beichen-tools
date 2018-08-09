@@ -169,7 +169,9 @@ export default {
       name: null,
       elements: [],
       basicinfo: {
-        name: ''
+        name: '',
+        background: '',
+        cover: ''
       },
       picElements: [],
       isUploadPic: false,
@@ -185,26 +187,8 @@ export default {
     }
   },
   computed: {
-    isDiaplayShape () {
-      if (this.elementType === '用户固有信息' && this.elementName === '2') return true
-      else return false
-    },
-    isDiaplayText () {
-      if (this.elementType === '用户固有信息') return false
-      else return true
-    }
   },
   watch: {
-    elementType: function (val) {
-      this.elementName = null
-      if (this.elementType === '用户固有信息') {
-        this.checkElementTypeInput = false
-        this.checkElementTypeSelect = true
-      } else {
-        this.checkElementTypeInput = true
-        this.checkElementTypeSelect = false
-      }
-    }
   },
   created () {
   },
@@ -223,7 +207,7 @@ export default {
       this.uploadFile.push(temp)
       console.log(this.uploadFile)
     },
-    // 提交项目图片
+    // 提交项目图片,返回图片存储地址
     createProjectElementsPic () {
     //   console.log(file)
       this.loadingfullscreen = true
@@ -251,18 +235,10 @@ export default {
       }).then(
         (response) => {
           if (response.data['errcode'] === 0) {
-            alert('提交成功' + response.data.data)
-            var temp = {}
-            temp['element_name'] = 'cover'
-            temp['element_content'] = response.data.data['cover']
-            temp['element_type'] = 6
-            _this.elements.push(temp)
-            temp = {}
-            temp['element_name'] = 'background'
-            temp['element_content'] = response.data.data['background']
-            temp['element_type'] = 7
-            _this.elements.push(temp)
-            _this.isUploadPic = true
+            _this.basicinfo.cover = response.data.data['cover']
+            _this.basicinfo.background = response.data.data['background']
+            _this.isUploadPic = true // 已经上传图片
+            alert(' 已经上传图片')
             this.submit()
             _this.uploadFile = []
           } else {
@@ -273,7 +249,7 @@ export default {
         }).catch(
         (error) => {
           if (error) {
-            alert('提交失败,请重新选择图片')
+            alert('网络错误,请重新选择图片')
             _this.uploadFile = []
             this.loadingfullscreen = false
           }
@@ -289,7 +265,6 @@ export default {
       postData['elements'] = _this.elements
       console.log(_this.elements)
       if (_this.isUploadPic) {
-        alert('WTF')
         axios({
           url: 'http://127.0.0.1/ps/createproject',
           method: 'post',
@@ -395,7 +370,6 @@ export default {
         case 5:
           this.$refs.weixinheadimage.change(this.elements[index], index)
           this.AddWeixinHeadimageVisuality = true
-          alert('fuck')
           break
         case 4:
           this.$refs.weixinnickname.change(this.elements[index], index)

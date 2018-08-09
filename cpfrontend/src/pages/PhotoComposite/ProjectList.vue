@@ -55,13 +55,13 @@
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='id'
+                                    prop='backgroundurl'
                                     label="项目背景缩略图"
                                     width="180">
                                     <template slot-scope="scope">
                                         <div class='scalebackground'>
                                             <!-- <img :src='scope.row.backgroundpic' title='背景图片'> -->
-                                            <img src='http://127.0.0.1/background.jpg' title='测试图片'  onclick="lookShareChannel(scope.index, scope.row)">
+                                            <img :src='scope.row.background' title='测试图片'  onclick="lookShareChannel(scope.index, scope.row)">
                                         </div>
                                     </template>
                                     </el-table-column>
@@ -144,13 +144,19 @@ export default {
     this.getItems()
   },
   methods: {
+    // 获取所有项目的信息
     getItems ($param = null) {
       // code
       var _this = this
       axios.get(_this.GLOBAL.WEB_URL + '/ps/searchproject').then(
         (response) => {
           if (response.data['errcode'] === 0) {
+            var domain = _this.GLOBAL.WEB_URL + '/uploads/'
             _this.items = response.data.data
+            for (var i in _this.items) {
+              _this.items[i]['background'] = _this.items[i]['background'].replace('\\', '/')
+              _this.items[i]['background'] = domain + _this.items[i]['background']
+            }
             _this.totalnums = _this.items.length
             console.log(_this.items)
           }
@@ -159,7 +165,6 @@ export default {
     },
     // 查看分享渠道
     lookShareChannel (index, row) {
-      alert(index)
       console.log(row)
     },
     // 创建新项目
@@ -168,11 +173,8 @@ export default {
       this.$router.push({path: '/ps/create'})
     },
     psProjectListSubmit () {
-      alert('This')
     },
     psProListLook (index, row) {
-      alert(index)
-      alert(row['id'])
       this.$router.push({path: '/ps/info', query: {'id': row['id']}})
     }
   }

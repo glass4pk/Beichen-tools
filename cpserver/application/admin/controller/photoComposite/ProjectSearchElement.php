@@ -1,6 +1,6 @@
 <?php
 /**
- * 元素添加中间类
+ * 元素查询中间类
  * @author jack <chengjunjie.jack@gmail.com>
  */
 namespace app\admin\controller\photoComposite;
@@ -15,32 +15,28 @@ class ProjectSearchElement extends Controller
      * @param array $param
      * @return void
      */
-    public static function searchProjects($param)
+    public static function searchProjects($searchArr)
     {
         /**
-         * validate验证器，验证param
+         * validate验证器，验证searchArr
          * code
          */
-
-        // $eachPageNums = 10; // 每页十个
-        // // 数据库查询条件
-        // $searchArr = [];
-        // $searchArr['page'] = 1;
-        // // 如果请求字段有page，则替换掉默认的page值
-        // if (isset($param['page'])) {
-        //     $searchArr['page'] = intval($param['page']);
-        // }
-        /**
-         * 其他请求字段
-         * code
-         */
-        if (count($param) != 0) {
+        if (count($searchArr) != 0) {
             // code
         }
         $projectModel = model('photoComposite.Project');
-        $result = $projectModel->searchProjects($param);
-        if ($result) {
-            // 查到正确结果
+        $project = $projectModel->searchProjects($searchArr);
+        if ($project) {
+            $projectElementModel = model('photoComposite.ProjectElement');
+            $projectElements = $projectElementModel->getAll();
+            // 最终结果
+            $result = [];
+            // 空数组
+            $empty = [];
+            foreach ($project as $one) {
+                $result[$one['id']] = $one;
+                $result[$one['id']]['elements'] = isset($projectElements[$one['id']]) ? $projectElements[$one['id']] : $empty;
+            }
             return $result;
         }
         // 返回错误信息

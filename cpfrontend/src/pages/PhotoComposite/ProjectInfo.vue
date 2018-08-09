@@ -218,7 +218,6 @@ export default {
     // 获取url参数
     getItemId () {
       this.itemId = this.$route.query.id
-      alert(this.itemId)
       return this.itemId
     },
     // 获取项目的所有信息
@@ -235,7 +234,6 @@ export default {
       )
     },
     psProjectListSubmit () {
-      alert('This')
     }
   }
 }
