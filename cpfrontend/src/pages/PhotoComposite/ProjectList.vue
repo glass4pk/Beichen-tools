@@ -130,22 +130,7 @@ export default {
       psProjectListItemName: null,
       items: [], // 获取到的所有总数
       psCreateElementShapeVisuality: false,
-      elementType: null, // 用户选择的元素类型
-      elementTypeOption: [
-        {label: '用户固有信息', value: '0'},
-        {label: '单行文本信息', value: '1'},
-        {label: '多行文本信息', value: '2'}
-      ],
-      elementName: null,
-      elementNameoptions: [
-        {label: '微信昵称', value: '1'},
-        {label: '微信头像', value: '2'}
-      ],
-      elementWeiXinHeadPicShape: null,
-      elementWeiXinHeadPicShapeOptions: [
-        {label: '正方形', value: '1'},
-        {label: '长方形', value: '2'}
-      ]
+      elementType: null // 用户选择的元素类型
     }
   },
   computed: {
@@ -153,14 +138,6 @@ export default {
       // this.elementName = null
       if (this.elementType === '0') return true
       else return false
-    },
-    isDiaplayShape () {
-      if (this.elementType === '0' && this.elementName === '2') return true
-      else return false
-    },
-    isDiaplayText () {
-      if (this.elementType === '0') return false
-      else return true
     }
   },
   created () {

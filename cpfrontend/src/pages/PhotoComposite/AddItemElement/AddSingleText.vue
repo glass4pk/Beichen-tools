@@ -60,7 +60,7 @@
                 </div>
             </div>
             <span slot='footer' class='dialog-footer'>
-            <el-button @click='cancel'>取消
+            <el-button @click='cancel' v-show="isShowCancel">取消
             </el-button>
             <el-button @click='submit' type='primary'>保存
             </el-button>
@@ -85,6 +85,7 @@ export default {
         word_maxnum: '',
         element_type: 2
       },
+      isShowCancel: true,
       type: 1,
       index: null
     }
@@ -106,9 +107,17 @@ export default {
         this.$emit('cancelDialog', 2)
       }
       this.element = {}
+      this.element['element_name'] = '多行文本'
+      this.element['element_type'] = 2
+      this.type = 1
+    },
+    newItem () {
+      this.isShowCancel = true
+      this.dialogVisible = true
       this.type = 1
     },
     change (data) {
+      this.isShowCancel = false
       this.type = 2
       this.element = data
       console.log(data)

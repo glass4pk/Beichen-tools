@@ -23,26 +23,9 @@ class Project extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        // 验证
-        $rule = ['name' => 'require|max:32', 'description' => 'max:255'];
-        $msg = ['name.require' => '名称必须',
-                'name.max' => '名称最多不能超过32个字符',
-                'description.max' => '描述最多不能超过255个字符'
-        ];
-        $validate = Validate::make($rule, $msg);
-        if (!$validate->check($param)) {
-            return resultArray(['error' => $validate->getError()]);
-        }
-        // // 检查重复提交
-        // if (!isset($param['TOKEN'])) {
-        //     return resultArray(['error' => '请求错误，缺少TOKEN']);
-        // }
-        // if (!$this->checkToken($param['TOKEN'])) {
-        //     return resultArray(['error' => '请不要重复提交']);
-        // }
         $createTimeStamp = strtotime('now');
         $description = $param['description'] ?? NULL;
-        $array['name'] = $param['name'];
+        $array['name'] = $param['basicinfo']['name'];
         $array['create_timestamp'] = $createTimeStamp;
         $array['create_time'] = date('Y-m-d H:i:s', $createTimeStamp);
         $array['description'] = $description;
@@ -50,11 +33,20 @@ class Project extends AdminApiCommon
         $array['create_user_id'] = 0;
 
         $itemModel = model('photoComposite.Project');
+        // 保存到ps_item中
         $result = $itemModel->createProject($array);
         if ($result) {
-            // 将item_id保存进session中
-            // code...
-            return resultArray(['data' => $result]); // 返回item_id
+            // 保存到ps_item_element
+            $itemElementModel = model('photoComposite.ProjectElement');
+            $temp = [];
+            foreach ($param['elements'] as $one) {
+                $temp = [];
+                // code
+                $temp = $one;
+                $temp['item_id'] = $result;
+                $itemElementModel->addElement($temp);
+            }
+            return resultArray(['data' => 'success']);
         }
         return resultArray(['error' => '提交失败']);
     }
@@ -64,16 +56,12 @@ class Project extends AdminApiCommon
      *
      * @return json 返回数据
      */
-    public function addTextElements()
+    private function addTextElements($param)
     {
         // 已经添加元素的数据库记录id
         // return 'hello world!';
         $addedId = [];
         $isOk = true;
-        if (!$this->request->isPost()) {
-            return ;
-        }
-        $params = $this->param;
         try {
             // 多次添加元素，一旦出现一次失败，则删除刚添加成功的元素
             foreach ($params as $param) {
@@ -100,9 +88,9 @@ class Project extends AdminApiCommon
                 }
             }
             if ($isOk) {
-                return resultArray(['data' => 'success']);
+                return true;
             } else {
-                return resultArray(['error' => '失败']);
+                return false;
             }
         }
     }

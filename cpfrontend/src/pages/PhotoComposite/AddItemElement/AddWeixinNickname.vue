@@ -59,7 +59,7 @@
                 </div>
             </div>
             <span slot='footer' class='dialog-footer'>
-            <el-button @click='cancel'>取消
+            <el-button @click='cancel' v-show="isShowCancel">取消
             </el-button>
             <el-button @click='submit' type='primary'>保存
             </el-button>
@@ -76,7 +76,7 @@ export default {
     return {
       dialogVisible: true,
       element: {
-        element_name: '',
+        element_name: '微信昵称',
         font_size: '',
         font_color: '',
         coordinate_x: '',
@@ -84,6 +84,7 @@ export default {
         word_maxnum: '',
         element_type: 4
       },
+      isShowCancel: true,
       type: 1,
       index: null
     }
@@ -95,9 +96,14 @@ export default {
       this.$emit('cancelDialog', 4)
       // cancelDialog
     },
+    newItem () {
+      this.isShowCancel = true
+      this.dialogVisible = true
+      this.type = 1
+    },
     submit () {
-      if (this.element.element_name === '' || this.element.font_size === '' || this.element.font_color === '' || this.element.coordinate_x === '' || this.element.coordinate_y === '' || this.element.word_maxnum === '') {
-        alert('请填写完整1')
+      if (this.element.font_size === '' || this.element.font_color === '' || this.element.coordinate_x === '' || this.element.coordinate_y === '' || this.element.word_maxnum === '') {
+        alert('请填写完整')
       } else {
         if (this.type === 1 || this.type === '1') {
           this.$emit('saveSubmitElement', this.element)
@@ -105,9 +111,12 @@ export default {
         this.$emit('cancelDialog', 4)
       }
       this.element = {}
+      this.element['element_name'] = '微信昵称'
+      this.element['element_type'] = 4
       this.type = 1
     },
     change (data) {
+      this.isShowCancel = false
       this.type = 2
       this.element = data
       console.log(data)

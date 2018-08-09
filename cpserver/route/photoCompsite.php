@@ -1,9 +1,9 @@
 <?php
 use think\facade\Route;
 
-Route::any('ps/create','admin/photoComposite.Project/createProject');
+Route::any('ps/createproject','admin/photoComposite.Project/createProject');
 Route::any('ps/addtext','admin/photoComposite.Project/addTextElement');
-Route::any('ps/addpic','admin/photoComposite.Project/addPicElement');
+Route::any('ps/addpic','admin/photoComposite.UploadFile/Pic');
 Route::any('ps/addelements','admin/photoComposite.Project/addTextElements');
 Route::get('ps/searchproject','admin/photoComposite.Project/searchProjects');
 Route::get('ps/item/getinfo','admin/photoComposite.Project/getProjectInfo'); // 获取项目详细信息

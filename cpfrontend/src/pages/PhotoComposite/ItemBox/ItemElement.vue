@@ -4,8 +4,8 @@
             <div class='on-same-line'>
                 <table style="border:1px solid #b5b9be; border-radius: 4px;/*黑色1像素粗边框*/">
                     <tr>
-                        <td style="width: 80px;" class='ps-row'>元素类型：</td>
-                        <td style="width: 120px" class='ps-row'>{{element.elementTypeForLook}}</td>
+                        <!-- <td style="width: 80px;" class='ps-row'>元素类型：</td>
+                        <td style="width: 120px" class='ps-row'>{{element.elementTypeForLook}}</td> -->
                         <td style="width: 80px" class='ps-row'>元素名称：</td>
                         <td style="width: 120px" class='ps-row'>{{element.element_name}}</td>
                         <td style="width: 80px" class='ps-row'></td>
