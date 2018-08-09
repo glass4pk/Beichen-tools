@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嘿卡</title>
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
+    <style type="text/css">
+        body {
+            background-image:url(static/images/P2_bg.png);
+            background-repeat: no-repeat;
+            background-size:100% auto;
+            background-color:#000000;
+        }
+        #block_card {
+            display:block;
+            width:80%;
+            padding:5%;
+            margin:0 auto;
+
+        }
+            #img_card {
+                display:block;
+                width:100%;
+            }
+        #block_buttons {
+            display:block;
+            width:100%;
+        }
+            #block_buttons #img_hint {
+                display:block;
+                width:100%;
+            }
+            #block_buttons .btns {
+                display:block;
+                width:50%;
+                float:left;
+            }
+                #block_buttons .btns img {
+                    display:block;
+                    width:100%;
+                }
+
+    </style>
+
+    <!--JS-->
+    <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div id="content">
+        <div id="block_card">
+            <img id="img_card" src="static/images/P2_cardLoading.png" />
+        </div>
+
+        <div id="block_buttons">
+            <img id="img_hint" src="static/images/P2_hint.png">
+            <a id="btn_home" class="btns" href="index.html">
+                <img src="static/images/P2_btn_home.png" />
+            </a>
+            <a id="btn_again" class="btns" href="card.html">
+                <img src="static/images/P2_btn_again.png" />
+            </a>
+        </div>
+    </div>
+</body>
+
+<script type="text/javascript">
+
+    var Global = {
+        cardTotal : 12,
+        cardType : 0,
+        cardTypeTotal : 5,
+        isCardTypeRandom : 0
+    };
+//    console.log(window.location.href.split("?").length)
+    //获取当前卡的类别
+    if(window.location.href.split("?").length > 1){
+        Global.cardType = window.location.href.split("?")[1].split("=")[1];
+    }
+
+    //如果卡的类别为0,则随机抽取一个卡号
+    if(Global.cardType == 0){
+        Global.cardType = Math.floor(Math.random() * Global.cardTypeTotal + 1);
+        Global.isCardTypeRandom = 1;
+    }
+
+    //随机抽一张卡号
+    Global.cardNum = Math.floor(Math.random() * Global.cardTotal + 1);
+//    console.log(Global.cardNum);
+
+
+    $(document).ready(function(){
+        //抽卡,改变卡的路径
+        $("#img_card").attr("src","static/images/cards/"+Global.cardType+"/"+Global.cardNum+".png");
+
+        //绑定再抽一次按钮
+        if(Global.isCardTypeRandom){
+            $("#btn_again").attr("href","card.html?cardType=0");
+        }
+        else {
+            $("#btn_again").attr("href","card.html?cardType=" + Global.cardType);
+        }
+
+    });
+</script>
+
+</html>
