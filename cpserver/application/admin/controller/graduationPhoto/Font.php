@@ -20,6 +20,7 @@ class Font
     {
         $this->coordinate_x = $x;
         $this->coordinate_y = $y;
+        $this->fontSize = $size;
         $this->fontFamily = $font;
         $this->fontColor = $color;
         $this->textKerning = $textKering;

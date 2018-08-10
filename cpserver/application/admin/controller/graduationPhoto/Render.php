@@ -5,20 +5,23 @@
 namespace app\admin\controller\graduationPhoto;
 
 use think\Controller;
+use Imagick;
+use ImagickDraw;
+use ImagickPixel;
 
-class RenderPic extends Controller
+class Render extends Controller
 {
     private $font; // 字体
     private $img; // 合成后的图片
     private $text; // 需要添加的文字
     private $imageFormat;
 
-    public function __construct(Font $font = null,Imagick $img = null)
+    public function __construct(Font $font,Imagick $img)
     {
         // 设置默认图片格式
         $this->imageFormat = 'jpg';
         // 初始化
-        if ($font) {
+        if (!$font) {
             $this->font = new Font();
         } else {
             $this->font = $font;
@@ -93,15 +96,18 @@ class RenderPic extends Controller
     public function render()
     {
         // code
+        $this->img->setImageFormat($this->imageFormat);
         $draw = new ImagickDraw(); // 画板
         $draw->setFillColor(new ImagickPixel($this->font->getFontColor()));
         $draw->setTextAlignment(Imagick::ALIGN_LEFT); // 左对齐
         $draw->setFontSize($this->font->getFontSize());
-        $draw->setFont($this->font->getFont());
+        $draw->setFont($this->font->getFontFamily());
         $draw->setTextEncoding('UTF-8');
-        $draw->setTextKerning($this->font->getTextKerning); // 设置文字间距
+        $draw->setTextKerning($this->font->getTextKerning()); // 设置文字间距
         $draw->annotation($this->font->getcoordinateX(), $this->font->getcoordinateY(), $this->text);
         $this->img->drawImage($draw);
+        $draw->clear();
+        $draw->destroy();
     }
 
     /**
@@ -113,5 +119,11 @@ class RenderPic extends Controller
     public function exportImg(string $filePath)
     {
         $this->img->writeImage($filePath);
+        $this->img->destroy();
+    }
+
+    public function destroy()
+    {
+        $this->img->destroy();
     }
 }
