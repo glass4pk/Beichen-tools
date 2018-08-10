@@ -1,0 +1,1 @@
+forever start ./accessToken/accessToken_test.js ./jsTicket/jsTicket_test.js ./timerTask/sendTemplateMessage_test.js
