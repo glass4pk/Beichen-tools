@@ -9,6 +9,6 @@ Route::get('wx','admin/weiXin.CheckServer/checkServer');
 // 发送群发模板消息接口
 // Route::any('manage/weixin/sendalltemplatemessage','admin/weixin.TemplateMessage/SendAllTemplateMessage');
 // 获取jsapi签名
-Route::any('/ps/weixin/getjsapi','admin/weixin.GetJsApi/getSignature');
+Route::any('ps/weixin/getjsapi','admin/weixin.GetJsApi/getSignature');
 // 刷新jsapi签名
-Route::get('/ps/weixin/flashjsapi','admin/weixin.GetJsApi/getJsApiFromWeixin');
+Route::get('ps/weixin/flashjsapi','admin/weixin.GetJsApi/getJsApiFromWeixin');

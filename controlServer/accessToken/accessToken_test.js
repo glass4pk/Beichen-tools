@@ -1,3 +1,6 @@
+/**
+ * 这个文件只是作为测试用，不可用生产环境
+ */
 var config=require('../serverConfig').wechat_test;  // 配置文件
 const mysql=require("mysql");
 const https=require("https");

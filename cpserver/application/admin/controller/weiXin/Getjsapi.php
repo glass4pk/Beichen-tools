@@ -14,7 +14,7 @@ use think\Validate;
 class Getjsapi extends WeixinApiCommon
 {
     /**
-     * 从微信服务器获取jsapi_ticket并存入数据库
+     * 从微信服务器获取jsapi_ticket并存入数据库(刷新jsapi_ticker用)
      * @return void
      */
     public function getJsApiFromWeixin()
