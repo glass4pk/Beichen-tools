@@ -12,7 +12,7 @@ use think\Db;
 use think\Exception;
 use think\Validate;
 
-class GetJsapi extends WeixinApiCommon
+class Getjsapi extends WeixinApiCommon
 {
     /**
      * 从微信服务器获取jsapi_ticket并存入数据库(刷新jsapi_ticker用)
