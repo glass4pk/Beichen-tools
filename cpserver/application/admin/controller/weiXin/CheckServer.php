@@ -5,7 +5,7 @@ use think\facade\Request;
 use app\common\controller\Common;
 use think\Validate;
 
-define('TOKEN','Beichen2013');
+define('TOKEN','hdfjslj23yesgo');
 
 class CheckServer extends Common
 {
