@@ -113,7 +113,7 @@ if (!function_exists('get_access_token')){
      * @return string $access_token
      */
     function get_access_token(){
-        $ATModel = model('token.AccessToken');
+        $ATModel = model('weixin.AccessToken');
         $access_token=$ATModel->getAccessToken();
         return $access_token;
     }
