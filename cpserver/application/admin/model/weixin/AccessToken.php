@@ -10,7 +10,7 @@ class AccessToken extends Common{
 
 
 	public function getAccessToken(){
-		$data = $this->where('type',2)->select();
+		$data = $this->where('type',1)->select();
 		$access_token = $data[0]['access_token'];
 		return $access_token;
 	}

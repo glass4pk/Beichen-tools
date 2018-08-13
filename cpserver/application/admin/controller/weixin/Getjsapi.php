@@ -35,9 +35,9 @@ class Getjsapi extends WeixinApiCommon
         $timestamp = $param['timestamp'];
         $signature = $param['signature'];
         $nowTimeStamp = strtotime('now');
-        if (($nowTimeStamp-60) > $param['timestamp'] || $param['timestamp'] > ($nowTimeStamp+60)) { // signature时间限制
-            return resultArray( ['error' => '禁止访问']);
-        }
+        // if (($nowTimeStamp-60) > $param['timestamp'] || $param['timestamp'] > ($nowTimeStamp+60)) { // signature时间限制
+        //     return resultArray( ['error' => '禁止访问']);
+        // }
         $string1 = $param['timestamp'].'passcode=d2wenvldj45fhgjJVlfglfstfgdjjslys2gjf7979jlf&timestamp='.$param['noncestr'];
         $newsignature = sha1($string1);
         if($signature != $newsignature){ // 判断签名的正确性
@@ -51,7 +51,7 @@ class Getjsapi extends WeixinApiCommon
             $result = json_decode(get_https($url));
             if (isset($result->errcode) && $result->errcode== 0){
                 $jsapi_ticket = $result->ticket;
-                $result = Db::name('jsapi_ticket')->where('type',2)->update(['jsapi_ticket' => $jsapi_ticket,'create_time' =>date('Y-m-d H:i:s',strtotime('now'))]);
+                $result = Db::name('jsapi_ticket')->where('type',1)->update(['jsapi_ticket' => $jsapi_ticket,'create_time' =>date('Y-m-d H:i:s',strtotime('now'))]);
                 return 1;
             }
         } catch(Exception $e) {
@@ -67,7 +67,7 @@ class Getjsapi extends WeixinApiCommon
      */
     private function getJsApi()
     {
-        $result = Db::name('jsapi_ticket')->where('type',2)->find();
+        $result = Db::name('jsapi_ticket')->where('type',1)->find();
         if ($result) {
             return $result['jsapi_ticket'];
         }
