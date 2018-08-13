@@ -2,7 +2,7 @@ var config=require('../serverConfig').wechat;  // 配置文件
 const mysql=require("mysql");
 const https=require("https");
 const http = require('http');
-var   type=2;
+var   type=1;
 var   update_time=3600*1.5;
 // 创建数据池
 
@@ -12,17 +12,20 @@ var   update_time=3600*1.5;
  * @param {*} result 
  */
 function saveResult(result){
+	console.log("accessToken: "  + result);
 	let connection=mysql.createConnection({
 		host:config['db'],
 		user:config['dbuser'],
-		password:config['dbpasswd'],
+		password:config['dbpassword'],
 		database:config['database']
 	});
 	connection.connect();
 	var sql="update access_token set access_token=\""+result+"\",create_time=now() where type="+type+" ;";
 	connection.query(sql,function(err,result){
 		 // 结束会话
-		if(err) {};
+		if(err) {
+		    console.log(err);
+		};
 		connection.end(); 
 	});
 }
@@ -33,6 +36,7 @@ function saveResult(result){
  */
 function firstGetAccessToken(){
 	var url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+config["appid"]+"&secret="+config["appsecret"];
+	console.log(url);
 	try{
 		https.get(url,(res)=>{
 			var data="";
