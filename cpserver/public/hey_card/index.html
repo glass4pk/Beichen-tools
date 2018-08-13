@@ -92,9 +92,11 @@
             },
             success:function(json){
                 alert("api调用成功");
+                alert(wx);
+                alert(json.data.signature);
                 //加载JS-SDK
                 wx.config({
-                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
                     appId: 'wxa46386d571e05bac', // 必填，公众号的唯一标识
                     timestamp: json.data.timestamp, // 必填，生成签名的时间戳
                     nonceStr: json.data.nonceStr, // 必填，生成签名的随机串
@@ -109,7 +111,7 @@
 
                 //设置微信初始化
                 wx.ready(function(){
-                    alert("wx.ready");
+                    //alert("wx.ready");
 
                     //设置朋友圈分享逻辑
                     wx.onMenuShareTimeline({
