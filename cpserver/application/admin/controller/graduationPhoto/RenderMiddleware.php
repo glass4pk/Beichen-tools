@@ -9,7 +9,15 @@ use Imagick;
 
 class RenderMiddleware extends Controller
 {
-    public static function makePic($userData, $projectData)
+    /**
+     * 合成图片
+     *
+     * @param array $userData
+     * @param array $projectData
+     * @param string $dirPath
+     * @return string
+     */
+    public static function makePic(array $userData, array $projectData, string $dirPath = UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'userCredential' . DIRECTORY_SEPARATOR)
     {
         $exportPicPath = '';
         $font = new Font($projectData['coordinate_x'], $projectData['coordinate_y'], $projectData['font_size'], UPLOADS . $projectData['font'], $projectData['font_color'], $projectData['textkerning']);
@@ -18,7 +26,8 @@ class RenderMiddleware extends Controller
         $render->setText($userData['cnName']); // 设置文本
         $render->render(); // 开始渲染
         $tt = explode('.', $projectData['pic']);
-        $exportPicPath= UPLOADS . date('YmdHis', strtotime('now')) . str_rand(5) . '.' . $tt[sizeof($tt) - 1];
+        // 导出目录
+        $exportPicPath= $dirPath . date('YmdHis', strtotime('now')) . str_rand(5) . '.' . $tt[sizeof($tt) - 1];
         $render->exportImg($exportPicPath); // 图片导出
         return $exportPicPath;
     }

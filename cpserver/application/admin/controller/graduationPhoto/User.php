@@ -53,7 +53,8 @@ class User extends Common
             if (isset($one['project_id'])) {
                 $projectData = $objectModel->getProject(array('id' => $one['project_id']));
                 if ($projectData) {
-                    $credentialList[$one['username']] = $projectData->toArray();
+                    $projectData = $projectData->toArray();
+                    $credentialList[$one['username']] = $projectData;
                 }
             }   
         }
@@ -67,9 +68,10 @@ class User extends Common
                 array_push($resultList, $localFilePath);
             }
         }
-        return resultArray(['data' => $resultList]);
+        // return resultArray(['data' => $resultList]);
         // 最终返回给用户的结果
         $result = [];
+
         // 上传到腾讯云cos
         $cosRegion = 'ap-guangzhou';
         $cosCredentials = array(
@@ -78,11 +80,12 @@ class User extends Common
             'secretKey' => 'EJDyXwOkuthKm3LagdP0QfkljbO0VowB');
         $bucket = 'devyesgo-1252041857'; // 存储桶
         $cos = new Cos($cosRegion, $cosCredentials);
+        // code 域名
+        $cosDomain =  'https://' . $bucket . '.cos.' . $cosRegion . '.myqcloud.com';
         foreach ($resultList as $one) {
-            // code
-            $key = 'gp/' . explode(DIRECTORY_SEPARATOR, $one)[sizeof(explode(DIRECTORY_SEPARATOR, $one) - 1)];
+            $key = '/gp/userCredential/' . explode(DIRECTORY_SEPARATOR, $one)[sizeof(explode(DIRECTORY_SEPARATOR, $one)) - 1];
             if ($cos->putFileObject($bucket, $key, $one)) {
-                array_push($result, $one);
+                array_push($result, $cosDomain . $key);
             }
         }
 

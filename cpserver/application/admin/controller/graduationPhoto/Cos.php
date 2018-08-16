@@ -5,7 +5,8 @@
 namespace app\admin\controller\graduationPhoto;
 
 use think\Exception;
-require(ROOT_PATH . 'vendor' . DIRECTORY_SEPARATOR . 'qc' . DIRECTORY_SEPARATOR . 'cos-sdk-v5' . DIRECTORY_SEPARATOR . 'cos-autoloader.php');
+use Qcloud\Cos\Client;
+// require(ROOT_PATH . 'vendor' . DIRECTORY_SEPARATOR . 'qc' . DIRECTORY_SEPARATOR . 'cos-sdk-v5' . DIRECTORY_SEPARATOR . 'cos-autoloader.php');
 
 class Cos
 {
@@ -19,7 +20,7 @@ class Cos
      */
     public function __construct(string $cosRegion, array $cosCredentials)
     {
-        $this->cosClient = new Qcloud\Cos\Client(array('region' => $cosRegion, 'credentials' => $cosCredentials));
+        $this->cosClient = new Client(array('region' => $cosRegion, 'credentials' => $cosCredentials));
     } 
 
     /**
