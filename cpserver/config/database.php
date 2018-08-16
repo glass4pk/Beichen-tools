@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'dev.yes-go.cn',
+    'hostname'        => '127.0.0.1',
     // 数据库名
     'database'        => 'cpmapping',
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'BeiChen_dev??who_has_$$.',
+    'password'        => 'root',
     // 端口
     'hostport'        => '3306',
     // 连接dsn

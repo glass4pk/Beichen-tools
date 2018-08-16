@@ -183,3 +183,17 @@ if (!function_exists('decryptSession')) {
         return false;
     }
 }
+
+if (!function_exists('str_rand')) {
+    function str_rand(int $len, $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        if (!is_int($len) || $len < 1) {
+            return false;
+        }
+        $result = '';
+        for ($i = $len; $i > 0; $i--) {
+            // code
+            $result .= $char[mt_rand(0, strlen($char) - 1)];
+        }
+        return $result;
+    }
+}
