@@ -36,6 +36,7 @@
 
     <!--JS-->
     <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 </head>
 <body>
 
@@ -77,4 +78,101 @@
     </div>
 
 </body>
+
+<script type="text/javascript">
+
+    $(document).ready(function(){
+
+        //加载微信分享
+        $.ajax({
+            method:"post",
+            url:"http://dev.yes-go.cn/weixin/getjsapi",
+            data:{
+//                url:"http://dev.yes-go.cn/hey_card/"
+                url:window.location.href
+            },
+            success:function(json){
+//                alert("api调用成功");
+                //加载JS-SDK
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: 'wxa46386d571e05bac', // 必填，公众号的唯一标识
+                    timestamp: json.data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: json.data.nonceStr, // 必填，生成签名的随机串
+                    signature: json.data.signature,// 必填，签名
+                    jsApiList: [
+                        "onMenuShareTimeline",
+                        "onMenuShareAppMessage",
+                        "onMenuShareWeibo",
+                        "onMenuShareQQ"
+                    ] // 必填，需要使用的JS接口列表
+                });
+
+                //设置微信初始化
+                wx.ready(function(){
+                    //alert("wx.ready");
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareTimeline({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg?v=1', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareAppMessage({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg?v=1', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareWeibo({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareQQ({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                });
+            },
+            error:function(){
+                alert("api调用失败");
+            }
+        });
+    });
+
+</script>
+<script>
+    var _hmt = _hmt || [];
+    (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?dd9f36504b1b1dd792c8952982096697";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
 </html>
