@@ -17,11 +17,11 @@ class RenderMiddleware extends Controller
      * @param string $dirPath
      * @return string
      */
-    public static function makePic(array $userData, array $projectData, string $dirPath = UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'userCredential' . DIRECTORY_SEPARATOR)
+    public static function makePic(array $userData, array $projectData, string $dirPath = DATA . 'gp' . DIRECTORY_SEPARATOR . 'userCredential' . DIRECTORY_SEPARATOR)
     {
         $exportPicPath = '';
-        $font = new Font($projectData['coordinate_x'], $projectData['coordinate_y'], $projectData['font_size'], UPLOADS . $projectData['font'], $projectData['font_color'], $projectData['textkerning']);
-        $img = new Imagick(UPLOADS . $projectData['pic']);
+        $font = new Font($projectData['coordinate_x'], $projectData['coordinate_y'], $projectData['font_size'], DATA . $projectData['font'], $projectData['font_color'], $projectData['textkerning']);
+        $img = new Imagick(DATA . $projectData['pic']);
         $render = new Render($font, $img); // 创建Render器
         $render->setText($userData['cnName']); // 设置文本
         $render->render(); // 开始渲染

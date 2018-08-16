@@ -11,6 +11,23 @@ class User extends Common
 {
     protected $name = 'gp_user';
 
+    /**
+     * 查询单个记录
+     *
+     * @param array $whereArray 查询条件
+     * @return void
+     */
+    public function getUser(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->find();
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
 
     /**
      * 获取用户
@@ -42,6 +59,25 @@ class User extends Common
         }
         $result = $this->insert($data);
         return $result;
+    }
+
+    /**
+     * User更新数据
+     *
+     * @param array $whereArray where选择条件
+     * @param array $param 更新数据
+     * @return boolean
+     */
+    public function updateUser(array $whereArray, array $param)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->update($param);
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
     }
 
     /**

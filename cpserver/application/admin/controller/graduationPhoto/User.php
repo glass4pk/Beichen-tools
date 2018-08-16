@@ -41,22 +41,24 @@ class User extends Common
         
         // 从数据库获取用户的详细信息
         $userModel = model('graduationPhoto.User');
-        $userDataList = $userModel->getUsers(array('phone' => (string)$param['phone']));
-        if (!$userDataList) {
+        $userData = $userModel->getUser(array('phone' => (string)$param['phone']));
+        if (!$userData) {
             return resultArray(['error' => '用户异常']);
         }
 
         // 获取毕业证信息
         $objectModel = model('graduationPhoto.Project');
         $credentialList = []; // 证书列表
-        foreach ($userDataList as $one) {
-            if (isset($one['project_id'])) {
-                $projectData = $objectModel->getProject(array('id' => $one['project_id']));
-                if ($projectData) {
-                    $projectData = $projectData->toArray();
-                    $credentialList[$one['username']] = $projectData;
-                }
-            }   
+        $projectIdList = explode(';', $userData['project_id']);
+        if (sizeof($projectIdList) == 0) {
+            return resultArray(['error' => '用户没有证书']);
+        }
+        foreach ($projectIdList as $one) {
+            $projectData = $objectModel->getProject(array('id' => $one));
+            if ($projectData) {
+                $projectData = $projectData->toArray();
+                $credentialList[$userData['username']] = $projectData;
+            }
         }
 
         // 图片合成结果
@@ -89,7 +91,47 @@ class User extends Common
             }
         }
 
+        // 生成result_id
+        $result_id = date('YmdHis',strtotime('now')) + str_int_rand(5);
+        // 插入图片记录到数据库gp_result表
+        $resultModel = model('graduationPhoto.Result');
+        $insertDataArray = [];
+        foreach ($result as $one) {
+            array_push($insertDataArray, array('result_id' => $result_id, 'url' => $one));
+        }
+        if ($resultModel->insertArrayList($insertDataArray)) {
+            if ($userModel->updateUser(array('id' => $userData['id']), array('result_id' => $result_id))) {
+                return resultArray(['data' => $result_id]);
+            }
+        } else {
+            return resultArray(['error' => '服务器错误,请重试！']);
+        }
         // 返回图片的cos链接
-        return resultArray(['data' => $result]);
+        return resultArray(['error' => '未知错误']);
+    }
+
+    /**
+     * 用户根据result_id获取证书图片列表
+     *
+     * @return void
+     */
+    public function getResult()
+    {
+        if (!$this->request->isGet()) {
+            return ;
+        }
+        
+        $param  = $this->param;
+        if (!isset($param['result_id'])) {
+            return resultArray(['error' => '缺少必要result_id字段']);
+        }
+
+        $result_id = intval($param['result_id']);
+        $resultModel = model('graduationPhoto.Result');
+        $result = $resultModel->getResult(array('result_id' => $result_id));
+        if ($result) {
+            return resultArray(['data' => $result->toArray()]);
+        }
+        return resultArray(['error' => '服务器错误']);
     }
 }

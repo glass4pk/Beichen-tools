@@ -27,7 +27,7 @@ class UploadFile extends AdminApiCommon
             return resultArray(['error' => '没有上传文件']);        
         }
         // 验证
-        $fileInfo = $file->validate(['ext' => 'jpeg,png,gif,jpg'])->move(UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'pic' . DIRECTORY_SEPARATOR);
+        $fileInfo = $file->validate(['ext' => 'jpeg,png,gif,jpg'])->move(DATA . 'gp' . DIRECTORY_SEPARATOR . 'pic' . DIRECTORY_SEPARATOR);
         if (!$fileInfo) {
             return resultArray(['error' => '上传文件出错']);
         }
@@ -56,14 +56,14 @@ class UploadFile extends AdminApiCommon
             return resultArray(['error' => '没有上传文件']);        
         }
         // 验证
-        $fileInfo = $file->validate(['ext' => 'eot,otf,fon,font,ttf,ttc,woff,woff2'])->move(UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR);
+        $fileInfo = $file->validate(['ext' => 'eot,otf,fon,font,ttf,ttc,woff,woff2'])->move(DATA . 'gp' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR);
         if (!$fileInfo) {
             return resultArray(['error' => '上传文件出错']);
         }
         // 保存路径
         $fileFilePath = $fileInfo->getSaveName();
         // 读取字体名字
-        $font = Font::load(UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . $fileFilePath);
+        $font = Font::load(DATA . 'gp' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . $fileFilePath);
         $font->parse();  // for getFontWeight() to work this call must be done first!
         // 字体全名
         $fontFullName;
@@ -100,13 +100,13 @@ class UploadFile extends AdminApiCommon
         }
         $temp = date('Y-m-d h:i:sa',time());
         $fileName = $temp . '_' .$file->getInfo()['name']; // 获取文件名
-        $info = $file->validate(['ext'=>'xlsx,xls'])->move(UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR);
+        $info = $file->validate(['ext'=>'xlsx,xls'])->move(DATA . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR);
         if (!$info) {
             return resultArray(['error' =>  $file->getError()]);
         }
         // 缓存文件
         $filePath = $info->getSaveName(); // 缓存文件的相对路径路径
-        $result = ExcelMiddleware::import(UPLOADS . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR . $filePath);
+        $result = ExcelMiddleware::import(DATA . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR . $filePath);
         return resultArray(['data' => $result]);
     }
 }

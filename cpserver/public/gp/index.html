@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>未来大学</title>
+    <!--CSS-->
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/common.css"> -->
+    <style type="text/css">
+        body {
+            background-color:#000000;
+            margin: 0px;
+        }
+        #main{
+            position: relative;
+        }
+        .scale img{
+            margin: 0;
+            padding: 0;
+            background-size: contain|cover;
+            width: 100%;
+            height:auto;
+        }
+        .commit_input{
+            /* width: 80%; */
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: 37%;
+            width:53%;
+            height:5%;
+            opacity:1;
+        }
+        .commit_button{
+            /* width: 80%; */
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: 52.5%;
+            width:28%;
+            height:8%;
+            opacity:0;
+        }
+        #myInput{
+            background: none;
+            border: none;
+            width:100%;
+            height:100%;
+            font-size: 1em;
+            color: rgb(255, 255, 255);
+        }
+        #commit{
+            width:100%;
+            height:100%;
+            border-radius: 20%;
+        }
+        ::-moz-placeholder{
+            color: red;
+        }
+        #myInput:-ms-input-placeholder{ color: red;}
+    </style>
+    <!--JS-->
+    <script>
+        function submit() {
+            var phone = document.getElementById('myInput').value;
+            // 使用XMLHttpRequest发起请求
+            var xhr = new XMLHttpRequest();
+            var data = {
+                'phone': phone,
+                'recogn': 1
+            }
+            xhr.open("POST", "/gp/create", true);
+            xhr.onload = function (e) {
+                if (e.target.status === 200){
+                    var result = JSON.parse(e.target.responseText);
+                    if (result.errcode === 0) {
+                        window.location.href ='credential.html?result_id=' + result.data;
+                    }
+                }
+                // console.log(e);
+            };
+            xhr.send(JSON.stringify(data));
+        };
+    </script>
+    <!-- <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script> -->
+</head>
+<body>
+    <div id='main'>
+        <div class="scale">
+            <img id='backgroundpic' src='static/image/background.jpg'>
+        </div>
+        <div class='commit_input'>
+            <input id='myInput' type='text' name='phone' maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')">
+        </div>
+        <div class='commit_button'>
+            <button id='commit' onclick="submit()">
+        </div>
+    </div>
+</body>
+</html>
+<!-- border: 0 !important; /*Removes border*/
+            -webkit-appearance: none; /*Removes default chrome and safari style*/ 
+            -moz-appearance: none; /*Removes default style Firefox*/
+             -->
