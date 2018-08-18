@@ -22,9 +22,10 @@ class Project extends AdminApiCommon
             'coordinate_y' => 'require',
             'font_color' => 'require',
             'font_size' => 'require',
-            'font_id' => 'require',
+            'font' => 'require',
             'textkerning' => 'require',
-            'pic' => 'require'
+            'pic' => 'require',
+            'item_id'=> 'require'
         ];
         $message = [
             'name.require' => '名称必须',
@@ -33,9 +34,10 @@ class Project extends AdminApiCommon
             'coordinate_y' => '缺少纵坐标',
             'font_color' => '缺少颜色',
             'font_size' => '缺少字体大小',
-            'font_id' => '缺少字体',
+            'font' => '缺少字体',
             'textkerning' => '缺少字体间距',
-            'pic' => '缺少图片'
+            'pic' => '缺少图片',
+            'item_id'=> '缺少item_id'
         ];
         $validate = Validate::make($rule, $message);
         if (!$validate->check($param)) {
@@ -45,7 +47,7 @@ class Project extends AdminApiCommon
         $searchArr = []; // 将要插入到数据库的数组
         $projectModel = model('graduationPhoto.Project');
         // default param list
-        $paramList = ['name','coordinate_x','coordinate_y','font_color','font_size','font_id','textkerning','pic'];
+        $paramList = ['name','coordinate_x','coordinate_y','font_color','font_size','font','textkerning','pic','item_id'];
         foreach ($paramList as $one) {
             $searchArr[$one] = $param[$one];
         }
@@ -55,5 +57,46 @@ class Project extends AdminApiCommon
         } else {
             return resultArray(['error' => '创建失败']);
         }
+    }
+
+    /**
+     * 获取字体裂开表
+     *
+     * @return void
+     */
+    public function getFontList()
+    {
+        if (!$this->request->isGet()) {
+            return ;
+        }
+        $fontModel  = model('graduationPhoto.Font');
+        $result = $fontModel->getFontList();
+        if ($result) {
+            return resultArray(['data' => $result]);
+        }
+        return resultArray(['error' => '获取字体列表失败']);
+    }
+
+    public function deleteFont()
+    {
+        if (!$this->request->isPost()) {
+            return ;
+        }
+        $param = $this->param;
+        if (!isset($param['id'])) {
+            return resultArray(['error' => '']);
+        }
+
+        $fontModel  = model('graduationPhoto.Font');
+        $fontFilePath = $fontModel->getFont(array('id' => intval($param['id'])));
+        $fontFilePath = isset($fontFilePath['filepath']) ? $fontFilePath['filepath'] : null;
+        if (file_exists($fontFilePath)) {
+            unlink(DATA . $fontFilePath);
+        }
+        $result = $fontModel->deleteFont(array('id' => intval($param['id'])));
+        if ($result) {
+            return resultArray(['data' => $result]);
+        }
+        return resultArray(['error' => '删除字体失败']);
     }
 }

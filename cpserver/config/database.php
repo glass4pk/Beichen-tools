@@ -19,7 +19,7 @@ return [
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'root',
+    'password'        => 'BeiChen_dev??who_has_$$.',
     // 端口
     'hostport'        => '3306',
     // 连接dsn

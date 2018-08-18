@@ -35,8 +35,45 @@ class Font extends Common
      *
      * @return void
      */
-    public function getFonts()
+    public function getFontList()
     {
         return $this->where(['status' => 1])->select();
+    }
+
+    /**
+     * 删除字体
+     *
+     * @param array $whereArray
+     * @return void
+     */
+    public function deleteFont(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $this->where($whereArray)->delete();
+            $isOk = true;
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
+
+    /**
+     * 查询特定字体的信息
+     *
+     * @param array $whereArray
+     * @return void
+     */
+    public function getFont(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->find();
+        } catch (Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
     }
 }

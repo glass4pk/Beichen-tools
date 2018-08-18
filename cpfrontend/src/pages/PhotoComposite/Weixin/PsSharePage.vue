@@ -266,14 +266,14 @@ export default {
   margin: 0;
   padding: 0;
   background-size:contain|cover;
-  width:100%;
+  width: 100%;
   height: auto;
 }
 .scale canvas{
 margin: 0;
 padding: 0;
 background-size:contain|cover;
-width:100%;
+width: 100%;
 height:auto;
 }
 .scale img{

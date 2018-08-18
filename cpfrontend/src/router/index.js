@@ -93,6 +93,35 @@ export default new Router({
       path: '/weixin/share',
       name: 'PsSharePage',
       component: require('@/pages/PhotoComposite/Weixin/PsSharePage').default
+    },
+    {
+      path: '/gp',
+      redirect: '/gp/item',
+      name: 'GraduationPhoto',
+      component: require('@/pages/GraduationPhoto/GraduationPhoto').default,
+      children: [
+        {
+          path: '/gp/font',
+          name: 'Font',
+          component: require('@/pages/GraduationPhoto/Font/Font').default
+        },
+        {
+          path: '/gp/item',
+          name: 'Item',
+          component: require('@/pages/GraduationPhoto/Item/Item').default
+        },
+        {
+          path: '/gp/createitem',
+          name: 'CreateItem',
+          component: require('@/pages/GraduationPhoto/Item/CreateItem').default
+        },
+        {
+          path: '/gp/iteminfo',
+          name: 'ItemInfo',
+          component: require('@/pages/GraduationPhoto/Item/ItemInfo').default
+        }
+      ]
     }
+
   ]
 })

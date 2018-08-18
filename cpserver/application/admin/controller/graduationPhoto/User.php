@@ -70,7 +70,7 @@ class User extends Common
                 array_push($resultList, $localFilePath);
             }
         }
-        // return resultArray(['data' => $resultList]);
+        return resultArray(['data' => $resultList]);
         // 最终返回给用户的结果
         $result = [];
 

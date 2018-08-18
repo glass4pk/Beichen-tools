@@ -107,7 +107,11 @@ class Render extends Controller
         $draw->setFont($this->font->getFontFamily());
         $draw->setTextEncoding('UTF-8');
         $draw->setTextKerning($this->font->getTextKerning()); // 设置文字间距
-        $draw->annotation($this->font->getcoordinateX(), $this->font->getcoordinateY() - $this->font->getFontSize() / 10, $this->text);
+        $draw->setTextAntialias(true);
+        $Metrics = $this->img->queryFontMetrics($draw, $this->text); // 获取text Metris
+        $getImageGeometry = $this->img->getImageGeometry(); // 获取图片几何
+        $coordinateX = ($this->font->getcoordinateX() == 0.0) ? (($getImageGeometry['width'] - $Metrics['textWidth']) / 2) : $this->font->getcoordinateX();
+        $draw->annotation($coordinateX, $this->font->getcoordinateY() - $this->font->getFontSize() / 10, $this->text);
         $this->img->drawImage($draw);
         $draw->clear();
         $draw->destroy();
