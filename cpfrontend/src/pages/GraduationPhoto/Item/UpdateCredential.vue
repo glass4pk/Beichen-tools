@@ -1,15 +1,15 @@
 <template>
-  <div id='createCredential' style='text-align: left'>
+  <div id='updateCredential' style='text-align: left'>
       <el-dialog
-        :visible.sync='createCredentialVisuality'
+        :visible.sync='updateCredentialVisuality'
         :fullscreen=false
         :center=false
         :show-close=false
-        title='新增证书'
+        title='编辑证书'
         width='40em'>
         <div>
             <div class='container'>
-                <div class="createCredential-main-content" style="vertical-align: top">
+                <div class="updateCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
                             <!-- <div class='title'>证书名称：</div> -->
@@ -37,15 +37,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="createCredential-main-content" style="vertical-align: top">
+                <div class="updateCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='2-20个字' v-model="project.name"></el-input>
+                            <el-input size='mini' placeholder='2-20个字' v-model="project.name" disabled></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='数字' v-model="project.credential_id"></el-input>
+                            <el-input size='mini' placeholder='数字' v-model="project.credential_id" disabled></el-input>
                         </div>
                     </div>
                     <div class='row'>
@@ -74,7 +74,7 @@
                 </div>
             </div>
             <div class='container'>
-                <div class="createCredential-main-content" style="vertical-align: top">
+                <div class="updateCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
                         选择字体：
@@ -95,10 +95,10 @@
                         Y坐标：</div>
                     </div>
                 </div>
-                <div class="createCredential-main-content" style="vertical-align: top">
+                <div class="updateCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-select size='mini' v-model='project.font_id'>
+                            <el-select size='mini' v-model='project.font_id' v-bind:placeholder='fontName'>
                                 <el-option
                                   v-for="item in fontList"
                                   :key="item.id"
@@ -129,7 +129,7 @@
         </div>
         <span slot='footer' class='dialog-footer'>
             <el-button @click='cancel' type='primary' size='mini'>取消</el-button>
-            <el-button @click='createProjectElementsPic' type='primary' size='mini' v-loading.fullscreen.lock='loadingfullscreen'>保存</el-button>
+            <el-button @click='updateProjectElementsPic' type='primary' size='mini' v-loading.fullscreen.lock='loadingfullscreen'>保存</el-button>
         </span>
       </el-dialog>
   </div>
@@ -137,9 +137,22 @@
 
 <script>
 import axios from 'axios'
+
+// 深拷贝
+function deepCopy (obj) {
+  if (typeof obj !== 'object') {
+    return obj
+  }
+  var newObj = {}
+  for (var attr in obj) {
+    newObj[attr] = deepCopy(obj[attr])
+  }
+  return newObj
+}
+
 export default {
-  name: 'CreateCredential',
-  props: ['createCredentialVisuality'],
+  name: 'UpdateCredential',
+  props: ['updateCredentialVisuality', 'updateItem'],
   data () {
     return {
       fontList: [],
@@ -158,16 +171,27 @@ export default {
         coordinate_y: null,
         item_id: null,
         font: null
-      }
+      },
+      fontName: null,
+      isUploadPic: false
     }
   },
   created () {
     this.getItemId()
     this.getFontList()
   },
+  watch: {
+    updateItem: function (val) {
+      this.project = deepCopy(this.updateItem)
+      this.fontName = this.project.font_fullname
+    }
+  },
   methods: {
     cancel () {
-      this.$emit('Cancel', 'create')
+      this.$emit('Cancel', 'update')
+      this.project = deepCopy(this.updateItem)
+      this.fontName = this.project.font_fullname
+      // this.flushAll()
     },
     // 获取url参数
     getItemId () {
@@ -199,7 +223,7 @@ export default {
       }
     },
     // 提交项目图片,返回图片存储地址
-    createProjectElementsPic () {
+    updateProjectElementsPic () {
     //   console.log(file)
       this.loadingfullscreen = true
       var _this = this
@@ -213,12 +237,7 @@ export default {
         this.loadingfullscreen = false
         return
       }
-      if (_this.project.pic === null) {
-        if (!_this.uploadFile) {
-          alert('请选择图片！')
-          this.loadingfullscreen = false
-          return
-        }
+      if (_this.uploadFile) {
         var formdata = new FormData()
         formdata.append('file', _this.uploadFile)
         axios({
@@ -249,6 +268,7 @@ export default {
           }
         )
       } else {
+        this.isUploadPic = true
         this.submit()
         _this.uploadFile = null
       }
@@ -257,11 +277,13 @@ export default {
     submit () {
       // code
       var _this = this
-      for (var i = 0; i < _this.fontList.length; i++) {
-        if (_this.fontList[i]['id'] === _this.project.font_id) {
-          _this.project.font = _this.fontList[i]['filepath']
-          _this.project.font_fullname = _this.fontList[i]['font_fullname']
-          break
+      if (_this.project.font_id) {
+        for (var i = 0; i < _this.fontList.length; i++) {
+          if (_this.fontList[i]['id'] === _this.project.font_id) {
+            _this.project.font = _this.fontList[i]['filepath']
+            _this.project.font_fullname = _this.fontList[i]['font_fullname']
+            break
+          }
         }
       }
       if (!_this.project.coordinate_x) {
@@ -272,7 +294,7 @@ export default {
       }
       if (_this.isUploadPic) {
         axios({
-          url: _this.GLOBAL.WEB_URL + '/gp/createproject',
+          url: _this.GLOBAL.WEB_URL + '/gp/updateproject',
           method: 'post',
           data: _this.project
         }).then(
@@ -298,7 +320,7 @@ export default {
           }
         )
       }
-      this.loadingfullscreen = false
+      _this.loadingfullscreen = false
     },
     flushAll () {
       this.project.name = null
@@ -312,6 +334,9 @@ export default {
       this.project.coordinate_y = null
       this.project.textkerning = null
       this.project.pic = null
+      this.project.item_id = null
+      this.fontName = null
+      this.uploadFile = null
     }
   }
 }
@@ -321,31 +346,31 @@ export default {
 .on-same-line{
     display: inline-block;
 }
-.createCredential .dialog{
+.updateCredential .dialog{
     position: relative;
 }
-#createCredential .el-dialog{
+#updateCredential .el-dialog{
     padding: 0em;
 }
-.createCredential-main-content{
+.updateCredential-main-content{
     padding: 0px;
     display: inline-block;
     float: top;
 }
-#createCredential .row{
+#updateCredential .row{
     padding: 0.5em;
     height: 2em;
 }
-#createCredential .on-same-line{
+#updateCredential .on-same-line{
     padding: 0em 0em 0em 0em;
     line-height: 2em;
     overflow: hidden;
 }
-#createCredential .container{
+#updateCredential .container{
     padding: 0em 0em 0em 1em;
     display: inline-block;
 }
-#createCredential .title{
+#updateCredential .title{
     vertical-align: middle;
     display: table-cell;
 }

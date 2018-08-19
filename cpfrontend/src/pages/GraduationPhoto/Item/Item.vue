@@ -28,8 +28,19 @@
                                     </el-table-column>
                                     <el-table-column
                                     prop='status'
-                                    label="状态"
+                                    label="发布状态"
                                     width="180">
+                                    <template slot-scope="scope">
+                                        <span>{{(scope.row['status'] === 1) ? '已发布 ' : '未发布'}}</span>
+                                    </template>
+                                    </el-table-column>
+                                    <el-table-column
+                                    label="发布管理"
+                                    width="180">
+                                    <template slot-scope="scope">
+                                        <el-button @click="ff(scope.$index, scope.row)" type="text" size="mini">发布</el-button>
+                                        <el-button @click="ff(scope.$index, scope.row)" type="text" size="mini">停止发布</el-button>
+                                    </template>
                                     </el-table-column>
                                     <el-table-column
                                     label="操作"

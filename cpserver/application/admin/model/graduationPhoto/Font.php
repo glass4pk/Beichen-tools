@@ -50,8 +50,7 @@ class Font extends Common
     {
         $isOk = false;
         try {
-            $this->where($whereArray)->delete();
-            $isOk = true;
+            $isOk = $this->where($whereArray)->delete();
         } catch (Exception $e) {
             $isOk = false;
         } finally {

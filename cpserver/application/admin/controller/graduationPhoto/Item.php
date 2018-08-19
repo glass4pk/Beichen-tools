@@ -47,6 +47,8 @@ class Item extends AdminApiCommon
         $itemModel  = model('graduationPhoto.Item');
         $result = $itemModel->deleteItem(array('id' => intval($param['id'])));
         if ($result) {
+            $projectModel = model('graduationPhoto.Project');
+            $projectModel->deleteProject(array('item_id' => intval($param['id'])));
             return resultArray(['data' => $result]);
         }
         return resultArray(['error' => '删除Item失败']);

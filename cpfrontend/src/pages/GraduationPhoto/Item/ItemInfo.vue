@@ -24,8 +24,8 @@
                                     size='mini'
                                     :data='items'>
                                     <el-table-column
-                                    prop='id'
-                                    label="证书ID"
+                                    prop='credential_id'
+                                    label="证书编号"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
@@ -35,15 +35,15 @@
                                     </el-table-column>
                                     <el-table-column
                                     prop='status'
-                                    label="状态"
+                                    label="预览"
                                     width="180">
                                     </el-table-column>
                                     <el-table-column
                                     label="操作"
                                     width="180">
                                     <template slot-scope="scope">
-                                        <el-button @click="deleteItem(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                                        <el-button @click="itemInfo(scope.$index, scope.row)" type="text" size="small">查看</el-button>
+                                        <el-button @click="deleteProject(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                                     </template>
                                     </el-table-column>
                                 </el-table>
@@ -78,46 +78,69 @@
             </el-button>
             </span>
         </el-dialog>
-        <CreateCredential :createCredentialVisuality=createCredentialVisuality v-on:CreateCredentialCancel=CreateCredentialCancel></CreateCredential>
+        <CreateCredential :createCredentialVisuality=createCredentialVisuality v-on:Cancel=Cancel v-on:flushList=flushList></CreateCredential>
+        <UpdateCredential :updateCredentialVisuality=updateCredentialVisuality :updateItem=updateItem v-on:Cancel=Cancel v-on:flushList=flushList></UpdateCredential>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import CreateCredential from './CreateCredential'
+import UpdateCredential from './UpdateCredential'
 export default {
   name: 'ItemInfo',
   components: {
-    CreateCredential
+    CreateCredential,
+    UpdateCredential
   },
   data () {
     return {
-      totalnums: null, // 所有数据总数
-      pic: '',
-      psProListLookChannelVisuality: false,
-      psItemItemName: null,
       items: [], // 获取到的所有总数
       createCredentialVisuality: false,
-      elementType: null // 用户选择的元素类型
+      updateCredentialVisuality: false,
+      item_id: null,
+      updateItem: {}
     }
   },
   computed: {
   },
   created () {
+    this.getItemId()
     this.flushList()
   },
   methods: {
+    // 获取url参数
+    getItemId () {
+      var url = window.location.href
+      var b = url.split('?id=')
+      if (b.length > 1) {
+        var id = b[1].split('&')[0]
+        this.item_id = id
+      } else {
+        alert('请选择一个项目进行编辑')
+        this.$router.push({path: '/gp/item'})
+      }
+    },
     create () {
       this.createCredentialVisuality = true
     },
-    // 删除item
-    deleteItem (index, row) {
+    // 删除project
+    deleteProject (index, row) {
       var _this = this
-      axios.post(_this.GLOBAL.WEB_URL + '/gp/deleteitem?id=' + _this.items[index]['id']).then(
+      alert(row['credential_id'])
+      axios({
+        url: _this.GLOBAL.WEB_URL + '/gp/deleteproject',
+        method: 'post',
+        data: {
+          id: row['id']
+        }
+      }).then(
         (response) => {
           if (response.data.errcode === 0) {
             _this.flushList() // 刷新列表
             alert('删除项目成功')
+          } else {
+            alert(response.data.errmsg)
           }
         }
       ).catch(
@@ -131,7 +154,7 @@ export default {
     // 刷新item列表
     flushList () {
       var _this = this
-      axios.get(_this.GLOBAL.WEB_URL + '').then(
+      axios.get(_this.GLOBAL.WEB_URL + '/gp/getprojectlist?id=' + this.item_id).then(
         (response) => {
           if (response.data['errcode'] === 0) {
             _this.items = response.data.data
@@ -145,8 +168,21 @@ export default {
         }
       )
     },
-    CreateCredentialCancel () {
-      this.createCredentialVisuality = false
+    Cancel (type) {
+      switch (type) {
+        case 'create':
+          this.createCredentialVisuality = false
+          break
+        case 'update':
+          this.updateCredentialVisuality = false
+          break
+        default:
+          break
+      }
+    },
+    projectInfo (index, row) {
+      this.updateCredentialVisuality = true
+      this.updateItem = row
     }
   }
 }

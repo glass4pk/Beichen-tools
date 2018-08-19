@@ -17,13 +17,12 @@ class Project extends Common
      * @param array $param
      * @return boolean
      */
-    public function creatProject($param)
+    public function creatProject(array $param)
     {
         $param['status'] = 1;
         $isOk = false;
         try {
-            $this->insert($param);
-            $isOk = true;
+            $isOk = $this->insert($param);
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
@@ -33,15 +32,79 @@ class Project extends Common
 
     /**
      * 获取project(证书)信息
-     *
+     * @param array $param 查询条件
      * @return void
      */
-    public function getProject($param)
+    public function getProject(array $param)
     {
         $param['status'] = 1;
         $isOk = false;
         try {
             $isOk = $this->where($param)->find();
+        } catch(Exceptionn $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
+
+    /**
+     * 获取证书列表
+     * @param array $whereArray 查询条件
+     * @return void
+     */
+    public function getProjectList(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->select();
+        } catch(Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
+
+    public function deleteProject(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->delete();
+        } catch(Exception $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
+
+    public function check(array $whereArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->select();
+            if (sizeof($isOk) > 0) {
+                $isOk = true;
+            } else {
+                $isOk = false;
+            }
+        } catch(Exception $e) {
+            $isOk = true;
+        } finally {
+            return $isOk;
+        }
+    }
+    
+    /**
+     * 更新Project
+     *
+     * @param array $param
+     * @return boolean
+     */
+    public function updateProject(array $whereArray, array $param)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->update($param);
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
