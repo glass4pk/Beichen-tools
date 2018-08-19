@@ -39,22 +39,22 @@
                 <div class="createCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='2-20个字'></el-input>
+                            <el-input size='mini' placeholder='2-20个字' v-model="project.name"></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='数字'></el-input>
+                            <el-input size='mini' placeholder='数字' v-model="project.credential_id"></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='单位像素'></el-input>
+                            <el-input size='mini' placeholder='单位像素' v-model='project.font_size'></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='十六进制颜色码'></el-input>
+                            <el-input size='mini' placeholder='十六进制颜色码' v-model="project.font_color"></el-input>
                         </div>
                     </div>
                     <div class='row'>
@@ -97,7 +97,7 @@
                 <div class="createCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-select size='mini' v-model='font'>
+                            <el-select size='mini' v-model='project.font_id'>
                                 <el-option
                                   v-for="item in fontList"
                                   :key="item.id"
@@ -110,17 +110,17 @@
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='默认0'></el-input>
+                            <el-input size='mini' placeholder='默认0' v-model="project.textkerning"></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='单位像素'></el-input>
+                            <el-input size='mini' placeholder='水平居中则不填' v-model="project.coordinate_x"></el-input>
                         </div>
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='水平居中则不填'></el-input>
+                            <el-input size='mini' placeholder='单位像素' v-model="project.coordinate_y"></el-input>
                         </div>
                     </div>
                 </div>
@@ -128,7 +128,7 @@
         </div>
         <span slot='footer' class='dialog-footer'>
             <el-button @click='cancel' type='primary' size='mini'>取消</el-button>
-            <el-button @click='submit' type='primary' size='mini' v-loading.fullscreen.lock='loadingfullscreen'>保存</el-button>
+            <el-button @click='createProjectElementsPic' type='primary' size='mini' v-loading.fullscreen.lock='loadingfullscreen'>保存</el-button>
         </span>
       </el-dialog>
   </div>
@@ -143,18 +143,42 @@ export default {
     return {
       font: null,
       fontList: [],
-      uploadFile: null,
-      loadingfullscreen: false
+      uploadFile: null, // 待上传的图片
+      loadingfullscreen: false,
+      project: {
+        name: null,
+        credential_id: null,
+        font_size: null,
+        font_color: null,
+        pic: null,
+        font_id: null,
+        textkerning: null,
+        font_fullname: null,
+        coordinate_x: null,
+        coordinate_y: null,
+        item_id: null
+      }
     }
   },
   created () {
+    this.getItemId()
     this.getFontList()
   },
   methods: {
     cancel () {
       this.$emit('CreateCredentialCancel')
     },
-    uploadFont () {
+    // 获取url参数
+    getItemId () {
+      var url = window.location.href
+      var b = url.split("?id=")
+      if (b.length > 1) {
+        var id = b[1].split('&')[0];
+        this.project.item_id = id;
+      } else {
+        alert('请选择一个项目进行编辑')
+        this.$router.push({path: '/gp/item'})
+      }
     },
     // 获取字体列表
     getFontList () {
@@ -181,10 +205,17 @@ export default {
       var _this = this
       if (!_this.uploadFile) {
         alert('请选择图片！')
+        this.loadingfullscreen = false
         return
       }
-      if (_this.basicinfo.name === '') {
-        alert('请填写项目名称！')
+      if (_this.project.name === null ||
+        _this.project.credential_id === null ||
+        _this.project.font_size === null ||
+        _this.project.font_color === null ||
+        _this.project.font_id === null ||
+        _this.project.coordinate_y === null ||
+        _this.project.textkerning === null) {
+        alert('请填写必要选项')
         this.loadingfullscreen = false
         return
       }
@@ -198,10 +229,9 @@ export default {
       }).then(
         (response) => {
           if (response.data['errcode'] === 0) {
-            _this.basicinfo.cover = response.data.data['cover']
-            _this.basicinfo.background = response.data.data['background']
             _this.isUploadPic = true // 已经上传图片
-            alert(' 已经上传图片')
+            _this.project.pic = response.data.data['file']
+            alert(_this.project.pic)
             this.submit()
             _this.uploadFile = []
           } else {
@@ -223,15 +253,13 @@ export default {
     submit () {
       // code
       var _this = this
-      var postData = {}
-      postData['basicinfo'] = _this.basicinfo
-      postData['elements'] = _this.elements
       console.log(_this.elements)
+      alert(_this.isUploadPic)
       if (_this.isUploadPic) {
         axios({
-          url: 'http://127.0.0.1/ps/createproject',
+          url: _this.GLOBAL.WEB_URL + '/gp/createproject',
           method: 'post',
-          data: postData
+          data: _this.project
         }).then(
           (response) => {
             if (response.data['errcode'] === 0) {

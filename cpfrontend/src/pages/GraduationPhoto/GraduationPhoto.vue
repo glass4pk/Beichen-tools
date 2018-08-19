@@ -4,7 +4,7 @@
         <el-asider>
           <div class='aside'>
             <el-menu
-              default-active="2"
+              default-active="3"
               class="el-menu-vertical-demo gp-aside-menu"
               background-color="#545c64"
               text-color="#fff"
@@ -17,7 +17,7 @@
                 <i class="el-icon-document"></i>
                 <span slot="title">新建项目</span>
               </el-menu-item>
-              <el-menu-item index="4" @click="goTo('/gp/item')">
+              <el-menu-item index="3" @click="goTo('/gp/item')">
                 <i class="el-icon-document"></i>
                 <span slot="title">项目管理</span>
               </el-menu-item>
