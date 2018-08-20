@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>未来大学</title>
     <script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.2.0.js'></script>
-    <script type='text/javascript' src='static/js/jsdk.js'></script>
+    <!-- <script type='text/javascript' src='static/js/jsdk.js'></script> -->
     <!--CSS-->
     <!-- <link rel="stylesheet" type="text/css" href="static/css/common.css"> -->
     <style type="text/css">
@@ -64,7 +64,9 @@
     <!--JS-->
     <script>
         function wxjsdk() {
-            var xhr = XMLHttpRequest();
+            alert('wxjsdk')
+            alert(window.location.href)
+            var xhr = new XMLHttpRequest();
             var data = {
                 url: window.location.href
             };
@@ -137,6 +139,7 @@
                 }
             }
             xhr.send(JSON.stringify(data));
+            alert(window.location.href)
         }
         function submit() {
             var phone = document.getElementById('myInput').value;
