@@ -95,8 +95,13 @@ export default new Router({
       component: require('@/pages/PhotoComposite/Weixin/PsSharePage').default
     },
     {
+      path: '/gp/login',
+      name: 'Login',
+      component: require('@/pages/GraduationPhoto/Login').default
+    },
+    {
       path: '/gp',
-      redirect: '/gp/item',
+      redirect: '/gp/login',
       name: 'GraduationPhoto',
       component: require('@/pages/GraduationPhoto/GraduationPhoto').default,
       children: [

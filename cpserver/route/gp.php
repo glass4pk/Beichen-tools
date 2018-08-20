@@ -20,3 +20,8 @@ Route::post('gp/deleteitem','admin/graduationPhoto.Item/deleteItem');
 Route::get('gp/getitemlist','admin/graduationPhoto.Item/getItemList');
 Route::any('gp/createitem','admin/graduationPhoto.Item/createItem');
 Route::get('gp/getiteminfo','admin/graduationPhoto.Item/getItemInfo');
+
+
+// 登录、注册
+Route::any('gp/login','admin/graduationPhoto.admin/login');
+Route::any('gp/signup','admin/graduationPhoto.admin/signUp');

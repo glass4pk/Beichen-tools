@@ -6,7 +6,9 @@
             <el-menu
               default-active="3"
               class="el-menu-vertical-demo gp-aside-menu"
+              style="width: 100%;"
               background-color="#545c64"
+              width=100%
               text-color="#fff"
               active-text-color="#ffd04b">
               <el-menu-item index="1" @click="goTo('/gp/font')">
@@ -24,7 +26,7 @@
             </el-menu>
           </div>
         </el-asider>
-        <el-main class='gp-main'>
+        <el-main class='gp-main' v-loading='isLoading' element-loading-text='拼命加载中' element-loading-spinner='el-icon-loading' element-loading-background="rgba(0, 0, 0, 0.5)">
           <router-view></router-view>
         </el-main>
       </el-container>
@@ -35,6 +37,7 @@ export default {
   name: 'GraduationPhoto',
   data () {
     return {
+      isLoading: false
     }
   },
   methods: {
