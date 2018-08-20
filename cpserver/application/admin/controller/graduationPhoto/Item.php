@@ -49,7 +49,7 @@ class Item extends AdminApiCommon
         if ($result) {
             $projectModel = model('graduationPhoto.Project');
             $projectModel->deleteProject(array('item_id' => intval($param['id'])));
-            return resultArray(['data' => $result]);
+            return resultArray(['data' => "删除项目成功"]);
         }
         return resultArray(['error' => '删除Item失败']);
     }
@@ -104,5 +104,36 @@ class Item extends AdminApiCommon
             return resultArray(['data' => $result]);
         }
         return resultArray(['error' => '获取item信息失败']);
+    }
+
+    public function changeStatus()
+    {
+        if (!$this->request->isPost()) {
+            return ;
+        }
+
+        $param = $this->param;
+        $rule = [
+            'status' => 'require|number',
+            'id' => 'require|number'
+        ];
+        $message = [
+            'status' => 'status参数错误',
+            'id' => 'id参数错误',
+        ];
+        $validate = Validate::make($rule, $message);
+        if (!isset($param['status']) || !is_int(intval($param['status']))) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+
+        $status = intval($param['status']);
+        $itemId = intval($param['id']);
+
+        $itemModel = model('graduationPhoto.Item');
+        if ($itemModel->changeStatus(array('id' => $itemId), array('status' => $status))) {
+            return resultArray(['data' => '更新成功']);
+        }
+
+        return resultArray(['error' => '更新失败']);
     }
 }

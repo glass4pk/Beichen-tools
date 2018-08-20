@@ -233,7 +233,7 @@ export default {
         _this.project.font_color === null ||
         _this.project.font_id === null ||
         _this.project.coordinate_y === null) {
-        alert('请填写必要选项')
+        _this.$message.error('请填写必要选项')
         this.loadingfullscreen = false
         return
       }
@@ -254,14 +254,14 @@ export default {
               _this.submit()
               _this.uploadFile = null
             } else {
-              alert('提交失败,请重新选择图片')
+              _this.$message.error('提交失败,请重新选择图片')
               _this.uploadFile = null
               _this.loadingfullscreen = false
             }
           }).catch(
           (error) => {
             if (error) {
-              alert('网络错误,请重新选择图片')
+              _this.$message.error('网络错误,请重新选择图片')
               _this.uploadFile = null
               _this.loadingfullscreen = false
             }
@@ -292,6 +292,7 @@ export default {
       if (!_this.project.textkerning) {
         _this.project.textkerning = 0
       }
+      this.$emit('Cancel', 'update')
       if (_this.isUploadPic) {
         axios({
           url: _this.GLOBAL.WEB_URL + '/gp/updateproject',
@@ -301,11 +302,11 @@ export default {
           (response) => {
             if (response.data['errcode'] === 0) {
               _this.$emit('flushList')
-              alert('提交成功')
+              _this.$message({type: 'succees', message: '提交成功'})
               _this.flushAll()
               _this.cancel()
             } else {
-              alert(response.data.errmsg)
+              _this.$message.error(response.data.errmsg)
             }
             _this.loadingfullscreen = false
           }
@@ -313,14 +314,13 @@ export default {
           (error) => {
             if (error) {
               // code
-              alert('提交失败')
+              _this.$message.error('提交失败')
               _this.elements = []
               _this.loadingfullscreen = false
             }
           }
         )
       }
-      _this.loadingfullscreen = false
     },
     flushAll () {
       this.project.name = null

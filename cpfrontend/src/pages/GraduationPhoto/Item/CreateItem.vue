@@ -78,6 +78,7 @@
 import axios from 'axios'
 export default {
   name: 'Item',
+  props: ['isLoading'],
   data () {
     return {
       name: null,
@@ -101,6 +102,7 @@ export default {
         alert('请填写完整')
         return
       }
+      _this.$emit('cancelLoading', true)
       axios({
         url: _this.GLOBAL.WEB_URL + '/gp/createitem',
         method: 'POST',
@@ -111,17 +113,25 @@ export default {
       }).then(
         (response) => {
           if (response.data['errcode'] === 0) {
-            alert('提交成功')
+            _this.$message({
+              type: 'success',
+              message: '创建成功'
+            });
             _this.flushList()
           } else {
-            alert('提交失败')
+            _this.$message({
+              type: 'warning',
+              message: response.data.errmsg
+            });
           }
+          _this.$emit('cancelLoading', false)
         }
       ).catch(
         (error) => {
           if (error) {
-            alert('提交失败')
+            _this.$message.error('网络错误');
             console.log(error)
+            _this.$emit('cancelLoading', false)
           }
         }
       )

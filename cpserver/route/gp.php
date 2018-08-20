@@ -13,14 +13,16 @@ Route::get('gp/getprojectlist','admin/graduationPhoto.Project/getProjectList');
 Route::any('gp/deleteproject','admin/graduationPhoto.Project/deleteProject');
 Route::any('gp/updateproject','admin/graduationPhoto.Project/updateProject');
 
-Route::get('gp/getresult','admin/graduationPhoto.User/getResult');
+// user
+Route::any('gp/user/create','admin/graduationPhoto.User/create'); // 创建证书
+Route::get('gp/getresult','admin/graduationPhoto.User/getResult'); // 获取证书链接
 
 // 项目
 Route::post('gp/deleteitem','admin/graduationPhoto.Item/deleteItem');
 Route::get('gp/getitemlist','admin/graduationPhoto.Item/getItemList');
 Route::any('gp/createitem','admin/graduationPhoto.Item/createItem');
 Route::get('gp/getiteminfo','admin/graduationPhoto.Item/getItemInfo');
-
+Route::any('gp/item/changestatus','admin/graduationPhoto.Item/changeStatus');
 
 // 登录、注册
 Route::any('gp/login','admin/graduationPhoto.admin/login');

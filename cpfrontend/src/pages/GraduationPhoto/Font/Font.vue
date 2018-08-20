@@ -105,6 +105,7 @@ export default {
     // 上传字体
     uploadFont (event) {
       var _this = this
+      _this.$emit('cancelLoading', true)
       var font = event.target.files[0]
       var formdata = new FormData()
       formdata.append('file', font)
@@ -116,17 +117,18 @@ export default {
       }).then(
         (response) => {
           if (response.data['errcode'] === 0) {
-            alert('上传成功')
-            this.flushList()
+            _this.$message({type: 'success', message: '上传成功'})
+            _this.flushList()
           } else {
-            alert('上传失败')
+            _this.$message({type: 'warning', message: '上传失败'})
           }
+          _this.$emit('cancelLoading', false)
         }
       ).catch(
         (error) => {
           if (error) {
-            alert('上传失败')
-            console.log(error)
+            _this.$message.error('网络错误')
+            _this.$emit('cancelLoading', false)
           }
         }
       )
@@ -134,16 +136,22 @@ export default {
     // 删除字体
     deleteFont (index, row) {
       var _this = this
+      _this.$emit('cancelLoading', true)
       axios.post(_this.GLOBAL.WEB_URL + '/gp/deletefont?id=' + _this.items[index]['id']).then(
         (response) => {
           if (response.data.errcode === 0) {
-            alert('删除字体成功')
+            _this.$message({type: 'success', message: '删除成功'})
             _this.flushList() // 刷新列表
+          } else {
+            _this.$message({type: 'warning', message: '删除失败'})
           }
+          _this.$emit('cancelLoading', false)
         }
       ).catch(
         (error) => {
           if (error) {
+            _this.$emit('cancelLoading', false)
+            _this.$message.error('网络错误')
             console.lg(error)
           }
         }

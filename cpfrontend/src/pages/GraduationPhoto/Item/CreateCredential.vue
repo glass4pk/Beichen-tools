@@ -168,6 +168,7 @@ export default {
   methods: {
     cancel () {
       this.$emit('Cancel', 'create')
+      this.flushAll()
     },
     // 获取url参数
     getItemId () {
@@ -177,7 +178,7 @@ export default {
         var id = b[1].split('&')[0]
         this.project.item_id = id
       } else {
-        alert('请选择一个项目进行编辑')
+        _this.$message('请选择一个项目进行编辑')
         this.$router.push({path: '/gp/item'})
       }
     },
@@ -209,16 +210,17 @@ export default {
         _this.project.font_color === null ||
         _this.project.font_id === null ||
         _this.project.coordinate_y === null) {
-        alert('请填写必要选项')
+        this.$message.error('请填写必要选项')
         this.loadingfullscreen = false
         return
       }
       if (_this.project.pic === null) {
         if (!_this.uploadFile) {
-          alert('请选择图片！')
+          this.$message.error('请选择图片！')
           this.loadingfullscreen = false
           return
         }
+        this.$emit('Cancel', 'create')
         var formdata = new FormData()
         formdata.append('file', _this.uploadFile)
         axios({
@@ -231,18 +233,17 @@ export default {
             if (response.data['errcode'] === 0) {
               _this.isUploadPic = true // 已经上传图片
               _this.project.pic = response.data.data['file']
-              alert(_this.project.pic)
               _this.submit()
               _this.uploadFile = null
             } else {
-              alert('提交失败,请重新选择图片')
+              _this.$message.error('提交失败，请重新提交！')
               _this.uploadFile = null
               _this.loadingfullscreen = false
             }
           }).catch(
           (error) => {
             if (error) {
-              alert('网络错误,请重新选择图片')
+              _this.$message.error('提交失败，请重新提交！')
               _this.uploadFile = null
               _this.loadingfullscreen = false
             }
@@ -279,26 +280,24 @@ export default {
           (response) => {
             if (response.data['errcode'] === 0) {
               _this.$emit('flushList')
-              alert('提交成功')
-              _this.flushAll()
-              _this.cancel()
+              _this.$message({type: 'success', message: '提交成功'})
             } else {
-              alert(response.data.errmsg)
+              _this.$message.error(response.data.errmsg)
             }
             _this.loadingfullscreen = false
+            _this.cancel()
           }
         ).catch(
           (error) => {
             if (error) {
               // code
-              alert('提交失败')
-              _this.elements = []
+              _this.$message.error('提交失败')
               _this.loadingfullscreen = false
+              _this.cancel()
             }
           }
         )
       }
-      this.loadingfullscreen = false
     },
     flushAll () {
       this.project.name = null
@@ -312,6 +311,7 @@ export default {
       this.project.coordinate_y = null
       this.project.textkerning = null
       this.project.pic = null
+      this.uploadFile = false
     }
   }
 }

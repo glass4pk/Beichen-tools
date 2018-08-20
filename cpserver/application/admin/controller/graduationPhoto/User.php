@@ -28,20 +28,28 @@ class User extends Common
 
         $rule = [
             'phone' => 'require',
-            'recogn' => 'require'
+            'recogn' => 'require|number',
+            'item_id' => 'require|number'
         ];
         $message = [
-            'phone' => '缺少手机号',
-            'recogn' => '缺少识别身份'
+            'phone' => '手机号错误',
+            'recogn' => '缺少识别身份',
+            'item_id' => '缺少item_id'
         ];
         $validate = Validate::make($rule, $message);
         if (!$validate->check($param)) {
             return resultArray(['error' => $validate->getError()]);
         }
         
+        // 检测item_id是否存在以及是否启用该item
+        $userItem = model('graduationPhoto.Item');
+        if (!$userItem->getItem(array('id' => intval($param['item_id'])))) {
+            return resultArray(['error' => 'item_id不可以使用']);
+        }
+
         // 从数据库获取用户的详细信息
         $userModel = model('graduationPhoto.User');
-        $userData = $userModel->getUser(array('phone' => (string)$param['phone']));
+        $userData = $userModel->getUser(array('phone' => (string)$param['phone'], 'item_id' => intval($param['item_id'])));
         if (!$userData) {
             return resultArray(['error' => '用户异常']);
         }
@@ -49,15 +57,15 @@ class User extends Common
         // 获取毕业证信息
         $objectModel = model('graduationPhoto.Project');
         $credentialList = []; // 证书列表
-        $projectIdList = explode(';', $userData['project_id']);
+        $projectIdList = explode(';', $userData['credential_id']);
         if (sizeof($projectIdList) == 0) {
             return resultArray(['error' => '用户没有证书']);
         }
         foreach ($projectIdList as $one) {
-            $projectData = $objectModel->getProject(array('id' => $one));
+            $projectData = $objectModel->getProject(array('item_id' => intval($param['item_id']), 'credential_id' => $one));
             if ($projectData) {
                 $projectData = $projectData->toArray();
-                $credentialList[$userData['username']] = $projectData;
+                array_push($credentialList, array('userData' => $userData, 'projectData' => $projectData));
             }
         }
 
@@ -65,12 +73,12 @@ class User extends Common
         $resultList = [];
         foreach ($credentialList as $k => $v) {
             // 渲染合成图片
-            $localFilePath = RenderMiddleware::makePic(array('cnName' => $k), $projectData);
+            $localFilePath = RenderMiddleware::makePic(array('cnName' => $v['userData']['username']), $v['projectData']);
             if ($localFilePath) {
                 array_push($resultList, $localFilePath);
             }
         }
-        return resultArray(['data' => $resultList]);
+        // return resultArray(['data' => $resultList]);
         // 最终返回给用户的结果
         $result = [];
 

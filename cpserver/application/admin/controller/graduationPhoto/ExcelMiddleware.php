@@ -6,7 +6,7 @@ use app\common\controller\Common;
 
 class ExcelMiddleware extends Common
 {
-    public static function import($filePath)
+    public static function import($item_id, $filePath)
     {
         $excel = new Excel();
         $result = $excel->open($filePath); // 待测试
@@ -16,7 +16,7 @@ class ExcelMiddleware extends Common
 
         // 从Excel中获取数据
         $data = $excel->getData();
-        $objError = ExcelMiddleware::saveToDataBase($data); // 导入数据库，返回导入失败的数据
+        $objError = ExcelMiddleware::saveToDataBase($item_id, $data); // 导入数据库，返回导入失败的数据
         return $objError;
     }
 
@@ -25,7 +25,7 @@ class ExcelMiddleware extends Common
      *
      * @return boolean
      */
-    public static function saveToDataBase($data)
+    public static function saveToDataBase($item_id, $data)
     {
         $obj = []; 
         $obj['error'] = []; // 导入失败名单
@@ -42,6 +42,7 @@ class ExcelMiddleware extends Common
         if (true) {
             for ($row = 2;$row <= $allRows;$row++) {
                 $userData = []; // 清空
+                $userData['item_id'] = $item_id;
                 for ($columm = 'A',$cnum = 0;$cnum<$allColummsNum;$columm++,$cnum++) {
                     // 存储用户信息
                     $temp = $data->getCell($columm.$row)->getValue();
@@ -53,7 +54,7 @@ class ExcelMiddleware extends Common
                             $userData['phone'] = $temp;
                             break;
                         case 2:
-                            $userData['project_id'] =  $temp;
+                            $userData['credential_id'] =  $temp;
                             break;
                         default:
                             break;

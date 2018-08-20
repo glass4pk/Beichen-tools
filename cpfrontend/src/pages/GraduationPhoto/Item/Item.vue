@@ -1,5 +1,5 @@
 <template>
-    <div id='content'>
+    <div id='content' v-loading='isLoading' element-loading-text='拼命加载中' element-loading-spinner='el-icon-loading' element-loading-background="rgba(0, 0, 0, 0.5)">
         <el-row class='main-title'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
@@ -19,34 +19,42 @@
                                     <el-table-column
                                     prop='id'
                                     label="项目ID"
-                                    width="180">
+                                    width="100">
                                     </el-table-column>
                                     <el-table-column
                                     prop='name'
                                     label="项目名称"
-                                    width="180">
+                                    width="150">
                                     </el-table-column>
                                     <el-table-column
                                     prop='status'
                                     label="发布状态"
-                                    width="180">
+                                    width="120">
                                     <template slot-scope="scope">
                                         <span>{{(scope.row['status'] === 1) ? '已发布 ' : '未发布'}}</span>
                                     </template>
                                     </el-table-column>
                                     <el-table-column
                                     label="发布管理"
-                                    width="180">
+                                    width="120">
                                     <template slot-scope="scope">
-                                        <el-button @click="ff(scope.$index, scope.row)" type="text" size="mini">发布</el-button>
-                                        <el-button @click="ff(scope.$index, scope.row)" type="text" size="mini">停止发布</el-button>
+                                        <el-button v-if="(scope.row['status'] === 0)" @click="changeStatus(scope.$index, scope.row, 1)" type="text" size="mini">发布</el-button>
+                                        <el-button v-else @click="changeStatus(scope.$index, scope.row, 0)" type="text" size="mini">停止发布</el-button>
                                     </template>
                                     </el-table-column>
                                     <el-table-column
+                                      label='分享'
+                                      width='120'
+                                    >
+                                        <template slot-scope="scope">
+                                            <el-button @click="share(scope.$index, scope.row)" type='text' size='small'>复制链接</el-button>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column
                                     label="操作"
-                                    width="180">
+                                    width="100">
                                     <template slot-scope="scope">
-                                        <el-button @click="deleteItem(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="confirm(scope.$index)" type="text" size="small">删除</el-button>
                                         <el-button @click="itemInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                                     </template>
                                     </el-table-column>
@@ -72,7 +80,7 @@
         <el-dialog
             id="content"
             title='分享渠道'
-            :visible.sync='psProListLookChannelVisuality'
+            :visible.sync='itemShareVisuality'
             :fullscreen=false
             :center=false
             width='20%'>
@@ -83,22 +91,48 @@
             </el-button>
             </span>
         </el-dialog>
+        <el-dialog
+            id="deleteitem"
+            title='确定删除？'
+            :visible.sync='deleteImteVisuality'
+            :fullscreen=false
+            :show-close=false
+            width='30%'>
+            <div><span>删除后不可以恢复！</span></div>
+            <span slot='footer' class='dialog-footer'>
+            <el-button @click="delete_item" type='primary' size='mini'>确定</el-button>
+            <el-button @click="deleteImteVisuality=false" type='primary' size='mini'>取消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
 import axios from 'axios'
+
+function copyUrl(text) {
+    var oInput = document.createElement('input');
+    oInput.value = text;
+    document.body.appendChild(oInput);
+    oInput.select(); // 选择对象
+    document.execCommand("Copy"); // 执行浏览器复制命令
+    oInput.className = 'oInput';
+    oInput.style.display='none';
+    alert('复制成功');
+}
+
 export default {
   name: 'Item',
   data () {
     return {
+      isLoading: false,
+      deleteImteVisuality: false,
+      itemShareVisuality: false,
       totalnums: null, // 所有数据总数
       pic: '',
-      psProListLookChannelVisuality: false,
       psItemItemName: null,
-      items: [], // 获取到的所有总数
-      psCreateElementShapeVisuality: false,
-      elementType: null // 用户选择的元素类型
+      items: [], // 获取到的所有item
+      deletingItem: null
     }
   },
   computed: {
@@ -107,14 +141,28 @@ export default {
     this.flushList()
   },
   methods: {
+    confirm (index) {
+      this.deleteImteVisuality = true
+      this.deletingItem = index
+    },
     // 删除item
-    deleteItem (index, row) {
+    delete_item () {
       var _this = this
-      axios.post(_this.GLOBAL.WEB_URL + '/gp/deleteitem?id=' + _this.items[index]['id']).then(
+      _this.deleteImteVisuality = false
+      axios.post(_this.GLOBAL.WEB_URL + '/gp/deleteitem?id=' + _this.items[_this.deletingItem]['id']).then(
         (response) => {
           if (response.data.errcode === 0) {
-            _this.flushList() // 刷新列表
-            alert('删除项目成功')
+            // _this.flushList() // 刷新列表
+            _this.items.splice(_this.deletingItem, 1)
+            _this.$message({
+              type: 'success',
+              message: response.data.data
+            })
+          } else {
+            _this.$message({
+              type: 'warning',
+              message: response.data.errmsg
+            })
           }
         }
       ).catch(
@@ -144,6 +192,43 @@ export default {
     },
     itemInfo (index, row) {
       this.$router.push({path: '/gp/iteminfo', query: {'id': row['id']}})
+    },
+    // 更新itemid状态
+    changeStatus (index, row, status) {
+      var _this = this
+      axios({
+        method: 'post',
+        data: {
+          status: status,
+          id: row['id']
+        },
+        url: _this.GLOBAL.WEB_URL + '/gp/item/changestatus'
+      }).then(
+        (response) => {
+          if (response.data.errcode === 0) {
+            _this.$message({
+              message: response.data.data,
+              type: 'success'
+            })
+            row['status'] = status
+          } else {
+            _this.$message({
+              message: response.data.data,
+              type: 'warning'
+            })
+          }
+        }
+      ).catch(
+        (error) => {
+          if (error) {
+            _this.$message.error('网络错误！修改失败')
+          }
+        }
+      )
+    },
+    share (index, row) {
+      var url = this.GLOBAL.WEB_URL + '/gp/index.html?item_id=' + row['id']
+      copyUrl(url)
     }
   }
 }

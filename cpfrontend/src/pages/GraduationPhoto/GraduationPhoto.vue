@@ -27,7 +27,7 @@
           </div>
         </el-asider>
         <el-main class='gp-main' v-loading='isLoading' element-loading-text='拼命加载中' element-loading-spinner='el-icon-loading' element-loading-background="rgba(0, 0, 0, 0.5)">
-          <router-view></router-view>
+          <router-view :isLoading=isLoading v-on:cancelLoading=cancelLoading></router-view>
         </el-main>
       </el-container>
     </div>
@@ -43,6 +43,9 @@ export default {
   methods: {
     goTo (routePath) {
       this.$router.push({path: routePath})
+    },
+    cancelLoading (type) {
+      this.isLoading = type
     }
   }
 }

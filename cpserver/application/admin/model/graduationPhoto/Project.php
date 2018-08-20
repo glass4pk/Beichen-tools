@@ -37,7 +37,7 @@ class Project extends Common
      */
     public function getProject(array $param)
     {
-        $param['status'] = 1;
+        // $param['status'] = 1;
         $isOk = false;
         try {
             $isOk = $this->where($param)->find();

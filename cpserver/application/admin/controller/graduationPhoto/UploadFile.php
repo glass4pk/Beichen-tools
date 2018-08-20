@@ -94,6 +94,21 @@ class UploadFile extends AdminApiCommon
      */
     public function excel()
     {
+        if (!$this->request->isPost()) {
+          return ;
+        }
+        // 检测参数
+        $param = $this->param;
+        if (!isset($param['item_id']) || !is_int(intval($param['item_id']))) {
+            return resultArray(['error' => '参数错误']);
+        }
+        $item_id = intval($param['item_id']);
+        // 检测item_id 是否存在
+        $itemModel =  model('graduationPhoto.Item');
+        if (!$itemModel->getItem(array('id' => $item_id))) {
+            return resultArray(['error' => 'item_id 不存在']);
+        }
+
         $file = request()->file('file');
         if (!$file) {
         	return resultArray(['error' => '请上传文件']);
@@ -106,7 +121,7 @@ class UploadFile extends AdminApiCommon
         }
         // 缓存文件
         $filePath = $info->getSaveName(); // 缓存文件的相对路径路径
-        $result = ExcelMiddleware::import(DATA . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR . $filePath);
+        $result = ExcelMiddleware::import($item_id, DATA . 'gp' . DIRECTORY_SEPARATOR . 'userdata' . DIRECTORY_SEPARATOR . $filePath);
         return resultArray(['data' => $result]);
     }
 }

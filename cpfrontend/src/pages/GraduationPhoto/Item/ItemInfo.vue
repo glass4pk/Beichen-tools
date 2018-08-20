@@ -1,5 +1,5 @@
 <template>
-    <div id='content'>
+    <div id='content' v-loading='isLoading' element-loading-text='拼命加载中' element-loading-spinner='el-icon-loading' element-loading-background="rgba(0, 0, 0, 0.5)">
         <el-row class='main-title'>
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
@@ -26,7 +26,7 @@
                                     <el-table-column
                                     prop='credential_id'
                                     label="证书编号"
-                                    width="180">
+                                    width="120">
                                     </el-table-column>
                                     <el-table-column
                                     prop='name'
@@ -36,13 +36,13 @@
                                     <el-table-column
                                     prop='status'
                                     label="预览"
-                                    width="180">
+                                    width="120">
                                     </el-table-column>
                                     <el-table-column
                                     label="操作"
                                     width="180">
                                     <template slot-scope="scope">
-                                        <el-button @click="deleteProject(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="confirm(scope.$index, scope.row)" type="text" size="small">删除</el-button>
                                         <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
                                     </template>
                                     </el-table-column>
@@ -65,6 +65,76 @@
                 </div>
             </el-col>
         </el-row>
+        <el-row class='main-title'>
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <div class="main-label-content">用户数据</div>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row class='main-title' style="padding: 0px">
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <div class="main-content">
+                        <div class='row'>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
+                                <div style="position: relative">
+                                    <input
+                                    id='input101'
+                                    type='file'
+                                    name='file_background'
+                                    @change="uploadExcel($event)"/>
+                                    <el-button @inpubutton='shout'>导入数据</el-button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- <div class='row'>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px">
+                                <el-table
+                                    size='mini'
+                                    :data='items'>
+                                    <el-table-column
+                                    prop='credential_id'
+                                    label="用户Id"
+                                    width="120">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop='name'
+                                    label="姓名"
+                                    width="180">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop='status'
+                                    label="预览"
+                                    width="120">
+                                    </el-table-column>
+                                    <el-table-column
+                                    label="操作"
+                                    width="180">
+                                    <template slot-scope="scope">
+                                        <el-button @click="confirm(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                                    </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <el-pagination
+                                size='mini'
+                                style='float:right;'
+                                layout="total, prev, pager, next"
+                                @current-change="handleCurrentChange"
+                                :page-size="20"
+                                :total='totalnums'>
+                            </el-pagination>
+                        </div>
+                        <br/>
+                        <br/> -->
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
         <el-dialog
             id="content"
             title='分享渠道'
@@ -76,6 +146,19 @@
             <span slot='footer' class='dialog-footer'>
             <el-button @click='psProListCopyChannelLink' type='primary' size='mini'>复制链接
             </el-button>
+            </span>
+        </el-dialog>
+        <el-dialog
+            id="deleteitem"
+            title='确定删除？'
+            :visible.sync='deleteProjectVisuality'
+            :fullscreen=false
+            :show-close=false
+            width='30%'>
+            <div><span>删除后不可以恢复！</span></div>
+            <span slot='footer' class='dialog-footer'>
+            <el-button @click="deleteProject" type='primary' size='mini'>确定</el-button>
+            <el-button @click="deleteProjectVisuality=false" type='primary' size='mini'>取消</el-button>
             </span>
         </el-dialog>
         <CreateCredential :createCredentialVisuality=createCredentialVisuality v-on:Cancel=Cancel v-on:flushList=flushList></CreateCredential>
@@ -99,7 +182,9 @@ export default {
       createCredentialVisuality: false,
       updateCredentialVisuality: false,
       item_id: null,
-      updateItem: {}
+      updateItem: {},
+      deletingProject: null,
+      deleteProjectVisuality: false
     }
   },
   computed: {
@@ -124,30 +209,37 @@ export default {
     create () {
       this.createCredentialVisuality = true
     },
+    confirm (index, row) {
+      this.deletingProject = index
+      this.deleteProjectVisuality = true
+    },
     // 删除project
-    deleteProject (index, row) {
+    deleteProject () {
       var _this = this
-      alert(row['credential_id'])
+      this.deleteProjectVisuality = false
+      this.$emit('cancelLoading', true)
       axios({
         url: _this.GLOBAL.WEB_URL + '/gp/deleteproject',
         method: 'post',
         data: {
-          id: row['id']
+          id: _this.items[_this.deletingProject]['id']
         }
       }).then(
         (response) => {
           if (response.data.errcode === 0) {
             _this.flushList() // 刷新列表
-            alert('删除项目成功')
+            _this.$message({message: '删除项目成功', type: 'success'})
           } else {
-            alert(response.data.errmsg)
+            _this.$message.error(response.data.errmsg)
           }
+          this.$emit('cancelLoading', false)
         }
       ).catch(
         (error) => {
           if (error) {
             console.lg(error)
           }
+          this.$emit('cancelLoading', false)
         }
       )
     },
@@ -183,6 +275,36 @@ export default {
     projectInfo (index, row) {
       this.updateCredentialVisuality = true
       this.updateItem = row
+    },
+    // 上传excel
+    uploadExcel (event) {
+      var _this = this
+      _this.$emit('cancelLoading', true)
+      var excel = event.target.files[0]
+      var formdata = new FormData()
+      formdata.append('file', excel)
+      axios({
+        method: 'POST',
+        enctype: 'multipart/form-data',
+        data: formdata,
+        url: _this.GLOBAL.WEB_URL + '/gp/uploadexcel?item_id=' + this.item_id
+      }).then(
+        (response) => {
+          if (response.data['errcode'] === 0) {
+            _this.$message({type: 'success', message: '上传成功'})
+          } else {
+            _this.$message({type: 'warning', message: '上传失败'})
+          }
+          _this.$emit('cancelLoading', false)
+        }
+      ).catch(
+        (error) => {
+          if (error) {
+            _this.$message.error('网络错误')
+            _this.$emit('cancelLoading', false)
+          }
+        }
+      )
     }
   }
 }

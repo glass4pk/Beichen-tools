@@ -1,5 +1,5 @@
 <template>
-    <div id='login'>
+    <div id='login' v-loading='isLoading' element-loading-text='拼命加载中' element-loading-spinner='el-icon-loading' element-loading-background="rgba(0, 0, 0, 0.5)">
         <!-- <div style="position: fixed; top: 0px; left: 0px">
             <img :src='loginImgUrl'>
         </div> -->

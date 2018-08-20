@@ -19,7 +19,7 @@ class Item extends Common
      */
     public function createItem($param)
     {
-        $param['status'] = 1;
+        $param['status'] = 0; // 默认不启用
         $isOk = false;
         try {
             $isOk = $this->insertGetId($param);
@@ -37,7 +37,6 @@ class Item extends Common
      */
     public function getItem($param)
     {
-        $param['status'] = 1;
         $isOk = false;
         try {
             $isOk = $this->where($param)->find();
@@ -76,6 +75,25 @@ class Item extends Common
         try {
             $isOk = $this->where($whereArray)->delete();
         } catch(Exceptionn $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
+
+    /**
+     * 更新item的状态
+     *
+     * @param array $whereArray
+     * @param array $paramArray
+     * @return boolean
+     */
+    public function changeStatus(array $whereArray, array $paramArray)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($whereArray)->update($paramArray);
+        } catch (Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
