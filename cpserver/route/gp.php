@@ -5,7 +5,7 @@ Route::any('gp/uploadpic','admin/graduationPhoto.UploadFile/pic');
 Route::any('gp/uploadexcel','admin/graduationPhoto.UploadFile/excel');
 Route::any('gp/uploadfont','admin/graduationPhoto.UploadFile/font');
 Route::get('gp/getfontlist','admin/graduationPhoto.Project/getFontList');
-Route::post('gp/deletefont','admin/graduationPhoto.Project/deletefont');
+Route::any('gp/deletefont','admin/graduationPhoto.Project/deletefont');
 
 // project (每个project 相当于一个证书)
 Route::any('gp/createproject','admin/graduationPhoto.Project/createProject'); // 创建Project
