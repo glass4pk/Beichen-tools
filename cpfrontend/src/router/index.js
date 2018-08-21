@@ -1,9 +1,16 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import Login from '@/pages/GraduationPhoto/Login'
+import GraduationPhoto from '@/pages/GraduationPhoto/GraduationPhoto'
+import Font from '@/pages/GraduationPhoto/Font/Font'
+import Item from '@/pages/GraduationPhoto/Item/Item'
+import CreateItem from '@/pages/GraduationPhoto/Item/CreateItem'
+import ItemInfo from '@/pages/GraduationPhoto/Item/ItemInfo'
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    /*
     {
       path: '/',
       redirect: '/pairing/importdata'
@@ -94,36 +101,42 @@ export default new Router({
       name: 'PsSharePage',
       component: require('@/pages/PhotoComposite/Weixin/PsSharePage').default
     },
+    */
     {
       path: '/gp/login',
       name: 'Login',
-      component: require('@/pages/GraduationPhoto/Login').default
+      component: Login
     },
     {
-      path: '/gp',
+      path: '/gp/',
+      redirect: '/gp/login',
+      component: Login
+    },
+    {
+      path: '/',
       redirect: '/gp/login',
       name: 'GraduationPhoto',
-      component: require('@/pages/GraduationPhoto/GraduationPhoto').default,
+      component: GraduationPhoto,
       children: [
         {
           path: '/gp/font',
           name: 'Font',
-          component: require('@/pages/GraduationPhoto/Font/Font').default
+          component: Font
         },
         {
           path: '/gp/item',
           name: 'Item',
-          component: require('@/pages/GraduationPhoto/Item/Item').default
+          component: Item
         },
         {
           path: '/gp/createitem',
           name: 'CreateItem',
-          component: require('@/pages/GraduationPhoto/Item/CreateItem').default
+          component: CreateItem
         },
         {
           path: '/gp/iteminfo',
           name: 'ItemInfo',
-          component: require('@/pages/GraduationPhoto/Item/ItemInfo').default
+          component: ItemInfo
         }
       ]
     }

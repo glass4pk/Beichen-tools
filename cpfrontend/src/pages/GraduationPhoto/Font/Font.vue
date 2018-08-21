@@ -42,7 +42,20 @@
                                     label="操作"
                                     width="180">
                                     <template slot-scope="scope">
-                                        <el-button @click="deleteFont(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="confirm(scope.$index)" type="text" size="small">删除</el-button>
+                                        <el-dialog
+                                            id="deleteitem"
+                                            title='确定删除？'
+                                            :visible.sync='deleteProjectVisuality'
+                                            :fullscreen=false
+                                            :show-close=false
+                                            width='30%'>
+                                            <div><span>删除后不可以恢复！</span></div>
+                                            <span slot='footer' class='dialog-footer'>
+                                            <el-button @click="deleteFont" type='primary' size='mini'>确定</el-button>
+                                            <el-button @click="deleteProjectVisuality=false" type='primary' size='mini'>取消</el-button>
+                                            </span>
+                                        </el-dialog>
                                     </template>
                                     </el-table-column>
                                 </el-table>
@@ -87,13 +100,15 @@ export default {
   name: 'Font',
   data () {
     return {
+      deleteProjectVisuality: null,
       totalnums: null, // 所有数据总数
       pic: '',
       psProListLookChannelVisuality: false,
       psFontItemName: null,
       items: [], // 获取到的所有总数
       psCreateElementShapeVisuality: false,
-      elementType: null // 用户选择的元素类型
+      elementType: null, // 用户选择的元素类型
+      deleteIndex: null
     }
   },
   computed: {
@@ -133,15 +148,27 @@ export default {
         }
       )
     },
+    confirm (index) {
+      this.deleteIndex = index
+      this.deleteProjectVisuality = true
+    },
     // 删除字体
-    deleteFont (index, row) {
+    deleteFont () {
       var _this = this
       _this.$emit('cancelLoading', true)
-      axios.post(_this.GLOBAL.WEB_URL + '/gp/deletefont?id=' + _this.items[index]['id']).then(
+      this.deleteProjectVisuality = false
+      axios({
+        method: 'post',
+        url: _this.GLOBAL.WEB_URL + '/gp/deletefont',
+        data: {
+          id: _this.items[_this.deleteIndex]['id']
+        }
+      }).then(
         (response) => {
           if (response.data.errcode === 0) {
             _this.$message({type: 'success', message: '删除成功'})
-            _this.flushList() // 刷新列表
+            _this.items.splice(_this.deleteIndex, 1)
+            // _this.flushList() // 刷新列表
           } else {
             _this.$message({type: 'warning', message: '删除失败'})
           }
@@ -150,8 +177,9 @@ export default {
       ).catch(
         (error) => {
           if (error) {
+            console.log(error)
             _this.$emit('cancelLoading', false)
-            _this.$message.error('网络错误')
+            _this.$message.error('网络错误!')
             console.lg(error)
           }
         }

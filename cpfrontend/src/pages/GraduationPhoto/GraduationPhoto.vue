@@ -4,7 +4,6 @@
         <el-asider>
           <div class='aside'>
             <el-menu
-              default-active="3"
               class="el-menu-vertical-demo gp-aside-menu"
               style="width: 100%;"
               background-color="#545c64"

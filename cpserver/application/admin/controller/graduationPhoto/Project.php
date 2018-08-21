@@ -102,7 +102,7 @@ class Project extends AdminApiCommon
         $fontModel  = model('graduationPhoto.Font');
         $fontFilePath = $fontModel->getFont(array('id' => intval($param['id'])));
         $fontFilePath = isset($fontFilePath['filepath']) ? $fontFilePath['filepath'] : null;
-        if (file_exists($fontFilePath)) {
+        if ($fontFilePath && file_exists(DATA . $fontFilePath)) {
             unlink(DATA . $fontFilePath);
         }
         $result = $fontModel->deleteFont(array('id' => intval($param['id'])));

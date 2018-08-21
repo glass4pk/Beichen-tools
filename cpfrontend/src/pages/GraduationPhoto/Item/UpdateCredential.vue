@@ -250,7 +250,6 @@ export default {
             if (response.data['errcode'] === 0) {
               _this.isUploadPic = true // 已经上传图片
               _this.project.pic = response.data.data['file']
-              alert(_this.project.pic)
               _this.submit()
               _this.uploadFile = null
             } else {
@@ -302,7 +301,7 @@ export default {
           (response) => {
             if (response.data['errcode'] === 0) {
               _this.$emit('flushList')
-              _this.$message({type: 'succees', message: '提交成功'})
+              _this.$message({type: 'success', message: '更新成功'})
               _this.flushAll()
               _this.cancel()
             } else {

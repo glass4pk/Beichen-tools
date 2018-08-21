@@ -116,20 +116,20 @@ export default {
             _this.$message({
               type: 'success',
               message: '创建成功'
-            });
+            })
             _this.flushList()
           } else {
             _this.$message({
               type: 'warning',
               message: response.data.errmsg
-            });
+            })
           }
           _this.$emit('cancelLoading', false)
         }
       ).catch(
         (error) => {
           if (error) {
-            _this.$message.error('网络错误');
+            _this.$message.error('网络错误')
             console.log(error)
             _this.$emit('cancelLoading', false)
           }

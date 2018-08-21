@@ -47,7 +47,7 @@
                                       width='120'
                                     >
                                         <template slot-scope="scope">
-                                            <el-button @click="share(scope.$index, scope.row)" type='text' size='small'>复制链接</el-button>
+                                            <el-button @click="share(scope.$index, scope.row)" type='text' size='small' :disabled="scope.row['status']===0">复制链接</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column
@@ -110,15 +110,15 @@
 <script>
 import axios from 'axios'
 
-function copyUrl(text) {
-    var oInput = document.createElement('input');
-    oInput.value = text;
-    document.body.appendChild(oInput);
-    oInput.select(); // 选择对象
-    document.execCommand("Copy"); // 执行浏览器复制命令
-    oInput.className = 'oInput';
-    oInput.style.display='none';
-    alert('复制成功');
+function copyUrl (text) {
+  var oInput = document.createElement('input')
+  oInput.value = text
+  document.body.appendChild(oInput)
+  oInput.select() // 选择对象
+  document.execCommand('Copy') // 执行浏览器复制命令
+  oInput.className = 'oInput'
+  oInput.style.display = 'none'
+  alert('复制成功')
 }
 
 export default {

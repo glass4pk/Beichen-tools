@@ -65,6 +65,7 @@
                                 id='input101'
                                 type='file'
                                 name='file_background'
+                                :title='uploadFileName'
                                 @change="uploadfile($event)"/>
                                 <el-button @click='none' size='mini'>选择图片
                                 </el-button>
@@ -111,7 +112,7 @@
                     </div>
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='默认不填' v-model="project.textkerning"></el-input>
+                            <el-input  size='mini' placeholder='默认不填' v-model="project.textkerning"></el-input>
                         </div>
                     </div>
                     <div class='row'>
@@ -144,6 +145,7 @@ export default {
     return {
       fontList: [],
       uploadFile: null, // 待上传的图片
+      uploadFileName: null,
       loadingfullscreen: false,
       project: {
         name: null,
@@ -158,7 +160,17 @@ export default {
         coordinate_y: null,
         item_id: null,
         font: null
-      }
+      },
+      textkerningOptions: [
+        {
+          label: '默认',
+          value: 0
+        },
+        {
+          label: '自定义',
+          value: -1
+        }
+      ]
     }
   },
   created () {
@@ -169,6 +181,7 @@ export default {
     cancel () {
       this.$emit('Cancel', 'create')
       this.flushAll()
+      document.getElementById('input101').files[0] = null
     },
     // 获取url参数
     getItemId () {
@@ -178,7 +191,7 @@ export default {
         var id = b[1].split('&')[0]
         this.project.item_id = id
       } else {
-        _this.$message('请选择一个项目进行编辑')
+        this.$message('请选择一个项目进行编辑')
         this.$router.push({path: '/gp/item'})
       }
     },
@@ -196,6 +209,7 @@ export default {
     // 选择图片并暂时缓存本地
     uploadfile (event, type) {
       if (event.target.files.length > 0) {
+        this.uploadFileName = event.target.files[0]['name']
         this.uploadFile = event.target.files[0]
       }
     },
@@ -312,6 +326,7 @@ export default {
       this.project.textkerning = null
       this.project.pic = null
       this.uploadFile = false
+      this.uploadFileName = null
     }
   }
 }
