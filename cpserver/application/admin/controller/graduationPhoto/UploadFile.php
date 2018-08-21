@@ -105,8 +105,8 @@ class UploadFile extends AdminApiCommon
         $item_id = intval($param['item_id']);
         // 检测item_id 是否存在
         $itemModel =  model('graduationPhoto.Item');
-        if (!$itemModel->getItem(array('id' => $item_id))) {
-            return resultArray(['error' => 'item_id 不存在']);
+        if (!$itemModel->getItem(array('gp_item_id' => $item_id))) {
+            return resultArray(['error' => 'gp_item_id 不存在']);
         }
 
         $file = request()->file('file');

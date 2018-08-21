@@ -29,7 +29,7 @@
                                     width="120">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='name'
+                                    prop='gp_project_name'
                                     label="证书名称"
                                     width="180">
                                     </el-table-column>
@@ -222,12 +222,12 @@ export default {
         url: _this.GLOBAL.WEB_URL + '/gp/deleteproject',
         method: 'post',
         data: {
-          id: _this.items[_this.deletingProject]['id']
+          id: _this.items[_this.deletingProject]['gp_project_id']
         }
       }).then(
         (response) => {
           if (response.data.errcode === 0) {
-            _this.flushList() // 刷新列表
+            _this.items.splice(_this.deletingProject, 1)
             _this.$message({message: '删除项目成功', type: 'success'})
           } else {
             _this.$message.error(response.data.errmsg)

@@ -42,7 +42,7 @@ class ExcelMiddleware extends Common
         if (true) {
             for ($row = 2;$row <= $allRows;$row++) {
                 $userData = []; // 清空
-                $userData['item_id'] = $item_id;
+                $userData['gp_item_id'] = $item_id;
                 for ($columm = 'A',$cnum = 0;$cnum<$allColummsNum;$columm++,$cnum++) {
                     // 存储用户信息
                     $temp = $data->getCell($columm.$row)->getValue();

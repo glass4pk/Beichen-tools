@@ -20,8 +20,8 @@ class Font extends Common
     public function saveFont(string $fontFullName,string $filePath)
     {
         $insertData = [];
-        $insertData['status'] = 1;
-        $insertData['filepath'] = $filePath;
+        $insertData['font_status'] = 1;
+        $insertData['font_filepath'] = $filePath;
         $insertData['font_fullname'] = $fontFullName;
         if ($this->insert($insertData)) {
             return true;
@@ -37,7 +37,7 @@ class Font extends Common
      */
     public function getFontList()
     {
-        return $this->where(['status' => 1])->select();
+        return $this->where(['font_status' => 1])->select();
     }
 
     /**

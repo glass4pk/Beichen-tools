@@ -6,6 +6,7 @@ namespace app\admin\model\graduationPhoto;
 
 use app\admin\model\Common;
 use think\Exception;
+use think\Db;
 
 class Project extends Common
 {
@@ -19,7 +20,6 @@ class Project extends Common
      */
     public function creatProject(array $param)
     {
-        $param['status'] = 1;
         $isOk = false;
         try {
             $isOk = $this->insert($param);
@@ -57,7 +57,7 @@ class Project extends Common
     {
         $isOk = false;
         try {
-            $isOk = $this->where($whereArray)->select();
+            $isOk = Db::table('gp_project')->where($whereArray)->alias('p')->join('font f', 'p.font_filepath = f.font_filepath')->select();
         } catch(Exception $e) {
             $isOk = false;
         } finally {

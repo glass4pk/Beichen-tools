@@ -19,7 +19,6 @@ class Item extends Common
      */
     public function createItem($param)
     {
-        $param['status'] = 0; // 默认不启用
         $isOk = false;
         try {
             $isOk = $this->insertGetId($param);

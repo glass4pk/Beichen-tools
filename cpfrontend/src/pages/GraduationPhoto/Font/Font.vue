@@ -29,7 +29,7 @@
                                     size='mini'
                                     :data='items'>
                                     <el-table-column
-                                    prop='id'
+                                    prop='font_id'
                                     label="字体ID"
                                     width="180">
                                     </el-table-column>
@@ -107,7 +107,6 @@ export default {
       psFontItemName: null,
       items: [], // 获取到的所有总数
       psCreateElementShapeVisuality: false,
-      elementType: null, // 用户选择的元素类型
       deleteIndex: null
     }
   },
@@ -161,7 +160,7 @@ export default {
         method: 'post',
         url: _this.GLOBAL.WEB_URL + '/gp/deletefont',
         data: {
-          id: _this.items[_this.deleteIndex]['id']
+          font_id: _this.items[_this.deleteIndex]['font_id']
         }
       }).then(
         (response) => {
@@ -203,9 +202,6 @@ export default {
       )
     },
     psFontSubmit () {
-    },
-    psProListLook (index, row) {
-      this.$router.push({path: '/ps/info', query: {'id': row['id']}})
     }
   }
 }

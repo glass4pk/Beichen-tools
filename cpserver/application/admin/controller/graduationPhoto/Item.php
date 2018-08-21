@@ -40,15 +40,15 @@ class Item extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        if (!isset($param['id'])) {
+        if (!isset($param['gp_item_id'])) {
             return resultArray(['error' => '']);
         }
 
         $itemModel  = model('graduationPhoto.Item');
-        $result = $itemModel->deleteItem(array('id' => intval($param['id'])));
+        $result = $itemModel->deleteItem(array('gp_item_id' => intval($param['gp_item_id'])));
         if ($result) {
             $projectModel = model('graduationPhoto.Project');
-            $projectModel->deleteProject(array('item_id' => intval($param['id'])));
+            $projectModel->deleteProject(array('gp_item_id' => intval($param['gp_item_id'])));
             return resultArray(['data' => "删除项目成功"]);
         }
         return resultArray(['error' => '删除Item失败']);
@@ -74,10 +74,11 @@ class Item extends AdminApiCommon
         }
 
         $insertArray = [];
-        $insertArray['name'] = strval($param['name']);
-        $insertArray['description'] = strval($param['description']);
+        $insertArray['gp_item_name'] = strval($param['name']);
+        $insertArray['gp_item_description'] = strval($param['description']);
         $insertArray['create_timestamp'] = strtotime('now');
         $insertArray['create_time'] = date('Y-m-d H:i:s',$insertArray['create_timestamp']);
+        $insertArray['gp_item_status'] = 0;
         $ItemModel = model('graduationPhoto.Item');
         $result = $ItemModel->createItem($insertArray);
         if ($result) {
@@ -95,8 +96,8 @@ class Item extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        if (!isset($param['id'])) {
-          return resultArray(['error' => '缺少id字段']);
+        if (!isset($param['gp_item_id'])) {
+          return resultArray(['error' => '缺少gp_item_id字段']);
         }
         $itemModel  = model('graduationPhoto.Project');
         $result = $itemModel->getProjectList();
@@ -114,23 +115,23 @@ class Item extends AdminApiCommon
 
         $param = $this->param;
         $rule = [
-            'status' => 'require|number',
-            'id' => 'require|number'
+            'gp_item_status' => 'require|number',
+            'gp_item_id' => 'require|number'
         ];
         $message = [
-            'status' => 'status参数错误',
-            'id' => 'id参数错误',
+            'gp_item_status' => 'status参数错误',
+            'gp_item_id' => 'id参数错误',
         ];
         $validate = Validate::make($rule, $message);
-        if (!isset($param['status']) || !is_int(intval($param['status']))) {
+        if (!isset($param['gp_item_status']) || !is_int(intval($param['gp_item_status']))) {
             return resultArray(['error' => $validate->getError()]);
         }
 
-        $status = intval($param['status']);
-        $itemId = intval($param['id']);
+        $status = intval($param['gp_item_status']);
+        $itemId = intval($param['gp_item_id']);
 
         $itemModel = model('graduationPhoto.Item');
-        if ($itemModel->changeStatus(array('id' => $itemId), array('status' => $status))) {
+        if ($itemModel->changeStatus(array('gp_item_id' => $itemId), array('gp_item_status' => $status))) {
             return resultArray(['data' => '更新成功']);
         }
 

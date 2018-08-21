@@ -17,28 +17,28 @@
                                     size='mini'
                                     :data='items'>
                                     <el-table-column
-                                    prop='id'
+                                    prop='gp_item_id'
                                     label="项目ID"
                                     width="100">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='name'
+                                    prop='gp_item_name'
                                     label="项目名称"
                                     width="150">
                                     </el-table-column>
                                     <el-table-column
-                                    prop='status'
+                                    prop='gp_item_status'
                                     label="发布状态"
                                     width="120">
                                     <template slot-scope="scope">
-                                        <span>{{(scope.row['status'] === 1) ? '已发布 ' : '未发布'}}</span>
+                                        <span>{{(scope.row['gp_item_status'] === 1) ? '已发布 ' : '未发布'}}</span>
                                     </template>
                                     </el-table-column>
                                     <el-table-column
                                     label="发布管理"
                                     width="120">
                                     <template slot-scope="scope">
-                                        <el-button v-if="(scope.row['status'] === 0)" @click="changeStatus(scope.$index, scope.row, 1)" type="text" size="mini">发布</el-button>
+                                        <el-button v-if="(scope.row['gp_item_status'] === 0)" @click="changeStatus(scope.$index, scope.row, 1)" type="text" size="mini">发布</el-button>
                                         <el-button v-else @click="changeStatus(scope.$index, scope.row, 0)" type="text" size="mini">停止发布</el-button>
                                     </template>
                                     </el-table-column>
@@ -47,7 +47,7 @@
                                       width='120'
                                     >
                                         <template slot-scope="scope">
-                                            <el-button @click="share(scope.$index, scope.row)" type='text' size='small' :disabled="scope.row['status']===0">复制链接</el-button>
+                                            <el-button @click="share(scope.$index, scope.row)" type='text' size='small' :disabled="scope.row['gp_item_status'] === 0">复制链接</el-button>
                                         </template>
                                     </el-table-column>
                                     <el-table-column
@@ -149,7 +149,7 @@ export default {
     delete_item () {
       var _this = this
       _this.deleteImteVisuality = false
-      axios.post(_this.GLOBAL.WEB_URL + '/gp/deleteitem?id=' + _this.items[_this.deletingItem]['id']).then(
+      axios.post(_this.GLOBAL.WEB_URL + '/gp/deleteitem?gp_item_id=' + _this.items[_this.deletingItem]['gp_item_id']).then(
         (response) => {
           if (response.data.errcode === 0) {
             // _this.flushList() // 刷新列表
@@ -191,7 +191,7 @@ export default {
       )
     },
     itemInfo (index, row) {
-      this.$router.push({path: '/gp/iteminfo', query: {'id': row['id']}})
+      this.$router.push({path: '/gp/iteminfo', query: {'id': row['gp_item_id']}})
     },
     // 更新itemid状态
     changeStatus (index, row, status) {
@@ -199,8 +199,8 @@ export default {
       axios({
         method: 'post',
         data: {
-          status: status,
-          id: row['id']
+          gp_item_status: status,
+          gp_item_id: row['gp_item_id']
         },
         url: _this.GLOBAL.WEB_URL + '/gp/item/changestatus'
       }).then(
@@ -210,7 +210,7 @@ export default {
               message: response.data.data,
               type: 'success'
             })
-            row['status'] = status
+            row['gp_item_status'] = status
           } else {
             _this.$message({
               message: response.data.data,
@@ -227,7 +227,7 @@ export default {
       )
     },
     share (index, row) {
-      var url = this.GLOBAL.WEB_URL + '/gp/index.html?item_id=' + row['id']
+      var url = this.GLOBAL.WEB_URL + '/gp/index.html?gp_item_id=' + row['id']
       copyUrl(url)
     }
   }

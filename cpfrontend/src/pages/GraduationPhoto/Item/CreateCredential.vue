@@ -40,7 +40,7 @@
                 <div class="createCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-input size='mini' placeholder='2-20个字' v-model="project.name"></el-input>
+                            <el-input size='mini' placeholder='2-20个字' v-model="project.gp_project_name"></el-input>
                         </div>
                     </div>
                     <div class='row'>
@@ -99,12 +99,12 @@
                 <div class="createCredential-main-content" style="vertical-align: top">
                     <div class='row'>
                         <div class='on-same-line'>
-                            <el-select size='mini' v-model='project.font_id'>
+                            <el-select size='mini' v-model='project.font_filepath'>
                                 <el-option
                                   v-for="item in fontList"
-                                  :key="item.id"
+                                  :key="item.font_filepath"
                                   :label="item.font_fullname"
-                                  :value="item.id"
+                                  :value="item.font_filepath"
                                 >
                                 </el-option>
                             </el-select>
@@ -148,18 +148,16 @@ export default {
       uploadFileName: null,
       loadingfullscreen: false,
       project: {
-        name: null,
+        gp_project_name: null,
         credential_id: null,
         font_size: null,
         font_color: null,
         pic: null,
-        font_id: null,
+        font_filepath: null,
         textkerning: null,
-        font_fullname: null,
         coordinate_x: null,
         coordinate_y: null,
-        item_id: null,
-        font: null
+        gp_item_id: null
       },
       textkerningOptions: [
         {
@@ -181,7 +179,6 @@ export default {
     cancel () {
       this.$emit('Cancel', 'create')
       this.flushAll()
-      document.getElementById('input101').files[0] = null
     },
     // 获取url参数
     getItemId () {
@@ -189,7 +186,7 @@ export default {
       var b = url.split('?id=')
       if (b.length > 1) {
         var id = b[1].split('&')[0]
-        this.project.item_id = id
+        this.project.gp_item_id = id
       } else {
         this.$message('请选择一个项目进行编辑')
         this.$router.push({path: '/gp/item'})
@@ -218,11 +215,11 @@ export default {
     //   console.log(file)
       this.loadingfullscreen = true
       var _this = this
-      if (_this.project.name === null ||
+      if (_this.project.gp_project_name === null ||
         _this.project.credential_id === null ||
         _this.project.font_size === null ||
         _this.project.font_color === null ||
-        _this.project.font_id === null ||
+        _this.project.font_filepath === null ||
         _this.project.coordinate_y === null) {
         this.$message.error('请填写必要选项')
         this.loadingfullscreen = false
@@ -272,13 +269,13 @@ export default {
     submit () {
       // code
       var _this = this
-      for (var i = 0; i < _this.fontList.length; i++) {
-        if (_this.fontList[i]['id'] === _this.project.font_id) {
-          _this.project.font = _this.fontList[i]['filepath']
-          _this.project.font_fullname = _this.fontList[i]['font_fullname']
-          break
-        }
-      }
+      // for (var i = 0; i < _this.fontList.length; i++) {
+      //   if (_this.fontList[i]['id'] === _this.project.font_id) {
+      //     _this.project.font = _this.fontList[i]['filepath']
+      //     _this.project.font_fullname = _this.fontList[i]['font_fullname']
+      //     break
+      //   }
+      // }
       if (!_this.project.coordinate_x) {
         _this.project.coordinate_x = 0
       }
@@ -304,7 +301,6 @@ export default {
         ).catch(
           (error) => {
             if (error) {
-              // code
               _this.$message.error('提交失败')
               _this.loadingfullscreen = false
               _this.cancel()
@@ -314,13 +310,11 @@ export default {
       }
     },
     flushAll () {
-      this.project.name = null
+      this.project.gp_project_name = null
       this.project.credential_id = null
       this.project.font_size = null
       this.project.font_color = null
-      this.project.font_id = null
-      this.project.font_fullname = null
-      this.project.font = null
+      this.project.font_filepath = null
       this.project.coordinate_x = null
       this.project.coordinate_y = null
       this.project.textkerning = null
