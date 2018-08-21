@@ -23,6 +23,8 @@ Route::get('gp/getitemlist','admin/graduationPhoto.Item/getItemList');
 Route::any('gp/createitem','admin/graduationPhoto.Item/createItem');
 Route::get('gp/getiteminfo','admin/graduationPhoto.Item/getItemInfo');
 Route::any('gp/item/changestatus','admin/graduationPhoto.Item/changeStatus');
+Route::any('gp/item/changeextendurl','admin/graduationPhoto.Item/changeExtendUrl');
+Route::any('gp/item/getextendurl','admin/graduationPhoto.Item/getExtendUrl');
 
 // 登录、注册
 Route::any('gp/login','admin/graduationPhoto.admin/login');

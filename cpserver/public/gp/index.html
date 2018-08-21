@@ -63,6 +63,7 @@
     </style>
     <!--JS-->
     <script>
+        var weixinShareHeadUrl = '';
         // onload事件侦听函数
         function addLoadEvent(func) {
             var oldOnload = window.onload;
@@ -75,6 +76,63 @@
                 }
             }
         }
+        
+        function getH5Url () {
+            var xhr  = new XMLHttpRequest();
+            xhr.open("get", "/gp/item/getextendurl?item_id=" + window.location.href.split('item_id=')[1].split('&')[0]);
+            xhr.onload = function (e) {
+                if (e.target.status === 200) {
+                    var result = JSON.parse(e.target.responseText);
+                    if (result.errcode === 0) {
+                        var extendurl = result.data
+                        wx.ready(function(){
+                            // 朋友圈分享逻辑
+                            wx.onMenuShareTimeline({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+
+                            wx.onMenuShareAppMessage({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+                            
+                            wx.onMenuShareWeibo({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+
+                            wx.onMenuShareQQ({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+                        })
+                    }
+                }
+            }
+            xhr.send(null);
+        }
+        
         // 调用微信js-sdk接口
         function wxjsdk() {
             var xhr = new XMLHttpRequest();
@@ -99,48 +157,7 @@
                                 "onMenuShareQQ"
                             ] // 必填，需要使用的JS接口列表
                         });
-                        wx.ready(function(){
-                            // 朋友圈分享逻辑
-                            wx.onMenuShareTimeline({
-                                title: '未来大学毕业证书', // 分享标题
-                                link: 'http://dev.yes-go.cn/gp/', // 分享链接
-                                desc: '分享desc...',
-                                imgUrl: 'http://dev.yes-go.cn/gp/static/images/img_share.jpg',
-                                success: function () {
-                                    // 用户点击分享
-                                }
-                            });
-
-                            wx.onMenuShareAppMessage({
-                                title: '未来大学毕业证书', // 分享标题
-                                link: 'http://dev.yes-go.cn/gp/', // 分享链接
-                                desc: '分享desc...',
-                                imgUrl: 'http://dev.yes-go.cn/gp/static/images/img_share.jpg',
-                                success: function () {
-                                    // 用户点击分享
-                                }
-                            });
-                            
-                            wx.onMenuShareWeibo({
-                                title: '未来大学毕业证书', // 分享标题
-                                link: 'http://dev.yes-go.cn/gp/', // 分享链接
-                                desc: '分享desc...',
-                                imgUrl: 'http://dev.yes-go.cn/gp/static/images/img_share.jpg',
-                                success: function () {
-                                    // 用户点击分享
-                                }
-                            });
-
-                            wx.onMenuShareQQ({
-                                title: '未来大学毕业证书', // 分享标题
-                                link: 'http://dev.yes-go.cn/gp/', // 分享链接
-                                desc: '分享desc...',
-                                imgUrl: 'http://dev.yes-go.cn/gp/static/images/img_share.jpg',
-                                success: function () {
-                                    // 用户点击分享
-                                }
-                            });
-                        })
+                        getH5Url();
                     }
                 }
                 else {

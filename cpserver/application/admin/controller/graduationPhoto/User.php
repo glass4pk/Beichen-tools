@@ -43,13 +43,13 @@ class User extends Common
         
         // 检测item_id是否存在以及是否启用该item
         $userItem = model('graduationPhoto.Item');
-        if (!$userItem->getItem(array('id' => intval($param['item_id'])))) {
+        if (!$userItem->getItem(array('gp_item_id' => intval($param['item_id'])))) {
             return resultArray(['error' => 'item_id不可以使用']);
         }
 
         // 从数据库获取用户的详细信息
         $userModel = model('graduationPhoto.User');
-        $userData = $userModel->getUser(array('phone' => (string)$param['phone'], 'item_id' => intval($param['item_id'])));
+        $userData = $userModel->getUser(array('phone' => (string)$param['phone'], 'gp_item_id' => intval($param['item_id'])));
         if (!$userData) {
             return resultArray(['error' => '用户异常']);
         }
@@ -62,7 +62,7 @@ class User extends Common
             return resultArray(['error' => '用户没有证书']);
         }
         foreach ($projectIdList as $one) {
-            $projectData = $objectModel->getProject(array('item_id' => intval($param['item_id']), 'credential_id' => $one));
+            $projectData = $objectModel->getProject(array('gp_item_id' => intval($param['item_id']), 'credential_id' => $one));
             if ($projectData) {
                 $projectData = $projectData->toArray();
                 array_push($credentialList, array('userData' => $userData, 'projectData' => $projectData));

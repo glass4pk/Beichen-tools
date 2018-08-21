@@ -35,14 +35,6 @@
                                     </template>
                                     </el-table-column>
                                     <el-table-column
-                                    label="发布管理"
-                                    width="120">
-                                    <template slot-scope="scope">
-                                        <el-button v-if="(scope.row['gp_item_status'] === 0)" @click="changeStatus(scope.$index, scope.row, 1)" type="text" size="mini">发布</el-button>
-                                        <el-button v-else @click="changeStatus(scope.$index, scope.row, 0)" type="text" size="mini">停止发布</el-button>
-                                    </template>
-                                    </el-table-column>
-                                    <el-table-column
                                       label='分享'
                                       width='120'
                                     >
@@ -125,6 +117,7 @@ export default {
   name: 'Item',
   data () {
     return {
+      isEdit: false,
       isLoading: false,
       deleteImteVisuality: false,
       itemShareVisuality: false,
@@ -193,16 +186,15 @@ export default {
     itemInfo (index, row) {
       this.$router.push({path: '/gp/iteminfo', query: {'id': row['gp_item_id']}})
     },
-    // 更新itemid状态
-    changeStatus (index, row, status) {
+    changeExtendUrl (index, row) {
       var _this = this
       axios({
         method: 'post',
         data: {
-          gp_item_status: status,
-          gp_item_id: row['gp_item_id']
+          item_id: row['gp_item_id'],
+          extend_url: row['extend_url']
         },
-        url: _this.GLOBAL.WEB_URL + '/gp/item/changestatus'
+        url: _this.GLOBAL.WEB_URL + '/gp/item/changeextendurl'
       }).then(
         (response) => {
           if (response.data.errcode === 0) {
@@ -210,10 +202,9 @@ export default {
               message: response.data.data,
               type: 'success'
             })
-            row['gp_item_status'] = status
           } else {
             _this.$message({
-              message: response.data.data,
+              message: response.data.errmsg,
               type: 'warning'
             })
           }
@@ -221,13 +212,46 @@ export default {
       ).catch(
         (error) => {
           if (error) {
-            _this.$message.error('网络错误！修改失败')
+            _this.$message.error('服务器错误！')
           }
         }
       )
     },
+    // 更新itemid状态
+    // changeStatus (index, row, status) {
+    //   var _this = this
+    //   axios({
+    //     method: 'post',
+    //     data: {
+    //       gp_item_status: status,
+    //       gp_item_id: row['gp_item_id']
+    //     },
+    //     url: _this.GLOBAL.WEB_URL + '/gp/item/changestatus'
+    //   }).then(
+    //     (response) => {
+    //       if (response.data.errcode === 0) {
+    //         _this.$message({
+    //           message: response.data.data,
+    //           type: 'success'
+    //         })
+    //         row['gp_item_status'] = status
+    //       } else {
+    //         _this.$message({
+    //           message: response.data.data,
+    //           type: 'warning'
+    //         })
+    //       }
+    //     }
+    //   ).catch(
+    //     (error) => {
+    //       if (error) {
+    //         _this.$message.error('网络错误！修改失败')
+    //       }
+    //     }
+    //   )
+    // },
     share (index, row) {
-      var url = this.GLOBAL.WEB_URL + '/gp/index.html?gp_item_id=' + row['id']
+      var url = this.GLOBAL.WEB_URL + '/gp/index.html?item_id=' + row['gp_item_id']
       copyUrl(url)
     }
   }

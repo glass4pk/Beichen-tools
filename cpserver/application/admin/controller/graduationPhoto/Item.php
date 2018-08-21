@@ -137,4 +137,60 @@ class Item extends AdminApiCommon
 
         return resultArray(['error' => '更新失败']);
     }
+
+    public function changeExtendUrl()
+    {
+        if (!$this->request->isPost()) {
+            return ;
+        }
+
+        $param = $this->param;
+        $validate = Validate::make(
+            [
+                'item_id' => 'require|number',
+                'extend_url' => 'require|url'
+            ],
+            [
+                'item_id' => 'item_id错误',
+                'extend_url' => 'extendurl错误'
+            ]
+        );
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+
+        $itemModel = model('graduationPhoto.Item');
+        if ($itemModel->updateItem(array('gp_item_id' => intval($param['item_id'])), array('extend_url' => strval($param['extend_url'])))) {
+            return resultArray(['data' => '更新成功']);
+        }
+        return resultArray(['error' => '更新失败']);
+    }
+
+    public function getExtendUrl()
+        {
+            if (!$this->request->isGet()) {
+                return ;
+            }
+    
+            $param = $this->param;
+            $validate = Validate::make(
+                [
+                    'item_id' => 'require|number'
+                ],
+                [
+                    'item_id' => 'item_id错误'
+                ]
+            );
+            if (!$validate->check($param)) {
+                return resultArray(['error' => $validate->getError()]);
+            }
+    
+            $itemModel = model('graduationPhoto.Item');
+            $result = $itemModel->getItem(array('gp_item_id' => intval($param['item_id'])));
+            if ($result) {
+                return resultArray(['data' => $result['extend_url']]);
+            }
+            return resultArray(['error' => '获取失败']);
+
+    }
 }

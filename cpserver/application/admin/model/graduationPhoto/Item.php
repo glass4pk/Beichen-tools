@@ -34,11 +34,11 @@ class Item extends Common
      *
      * @return void
      */
-    public function getItem($param)
+    public function getItem($whereArray)
     {
         $isOk = false;
         try {
-            $isOk = $this->where($param)->find();
+            $isOk = $this->where($whereArray)->find();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
@@ -81,13 +81,13 @@ class Item extends Common
     }
 
     /**
-     * 更新item的状态
+     * 更新item
      *
      * @param array $whereArray
      * @param array $paramArray
      * @return boolean
      */
-    public function changeStatus(array $whereArray, array $paramArray)
+    public function updateItem(array $whereArray, array $paramArray)
     {
         $isOk = false;
         try {

@@ -135,6 +135,61 @@
                 </div>
             </el-col>
         </el-row>
+        <el-row class='main-title'>
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <div class="main-label-content">H5链接</div>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row class='main-title' style="padding: 0px">
+            <el-col :span="24">
+                <div class="grid-content bg-purple-dark">
+                    <div class="main-content">
+                        <div class='row'>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
+                                <div style="">
+                                    <el-button @click='create()'>编辑分享链接</el-button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px">
+                                <el-table
+                                    size='mini'
+                                    :data='items'>
+                                    <el-table-column
+                                    prop='credential_id'
+                                    label="证书编号"
+                                    width="120">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop='gp_project_name'
+                                    label="证书名称"
+                                    width="180">
+                                    </el-table-column>
+                                    <el-table-column
+                                    prop='status'
+                                    label="预览"
+                                    width="120">
+                                    </el-table-column>
+                                    <el-table-column
+                                    label="操作"
+                                    width="180">
+                                    <template slot-scope="scope">
+                                        <el-button @click="confirm(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                                        <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
+                                    </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </div>
+                        <br/>
+                        <br/>
+                    </div>
+                </div>
+            </el-col>
+        </el-row>
         <el-dialog
             id="content"
             title='分享渠道'
