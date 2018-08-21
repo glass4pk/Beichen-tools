@@ -29,8 +29,8 @@ class Font
 
     /**
      * 设置字体
-     *
-     * @param string $font
+     * 
+     * @param string $font  字体文件的相对路径
      */
     public function setFontFamily($font)
     {

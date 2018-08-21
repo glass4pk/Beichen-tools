@@ -183,3 +183,37 @@ if (!function_exists('decryptSession')) {
         return false;
     }
 }
+
+if (!function_exists('str_rand')) {    
+    /**
+     * 生成随机字符串
+     */
+    function str_rand(int $len, $char = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
+        if (!is_int($len) || $len < 1) {
+            return false;
+        }
+        $result = '';
+        for ($i = $len; $i > 0; $i--) {
+            // code
+            $result .= $char[mt_rand(0, strlen($char) - 1)];
+        }
+        return $result;
+    }
+}
+
+if (!function_exists('str_int_rand')) {    
+    /**
+     * 生成数字型随机字符串
+     */
+    function str_int_rand(int $len, $char = '012345678967892379117053579334') {
+        if (!is_int($len) || $len < 1) {
+            return false;
+        }
+        $result = '';
+        for ($i = $len; $i > 0; $i--) {
+            // code
+            $result .= $char[mt_rand(0, strlen($char) - 1)];
+        }
+        return $result;
+    }
+}

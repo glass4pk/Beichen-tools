@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>未来大学</title>
+    <script type='text/javascript' src='http://res.wx.qq.com/open/js/jweixin-1.2.0.js'></script>
+    <!-- <script type='text/javascript' src='static/js/jsdk.js'></script> -->
+    <!--CSS-->
+    <!-- <link rel="stylesheet" type="text/css" href="static/css/common.css"> -->
+    <style type="text/css">
+        body {
+            background-color:#000000;
+            margin: 0px;
+        }
+        #main{
+            position: relative;
+        }
+        .scale img{
+            margin: 0;
+            padding: 0;
+            background-size: contain|cover;
+            width: 100%;
+            height:auto;
+        }
+        .commit_input{
+            /* width: 80%; */
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: 37%;
+            width:53%;
+            height:5%;
+            opacity:1;
+        }
+        .commit_button{
+            /* width: 80%; */
+            position: absolute;
+            left: 50%;
+            transform: translate(-50%);
+            top: 52.5%;
+            width:28%;
+            height:8%;
+            opacity:0;
+        }
+        #myInput{
+            background: none;
+            border: none;
+            width:100%;
+            height:100%;
+            font-size: 1em;
+            color: rgb(255, 255, 255);
+        }
+        #commit{
+            width:100%;
+            height:100%;
+            border-radius: 20%;
+        }
+        ::-moz-placeholder{
+            color: red;
+        }
+        #myInput:-ms-input-placeholder{ color: red;}
+    </style>
+    <!--JS-->
+    <script>
+        var weixinShareHeadUrl = '';
+        // onload事件侦听函数
+        function addLoadEvent(func) {
+            var oldOnload = window.onload;
+            if (typeof window.onload !== 'function') {
+                window.onload = func;
+            } else {
+                window.onload = function () {
+                    olodOnload();
+                    func();
+                }
+            }
+        }
+        
+        function getH5Url () {
+            var xhr  = new XMLHttpRequest();
+            xhr.open("get", "/gp/item/getextendurl?item_id=" + window.location.href.split('item_id=')[1].split('&')[0]);
+            xhr.onload = function (e) {
+                if (e.target.status === 200) {
+                    var result = JSON.parse(e.target.responseText);
+                    if (result.errcode === 0) {
+                        var extendurl = result.data
+                        wx.ready(function(){
+                            // 朋友圈分享逻辑
+                            wx.onMenuShareTimeline({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+
+                            wx.onMenuShareAppMessage({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+                            
+                            wx.onMenuShareWeibo({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+
+                            wx.onMenuShareQQ({
+                                title: '未来大学毕业证书', // 分享标题
+                                link: extendurl, // 分享链接
+                                desc: '分享desc...',
+                                imgUrl: weixinShareHeadUrl,
+                                success: function () {
+                                    // 用户点击分享
+                                }
+                            });
+                        })
+                    }
+                }
+            }
+            xhr.send(null);
+        }
+        
+        // 调用微信js-sdk接口
+        function wxjsdk() {
+            var xhr = new XMLHttpRequest();
+            var data = {
+                url: window.location.href
+            };
+            xhr.open("POST", "http://dev.yes-go.cn/weixin/getjsapi", true);
+            xhr.onload = function(e) {
+                if (e.target.status === 200) {
+                    var result = JSON.parse(e.target.responseText);
+                    if (result.errcode === 0) {
+                        wx.config({
+                            debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                            appId: 'wxa46386d571e05bac', // 必填，公众号的唯一标识
+                            timestamp: result.data.timestamp, // 必填，生成签名的时间戳
+                            nonceStr: result.data.nonceStr, // 必填，生成签名的随机串
+                            signature: result.data.signature,// 必填，签名
+                            jsApiList: [
+                                "onMenuShareTimeline",
+                                "onMenuShareAppMessage",
+                                "onMenuShareWeibo",
+                                "onMenuShareQQ"
+                            ] // 必填，需要使用的JS接口列表
+                        });
+                        getH5Url();
+                    }
+                }
+                else {
+                    alert("jsapi调用失败");
+                }
+            }
+            xhr.send(JSON.stringify(data));
+        }
+        // 用户提交数据
+        function submit() {
+            var phone = document.getElementById('myInput').value;
+            // 使用XMLHttpRequest发起请求
+            var xhr = new XMLHttpRequest();
+            var data = {
+                'phone': phone,
+                'recogn': 1,
+                'item_id': window.location.href.split('item_id=')[1].split('&')[0]
+            }
+            xhr.open("POST", "/gp/user/create", true);
+            xhr.onload = function (e) {
+                if (e.target.status === 200){
+                    var result = JSON.parse(e.target.responseText);
+                    if (result.errcode === 0) {
+                        window.location.href ='credential.html?result_id=' + result.data;
+                    }
+                }
+                // console.log(e);
+            };
+            xhr.send(JSON.stringify(data));
+        };
+        addLoadEvent(wxjsdk);
+    </script>
+    <!-- <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script> -->
+</head>
+<body>
+    <div id='main'>
+        <div class="scale">
+            <img id='backgroundpic' src='static/image/background.jpg'>
+        </div>
+        <div class='commit_input'>
+            <input id='myInput' type='text' name='phone' maxlength="11" onkeyup="this.value=this.value.replace(/\D/g,'')">
+        </div>
+        <div class='commit_button'>
+            <button id='commit' onclick="submit()">
+        </div>
+    </div>
+</body>
+</html>
+<!-- border: 0 !important; /*Removes border*/
+            -webkit-appearance: none; /*Removes default chrome and safari style*/ 
+            -moz-appearance: none; /*Removes default style Firefox*/
+             -->

@@ -33,5 +33,15 @@ export default {
         return '' // 返回空字符串
       }
     }
+  },
+  deepCopy: (obj) => {
+    if (typeof obj !== 'object') {
+      return obj
+    }
+    var newObj = {}
+    for (var attr in obj) {
+      newObj[attr] = this.deepCopy(obj[attr])
+    }
+    return newObj
   }
 }

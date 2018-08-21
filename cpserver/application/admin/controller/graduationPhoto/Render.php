@@ -96,15 +96,22 @@ class Render extends Controller
     public function render()
     {
         // code
+        $a = $this->img->setGravity(Imagick::GRAVITY_CENTER);
         $this->img->setImageFormat($this->imageFormat);
         $draw = new ImagickDraw(); // 画板
+        $draw->setGravity(Imagick::GRAVITY_CENTER); // 设置重力方向，决定了坐标定位的起点
         $draw->setFillColor(new ImagickPixel($this->font->getFontColor()));
         $draw->setTextAlignment(Imagick::ALIGN_LEFT); // 左对齐
         $draw->setFontSize($this->font->getFontSize());
+        $TEST = $this->font->getFontFamily();
         $draw->setFont($this->font->getFontFamily());
         $draw->setTextEncoding('UTF-8');
         $draw->setTextKerning($this->font->getTextKerning()); // 设置文字间距
-        $draw->annotation($this->font->getcoordinateX(), $this->font->getcoordinateY(), $this->text);
+        $draw->setTextAntialias(true);
+        $Metrics = $this->img->queryFontMetrics($draw, $this->text); // 获取text Metris
+        $getImageGeometry = $this->img->getImageGeometry(); // 获取图片几何
+        $coordinateX = ($this->font->getcoordinateX() == 0.0) ? (($getImageGeometry['width'] - $Metrics['textWidth']) / 2) : $this->font->getcoordinateX();
+        $draw->annotation($coordinateX, $this->font->getcoordinateY() - $this->font->getFontSize() / 10, $this->text);
         $this->img->drawImage($draw);
         $draw->clear();
         $draw->destroy();
