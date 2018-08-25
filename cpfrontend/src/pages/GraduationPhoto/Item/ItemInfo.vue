@@ -22,7 +22,7 @@
                             <div class='on-same-line' style="padding: 0px 0px 0px 30px">
                                 <el-table
                                     size='mini'
-                                    :data='items'>
+                                    :data='projects'>
                                     <el-table-column
                                     prop='credential_id'
                                     label="证书编号"
@@ -65,16 +65,10 @@
                 </div>
             </el-col>
         </el-row>
-        <el-row class='main-title'>
+        <el-row class='main-title' style="">
             <el-col :span="24">
                 <div class="grid-content bg-purple-dark">
                     <div class="main-label-content">用户数据</div>
-                </div>
-            </el-col>
-        </el-row>
-        <el-row class='main-title' style="padding: 0px">
-            <el-col :span="24">
-                <div class="grid-content bg-purple-dark">
                     <div class="main-content">
                         <div class='row'>
                             <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
@@ -88,104 +82,21 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- <div class='row'>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 30px">
-                                <el-table
-                                    size='mini'
-                                    :data='items'>
-                                    <el-table-column
-                                    prop='credential_id'
-                                    label="用户Id"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop='name'
-                                    label="姓名"
-                                    width="180">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop='status'
-                                    label="预览"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    label="操作"
-                                    width="180">
-                                    <template slot-scope="scope">
-                                        <el-button @click="confirm(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                                        <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                                    </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <el-pagination
-                                size='mini'
-                                style='float:right;'
-                                layout="total, prev, pager, next"
-                                @current-change="handleCurrentChange"
-                                :page-size="20"
-                                :total='totalnums'>
-                            </el-pagination>
-                        </div>
-                        <br/>
-                        <br/> -->
-                    </div>
-                </div>
-            </el-col>
-        </el-row>
-        <el-row class='main-title'>
-            <el-col :span="24">
-                <div class="grid-content bg-purple-dark">
-                    <div class="main-label-content">H5链接</div>
-                </div>
-            </el-col>
-        </el-row>
-        <el-row class='main-title' style="padding: 0px">
-            <el-col :span="24">
-                <div class="grid-content bg-purple-dark">
-                    <div class="main-content">
                         <div class='row'>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
-                                <div style="">
-                                    <el-button @click='create()'>编辑分享链接</el-button>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px; font-size: 1em">
+                                <div style="position: relative">
+                                    <span>最新数据：</span>
+                                    <span style="color: rgb(102,187,255);">{{dataName}}</span>
+                                </div>
+                                <div style="position: relative">
+                                    <span>上传时间：</span>
+                                    <span style="color: rgb(102,187,255);">{{importTime}}</span>
+                                </div>
+                                <div style="position: relative; font-size: 0.8em; padding: 0.5em 0em 0em 0em; color: rgb(199, 40, 78);">
+                                    <span>注：导入数据将覆盖原有的数据</span>
                                 </div>
                             </div>
                         </div>
-                        <div class='row'>
-                            <div class='on-same-line' style="padding: 0px 0px 0px 30px">
-                                <el-table
-                                    size='mini'
-                                    :data='items'>
-                                    <el-table-column
-                                    prop='credential_id'
-                                    label="证书编号"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop='gp_project_name'
-                                    label="证书名称"
-                                    width="180">
-                                    </el-table-column>
-                                    <el-table-column
-                                    prop='status'
-                                    label="预览"
-                                    width="120">
-                                    </el-table-column>
-                                    <el-table-column
-                                    label="操作"
-                                    width="180">
-                                    <template slot-scope="scope">
-                                        <el-button @click="confirm(scope.$index, scope.row)" type="text" size="small">删除</el-button>
-                                        <el-button @click="projectInfo(scope.$index, scope.row)" type="text" size="small">编辑</el-button>
-                                    </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                        </div>
-                        <br/>
-                        <br/>
                     </div>
                 </div>
             </el-col>
@@ -218,6 +129,7 @@
         </el-dialog>
         <CreateCredential :createCredentialVisuality=createCredentialVisuality v-on:Cancel=Cancel v-on:flushList=flushList></CreateCredential>
         <UpdateCredential :updateCredentialVisuality=updateCredentialVisuality :updateItem=updateItem v-on:Cancel=Cancel v-on:flushList=flushList></UpdateCredential>
+        <ItemShare :item_id=item_id :extend_url=extend_url :share_title=share_title :share_content=share_content :share_pic=share_pic v-on:flushList=flushList></ItemShare>
     </div>
 </template>
 
@@ -225,21 +137,29 @@
 import axios from 'axios'
 import CreateCredential from './CreateCredential'
 import UpdateCredential from './UpdateCredential'
+import ItemShare from './ItemShare'
 export default {
   name: 'ItemInfo',
   components: {
     CreateCredential,
-    UpdateCredential
+    UpdateCredential,
+    ItemShare
   },
   data () {
     return {
-      items: [], // 获取到的所有总数
+      projects: [], // 获取到的所有总数
       createCredentialVisuality: false,
       updateCredentialVisuality: false,
       item_id: null,
+      extend_url: null,
+      share_title: null,
+      share_content: null,
+      share_pic: null,
       updateItem: {},
       deletingProject: null,
-      deleteProjectVisuality: false
+      deleteProjectVisuality: false,
+      dataName: null,
+      importTime: null
     }
   },
   computed: {
@@ -251,15 +171,7 @@ export default {
   methods: {
     // 获取url参数
     getItemId () {
-      var url = window.location.href
-      var b = url.split('?id=')
-      if (b.length > 1) {
-        var id = b[1].split('&')[0]
-        this.item_id = id
-      } else {
-        alert('请选择一个项目进行编辑')
-        this.$router.push({path: '/gp/item'})
-      }
+      this.item_id = this.$route.query.id
     },
     create () {
       this.createCredentialVisuality = true
@@ -277,13 +189,16 @@ export default {
         url: _this.GLOBAL.WEB_URL + '/gp/deleteproject',
         method: 'post',
         data: {
-          id: _this.items[_this.deletingProject]['gp_project_id']
+          id: _this.projects[_this.deletingProject]['gp_project_id']
         }
       }).then(
         (response) => {
           if (response.data.errcode === 0) {
-            _this.items.splice(_this.deletingProject, 1)
+            _this.projects.splice(_this.deletingProject, 1)
             _this.$message({message: '删除项目成功', type: 'success'})
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message.error(response.data.errmsg)
           }
@@ -304,7 +219,17 @@ export default {
       axios.get(_this.GLOBAL.WEB_URL + '/gp/getprojectlist?id=' + this.item_id).then(
         (response) => {
           if (response.data['errcode'] === 0) {
-            _this.items = response.data.data
+            _this.projects = response.data.data.projects
+            _this.itemInfo = response.data.data.itemInfo
+            _this.extend_url = _this.itemInfo['extend_url']
+            _this.share_title = _this.itemInfo['share_title']
+            _this.share_content = _this.itemInfo['share_content']
+            _this.share_pic = _this.itemInfo['share_pic']
+            _this.importTime = _this.itemInfo['data_upload_time']
+            _this.dataName = _this.itemInfo['data_name']
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           }
         }
       ).catch(
@@ -347,6 +272,10 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             _this.$message({type: 'success', message: '上传成功'})
+            _this.flushList() // 刷新列表
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({type: 'warning', message: '上传失败'})
           }

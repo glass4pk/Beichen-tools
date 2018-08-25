@@ -58,6 +58,8 @@ class Project extends Common
         $isOk = false;
         try {
             $isOk = Db::table('gp_project')->where($whereArray)->alias('p')->join('font f', 'p.font_filepath = f.font_filepath')->select();
+            if (gettype($isOk) == "array" && sizeof($isOk) == 0)
+                $isOk = true;
         } catch(Exception $e) {
             $isOk = false;
         } finally {

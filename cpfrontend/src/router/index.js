@@ -6,6 +6,8 @@ import Font from '@/pages/GraduationPhoto/Font/Font'
 import Item from '@/pages/GraduationPhoto/Item/Item'
 import CreateItem from '@/pages/GraduationPhoto/Item/CreateItem'
 import ItemInfo from '@/pages/GraduationPhoto/Item/ItemInfo'
+import Home from '@/pages/GraduationPhoto/Home'
+
 Vue.use(Router)
 
 export default new Router({
@@ -103,18 +105,18 @@ export default new Router({
     },
     */
     {
+      path: '/',
+      name: 'Home',
+      component: Home
+    },
+    {
       path: '/gp/login',
       name: 'Login',
       component: Login
     },
     {
-      path: '/gp/',
-      redirect: '/gp/login',
-      component: Login
-    },
-    {
-      path: '/',
-      redirect: '/gp/login',
+      path: '/gp',
+      redirect: '/gp/item',
       name: 'GraduationPhoto',
       component: GraduationPhoto,
       children: [

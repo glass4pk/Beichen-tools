@@ -11,7 +11,7 @@ use think\Db;
 use app\admin\model\Common;
 use com\verify\HonrayVerify;
 
-class User extends Common 
+class User extends Common
 {	
     
     /**

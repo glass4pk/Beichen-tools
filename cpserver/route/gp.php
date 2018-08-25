@@ -24,8 +24,14 @@ Route::any('gp/createitem','admin/graduationPhoto.Item/createItem');
 Route::get('gp/getiteminfo','admin/graduationPhoto.Item/getItemInfo');
 Route::any('gp/item/changestatus','admin/graduationPhoto.Item/changeStatus');
 Route::any('gp/item/changeextendurl','admin/graduationPhoto.Item/changeExtendUrl');
-Route::any('gp/item/getextendurl','admin/graduationPhoto.Item/getExtendUrl');
+Route::any('gp/item/getitembaseinfo','admin/graduationPhoto.Item/getItemBaseInfo');
+Route::any('gp/sharelink','admin/graduationPhoto.Item/shareLink');
+Route::any('gp/uploadsharepic', 'admin/graduationPhoto.UploadFile/uploadSharePic');
 
 // 登录、注册
-Route::any('gp/login','admin/graduationPhoto.admin/login');
-Route::any('gp/signup','admin/graduationPhoto.admin/signUp');
+Route::any('gp/login','admin/graduationPhoto.Auth/login');
+Route::any('gp/signup','admin/graduationPhoto.Auth/signUp');
+Route::any('gp/checkislogin','admin/graduationPhoto.Check/checkIsLogin');
+Route::any('gp/logout', 'admin/graduationPhoto.Auth/logout');
+
+Route::any('gp/test', 'admin/graduationPhoto.Test/index');

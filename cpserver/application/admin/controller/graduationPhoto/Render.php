@@ -4,12 +4,11 @@
  */
 namespace app\admin\controller\graduationPhoto;
 
-use think\Controller;
 use Imagick;
 use ImagickDraw;
 use ImagickPixel;
 
-class Render extends Controller
+class Render
 {
     private $font; // 字体
     private $img; // 合成后的图片

@@ -1,15 +1,17 @@
 <?php
+/**
+ * @author jack <chengjunjie.jack@qq.com>
+ */
 namespace app\admin\controller\graduationPhoto;
 
 use think\Request;
-use app\admin\controller\AdminApiCommon;
 use FontLib\Font;
 use think\facade\Validate;
 
 /**
  * 项目控制类
  */
-class Item extends AdminApiCommon
+class Item extends ApiCommon
 {
     /**
      * 获取Item
@@ -78,7 +80,7 @@ class Item extends AdminApiCommon
         $insertArray['gp_item_description'] = strval($param['description']);
         $insertArray['create_timestamp'] = strtotime('now');
         $insertArray['create_time'] = date('Y-m-d H:i:s',$insertArray['create_timestamp']);
-        $insertArray['gp_item_status'] = 0;
+        $insertArray['gp_item_status'] = 1;
         $ItemModel = model('graduationPhoto.Item');
         $result = $ItemModel->createItem($insertArray);
         if ($result) {
@@ -96,7 +98,7 @@ class Item extends AdminApiCommon
             return ;
         }
         $param = $this->param;
-        if (!isset($param['gp_item_id'])) {
+        if (!isset($param['item_id'])) {
           return resultArray(['error' => '缺少gp_item_id字段']);
         }
         $itemModel  = model('graduationPhoto.Project');
@@ -166,7 +168,7 @@ class Item extends AdminApiCommon
         return resultArray(['error' => '更新失败']);
     }
 
-    public function getExtendUrl()
+    public function getItemBaseInfo()
         {
             if (!$this->request->isGet()) {
                 return ;
@@ -188,9 +190,49 @@ class Item extends AdminApiCommon
             $itemModel = model('graduationPhoto.Item');
             $result = $itemModel->getItem(array('gp_item_id' => intval($param['item_id'])));
             if ($result) {
-                return resultArray(['data' => $result['extend_url']]);
+                return resultArray(['data' => $result]);
             }
             return resultArray(['error' => '获取失败']);
 
+    }
+
+    /**
+     * 修改Extend_url
+     *
+     * @return void
+     */
+    public function shareLink()
+    {
+        if (!$this->request->isPost()){
+            return;
+        }
+        $param = $this->param;
+        $validate = Validate::make([
+            'item_id' => 'require|number',
+            'extend_url' => 'require|url',
+            'share_title' => 'require',
+            'share_content' => 'require'
+        ],[
+            'item_id' => 'item_id错误',
+            'extend_url' => '链接错误',
+            'share_title' => 'share_title缺失',
+            'share_content' => "share_content缺失"
+        ]);
+
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]); 
+        }
+
+        $whereArray = array('gp_item_id' => intval($param['item_id']));
+        $paramArray = array("extend_url" => strval($param["extend_url"]), "share_title" => strval($param["share_title"]), "share_content" => strval($param["share_content"]));
+        if (isset($param['share_pic'])) {
+            $paramArray['share_pic'] = strval($param['share_pic']);
+        }
+        $itemModel = model('graduationPhoto.Item');
+        $result = $itemModel->updateItem($whereArray, $paramArray);
+        if ($result) {
+            return resultArray(['data' => '修改成功']);
+        }
+        return resultArray(['error' => '修改失败']);
     }
 }

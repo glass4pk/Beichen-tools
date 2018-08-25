@@ -4,10 +4,9 @@
  */
 namespace app\admin\controller\graduationPhoto;
 
-use think\Controller;
 use Imagick;
 
-class RenderMiddleware extends Controller
+class RenderMiddleware
 {
     /**
      * 合成图片

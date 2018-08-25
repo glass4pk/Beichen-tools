@@ -34,14 +34,14 @@
                                         <span>{{(scope.row['gp_item_status'] === 1) ? '已发布 ' : '未发布'}}</span>
                                     </template>
                                     </el-table-column>
-                                    <el-table-column
+                                    <!-- <el-table-column
                                       label='分享'
                                       width='120'
                                     >
                                         <template slot-scope="scope">
                                             <el-button @click="share(scope.$index, scope.row)" type='text' size='small' :disabled="scope.row['gp_item_status'] === 0">复制链接</el-button>
                                         </template>
-                                    </el-table-column>
+                                    </el-table-column> -->
                                     <el-table-column
                                     label="操作"
                                     width="100">
@@ -151,6 +151,9 @@ export default {
               type: 'success',
               message: response.data.data
             })
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({
               type: 'warning',
@@ -173,6 +176,9 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             _this.items = response.data.data
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           }
         }
       ).catch(
@@ -202,6 +208,9 @@ export default {
               message: response.data.data,
               type: 'success'
             })
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({
               message: response.data.errmsg,
@@ -251,7 +260,11 @@ export default {
     //   )
     // },
     share (index, row) {
-      var url = this.GLOBAL.WEB_URL + '/gp/index.html?item_id=' + row['gp_item_id']
+    //   var url = this.GLOBAL.WEB_URL + '/gp/index.html?item_id=' + row['gp_item_id']
+      var url = row['extend_url']
+      if (!url) {
+        url = ''
+      }
       copyUrl(url)
     }
   }

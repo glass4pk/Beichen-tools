@@ -5,8 +5,8 @@
  */
 namespace app\admin\controller\graduationPhoto;
 
-use app\common\controller\Common;
 use think\facade\Validate;
+use app\common\controller\Common;
 
 class User extends Common
 {
@@ -54,6 +54,10 @@ class User extends Common
             return resultArray(['error' => '用户异常']);
         }
 
+        if (isset($userData['result_id']) || $userData['result_id']) {
+            return resultArray(['data' => $userData['result_id']]);
+        }
+
         // 获取毕业证信息
         $objectModel = model('graduationPhoto.Project');
         $credentialList = []; // 证书列表
@@ -96,6 +100,15 @@ class User extends Common
             $key = '/gp/userCredential/' . explode(DIRECTORY_SEPARATOR, $one)[sizeof(explode(DIRECTORY_SEPARATOR, $one)) - 1];
             if ($cos->putFileObject($bucket, $key, $one)) {
                 array_push($result, $cosDomain . $key);
+            }
+        }
+
+        // 删除本地合成图片
+        foreach ($resultList as $one) {
+            try {
+                unlink($one);
+            } catch (Exception $e) {
+                // 
             }
         }
 

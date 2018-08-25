@@ -129,8 +129,8 @@
             </div>
         </div>
         <span slot='footer' class='dialog-footer'>
-            <el-button @click='cancel' type='primary' size='mini'>取消</el-button>
             <el-button @click='createProjectElementsPic' type='primary' size='mini' v-loading.fullscreen.lock='loadingfullscreen'>保存</el-button>
+            <el-button @click='cancel' type='primary' size='mini'>取消</el-button>
         </span>
       </el-dialog>
   </div>
@@ -199,6 +199,9 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             _this.fontList = response.data.data
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           }
         }
       )
@@ -246,6 +249,9 @@ export default {
               _this.project.pic = response.data.data['file']
               _this.submit()
               _this.uploadFile = null
+            } else if (response.data['errcode'] === 101) {
+              _this.$message({type: 'warning', message: '请重新登录'})
+              _this.$router.push({path: '/gp/login'}) // 重新登录
             } else {
               _this.$message.error('提交失败，请重新提交！')
               _this.uploadFile = null
@@ -292,6 +298,9 @@ export default {
             if (response.data['errcode'] === 0) {
               _this.$emit('flushList')
               _this.$message({type: 'success', message: '提交成功'})
+            } else if (response.data['errcode'] === 101) {
+              _this.$message({type: 'warning', message: '请重新登录'})
+              _this.$router.push({path: '/gp/login'}) // 重新登录
             } else {
               _this.$message.error(response.data.errmsg)
             }

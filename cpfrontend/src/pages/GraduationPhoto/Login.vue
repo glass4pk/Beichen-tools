@@ -4,7 +4,7 @@
             <img :src='loginImgUrl'>
         </div> -->
         <div>
-            <el-row id='main_title'>未来大学毕业证书管理系统</el-row>
+            <el-row id='main_title'>未来大学毕业证书管理</el-row>
             <br>
             <br>
             <el-form :model='from' label-width='80px'>
@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Main',
   data () {
@@ -31,11 +32,36 @@ export default {
       loginImgUrl: require('../../assets/login.jpg'),
       form: {
         username: '',
-        password: ''}
+        password: ''
+      }
     }
   },
   methods: {
     onSubmit () {
+      if (!this.form.username || !this.form.password) {
+        this.$message.error('请填写完整')
+        return
+      }
+      var _this = this
+      axios(
+        {
+          method: 'POST',
+          url: _this.GLOBAL.WEB_URL + '/gp/login',
+          data: _this.form
+        }
+      ).then(
+        (response) => {
+          if (response.data.errcode === 0) {
+            _this.$message({
+              type: 'success',
+              message: response.data.data
+            })
+            _this.$router.push({path: '/gp/item'})
+          } else {
+            _this.$message.error(response.data.errmsg)
+          }
+        }
+      )
     },
     cancel () {
       this.form.username = ''

@@ -15,12 +15,16 @@
                 <span slot="title">字体管理</span>
               </el-menu-item>
               <el-menu-item index="2" @click="goTo('/gp/createitem')">
-                <i class="el-icon-document"></i>
+                <i class="el-icon-edit"></i>
                 <span slot="title">新建项目</span>
               </el-menu-item>
               <el-menu-item index="3" @click="goTo('/gp/item')">
                 <i class="el-icon-document"></i>
                 <span slot="title">项目管理</span>
+              </el-menu-item>
+              <el-menu-item index="4" @click="logout">
+                <i class="el-icon-delete"></i>
+                <span slot="title">退出登录</span>
               </el-menu-item>
             </el-menu>
           </div>
@@ -32,6 +36,7 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
   name: 'GraduationPhoto',
   data () {
@@ -45,6 +50,23 @@ export default {
     },
     cancelLoading (type) {
       this.isLoading = type
+    },
+    logout () {
+      var _this = this
+      axios(
+        {
+          method: 'POST',
+          url: _this.GLOBAL.WEB_URL + '/gp/logout',
+          data: {}
+        }
+      ).then(
+        (response) => {
+          if (response.data.errcode === 0) {
+            _this.$message({type: 'warning', message: '退出登录'})
+            _this.$router.push({path: '/gp/login'})
+          }
+        }
+      )
     }
   }
 }

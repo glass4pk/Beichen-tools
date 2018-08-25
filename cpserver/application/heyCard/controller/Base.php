@@ -1,34 +1,35 @@
 <?php
-/**
- * graduationPhoto基础验证类
- * @author jack <chengjunjie.jack@qq.com>
- */
+// +----------------------------------------------------------------------
+// | Description: 基础类，无需验证权限。
+// +----------------------------------------------------------------------
+// | Author: linchuangbin <linchuangbin@honraytech.com>
+// +----------------------------------------------------------------------
 
 namespace app\admin\controller;
 
+use com\verify\HonrayVerify;
 use app\common\controller\Common;
 use think\Request;
-use app\admin\validate\graduationPhoto\SignUp as SignUpValidate;
-use app\admin\validate\graduationPhoto\Login as LoginValidate;
+use app\admin\validate\ManageSignUp as ManageSignUpValidate;
+use app\admin\validate\ManageLogin as ManageLoginValidate;
 
-class Admin extends Common
+class Base extends Common
 {
     /**
      * 注册
      */
-    public function signup()
-    {
-        return resultArray(['error' => '禁止注册，请联系开放人员']);
+    public function signup(){
+
         // 如果不是post请求就返回
         if (!$this->request->isPost()){
             return ;
         }
 
-        $adminModel = model('User');
+        $userModel = model('User');
         $param = $this->param;
 
         // 验证注册参数
-        $validate = new SignUpValidate();
+        $validate = new ManageSignUpValidate();
         if(!$validate->check($param)){
             return resultArray(['error' => $validate->getError()]);
         }
@@ -45,9 +46,9 @@ class Admin extends Common
         $email = $param['email'];
         $mobile = $param['mobile'];
 
-        $data = $adminModel->signup($username, $password,$email,$mobile);
+        $data = $userModel->signup($username, $password,$email,$mobile);
         if(!$data){
-            return resultArray(['error'=>$adminModel->getError()]);
+            return resultArray(['error'=>$userModel->getError()]);
         }
         return resultArray(['data'=>'注册成功']);
     }
@@ -61,28 +62,30 @@ class Admin extends Common
         if (!$this->request->isPost()){
             return ;
         }
-        $adminModel = model('graduationPhoto.Admin');
+        $userModel = model('User');
         $param = $this->param;
 
         // 验证登录参数
-        $validate = new LoginValidate();
+        $validate = new ManageLoginValidate();
         if (!$validate->check($param)){
             return resultArray(['error' => $validate->getError()]);
         }
-        $username = strval($param['username']);
-        $password = strval($param['password']);
-        $data = $adminModel->login($username, $password, $verifyCode, $isRemember);
+        $username = $param['username'];
+        $password = $param['password'];
+        $verifyCode = isset($param['verifyCode'])? $param['verifyCode']: '';
+        $isRemember = isset($param['isRemember'])? $param['isRemember']: '';
+        $data = $userModel->login($username, $password, $verifyCode, $isRemember);
         if (!$data) {
-            $tmp= $adminModel->getError();
-            return resultArray(['error' => $adminModel->getError()]);
+            $tmp= $userModel->getError();
+            return resultArray(['error' => $userModel->getError()]);
         }
         return resultArray(['data' => '登录成功']);
     }
 
     public function index(){
-        $adminModel = model('SystemConfig');
+        $userModel = model('SystemConfig');
 
-        $data = $adminModel->getDataList();
+        $data = $userModel->getDataList();
 //        return json($data);
 //        dump(config());
         return view("Login_index");
@@ -90,15 +93,15 @@ class Admin extends Common
 
     public function relogin()
     {   
-        $adminModel = model('User');
+        $userModel = model('User');
         $param = $this->param;
         $data = decrypt($param['rememberKey']);
         $username = $data['username'];
         $password = $data['password'];
 
-        $data = $adminModel->login($username, $password, '', true, true);
+        $data = $userModel->login($username, $password, '', true, true);
         if (!$data) {
-            return resultArray(['error' => $adminModel->getError()]);
+            return resultArray(['error' => $userModel->getError()]);
         } 
         return resultArray(['data' => '登录成功']);
     }    
@@ -137,14 +140,14 @@ class Admin extends Common
 
     public function setInfo()
     {
-        $adminModel = model('User');
+        $userModel = model('User');
         $param = $this->param;
         $old_pwd = $param['old_pwd'];
         $new_pwd = $param['new_pwd'];
         $auth_key = $param['auth_key'];
-        $data = $adminModel->setInfo($auth_key, $old_pwd, $new_pwd);
+        $data = $userModel->setInfo($auth_key, $old_pwd, $new_pwd);
         if (!$data) {
-            return resultArray(['error' => $adminModel->getError()]);
+            return resultArray(['error' => $userModel->getError()]);
         } 
         return resultArray(['data' => $data]);
     }

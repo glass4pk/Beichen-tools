@@ -2,12 +2,11 @@
 namespace app\admin\controller\graduationPhoto;
 
 use think\Request;
-use app\admin\controller\AdminApiCommon;
 use FontLib\Font;
 use think\facade\Validate;
 use think\Exception;
 
-class Project extends AdminApiCommon
+class Project extends ApiCommon
 {
     public function createProject()
     {
@@ -126,10 +125,12 @@ class Project extends AdminApiCommon
         }
         $param = $this->param;
         if (!isset($param['id'])) return resultArray(['error' => '缺少id']);
-        $fontModel  = model('graduationPhoto.Project');
-        $result = $fontModel->getProjectList(array('gp_item_id' => intval($param['id'])));
+        $projectModel  = model('graduationPhoto.Project');
+        $itemModle = model('graduationPhoto.Item');
+        $itemInfo = $itemModle->getItem(array('gp_item_id' => intval($param['id'])));
+        $result = $projectModel->getProjectList(array('gp_item_id' => intval($param['id'])));
         if ($result) {
-            return resultArray(['data' => $result]);
+            return resultArray(['data' => array('projects' => $result, 'itemInfo' => $itemInfo)]);
         }
         return resultArray(['error' => '获取证书列表失败']);
     }

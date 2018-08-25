@@ -12,6 +12,10 @@ use think\Request;
 use think\facade\Log;
 use think\facade\Session;
 
+// 自定常量
+define('LOGIN_REDIRECT_CODE', 101); // 重新登录code
+define('LOGIN_FORBIT_CODE', 103); // 禁止登录code
+
 class Common extends Controller
 {
     public $param;

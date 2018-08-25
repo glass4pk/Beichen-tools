@@ -95,11 +95,21 @@ class User extends Common
     /**
      * 删除用户
      *
-     * @param string $id
-     * @param int $dataID
+     * @param array $whereArray 删除条件
      * @return void
      */
-    public function deleteUser( $id, $dataID)
+    public function deleteUser($whereArray)
     {
+        if (gettype($whereArray) != "array" || sizeof($whereArray) <= 0) {
+            return false;
+        }
+        $result = false;
+        try {
+            $result = $this->where($whereArray)->delete();
+        } catch (Exception $e) {
+            $result = true;
+        } finally {
+            return $result;
+        }
     }
 }

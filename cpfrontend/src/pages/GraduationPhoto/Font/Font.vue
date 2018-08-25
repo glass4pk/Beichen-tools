@@ -133,6 +133,9 @@ export default {
           if (response.data['errcode'] === 0) {
             _this.$message({type: 'success', message: '上传成功'})
             _this.flushList()
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({type: 'warning', message: '上传失败'})
           }
@@ -168,6 +171,9 @@ export default {
             _this.$message({type: 'success', message: '删除成功'})
             _this.items.splice(_this.deleteIndex, 1)
             // _this.flushList() // 刷新列表
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({type: 'warning', message: '删除失败'})
           }
@@ -191,6 +197,9 @@ export default {
         (response) => {
           if (response.data['errcode'] === 0) {
             _this.items = response.data.data
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           }
         }
       ).catch(

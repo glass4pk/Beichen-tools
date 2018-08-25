@@ -117,7 +117,11 @@ export default {
               type: 'success',
               message: '创建成功'
             })
+            _this.$router.push({path: '/gp/iteminfo?id=' + response.data.data})
             _this.flushList()
+          } else if (response.data['errcode'] === 101) {
+            _this.$message({type: 'warning', message: '请重新登录'})
+            _this.$router.push({path: '/gp/login'}) // 重新登录
           } else {
             _this.$message({
               type: 'warning',

@@ -1,10 +1,13 @@
 <?php
+/**
+ * Excel操作类
+ */
+
 namespace app\admin\controller\graduationPhoto;
 
 use app\admin\controller\Excel;
-use app\common\controller\Common;
 
-class ExcelMiddleware extends Common
+class ExcelMiddleware
 {
     public static function import($item_id, $filePath)
     {
