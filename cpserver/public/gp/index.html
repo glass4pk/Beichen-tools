@@ -172,18 +172,19 @@
         function submit() {
             var phone = document.getElementById('myInput').value;
             // 使用XMLHttpRequest发起请求
+            var item_id = window.location.href.split('item_id=')[1].split('&')[0];
             var xhr = new XMLHttpRequest();
             var data = {
                 'phone': phone,
                 'recogn': 1,
-                'item_id': window.location.href.split('item_id=')[1].split('&')[0]
+                'item_id': item_id
             }
             xhr.open("POST", "/gp/user/create", true);
             xhr.onload = function (e) {
                 if (e.target.status === 200){
                     var result = JSON.parse(e.target.responseText);
                     if (result.errcode === 0) {
-                        window.location.href ='credential.html?result_id=' + result.data;
+                        window.location.href ='credential.html?item_id=' + item_id + '&result_id=' + result.data;
                     }
                 }
                 // console.log(e);
