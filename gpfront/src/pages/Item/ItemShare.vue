@@ -15,7 +15,14 @@
                         <div class='row'>
                             <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
                                 <div style="">
-                                    分享链接：{{extend_url}}
+                                    H5分享链接：{{extend_url}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='on-same-line' style="padding: 0px 0px 0px 30px;">
+                                <div style="">
+                                    嵌入H5的链接：{{embed_link}}
                                 </div>
                             </div>
                         </div>
@@ -101,8 +108,6 @@ import axios from 'axios'
 export default {
   name: '',
   props: ['item_id', 'extend_url', 'share_title', 'share_content', 'share_pic'],
-  created () {
-  },
   computed: {
   },
   data () {
@@ -113,8 +118,12 @@ export default {
       share_content_Edit: null,
       share_pic_Edit: null,
       upload_pic: null,
-      loadingfullscreen: false
+      loadingfullscreen: false,
+      embed_link: null
     }
+  },
+  created () {
+    this.embed_link = window.location.origin + '/gp/index.html?item_id=' + this.item_id
   },
   watch: {
     extend_url: function (val) {
