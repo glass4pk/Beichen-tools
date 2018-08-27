@@ -1,6 +1,6 @@
 <?php
 
-namespace app\gp\validate\gp;
+namespace app\gp\validate;
 use think\Validate;
 
 /**
