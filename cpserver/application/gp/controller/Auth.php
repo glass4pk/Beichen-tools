@@ -18,7 +18,7 @@ class Auth extends Common
      */
     public function signup()
     {
-        // return resultArray(['error' => '禁止注册，请联系开放人员']);
+        return resultArray(['error' => '禁止注册，请联系开放人员']);
         // 如果不是post请求就返回
         if (!$this->request->isPost()){
             return ;
