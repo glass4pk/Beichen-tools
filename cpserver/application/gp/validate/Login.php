@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\validate\graduationPhoto;
+namespace app\gp\validate\graduationPhoto;
 
 use think\Validate;
 
