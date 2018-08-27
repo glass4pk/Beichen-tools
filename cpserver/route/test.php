@@ -9,3 +9,5 @@ Route::get('test1','admin/graduationPhoto.test/index');
 // Route::get('exportexcel','admin/data.Export/exportToExcel');
 
 Route::get('test2','test/Test/index');
+
+Route::get('test3','test/CloudTest/index');

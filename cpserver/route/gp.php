@@ -1,37 +1,41 @@
 <?php
+/**
+ * gp模块路由，前缀为gp
+ */
+
 use think\facade\Route;
 
-Route::any('gp/uploadpic','admin/graduationPhoto.UploadFile/pic');
-Route::any('gp/uploadexcel','admin/graduationPhoto.UploadFile/excel');
-Route::any('gp/uploadfont','admin/graduationPhoto.UploadFile/font');
-Route::get('gp/getfontlist','admin/graduationPhoto.Project/getFontList');
-Route::any('gp/deletefont','admin/graduationPhoto.Project/deletefont');
+Route::any('gp/uploadpic','gp/UploadFile/pic');
+Route::any('gp/uploadexcel','gp/UploadFile/excel');
+Route::any('gp/uploadfont','gp/UploadFile/font');
+Route::get('gp/getfontlist','gp/Project/getFontList');
+Route::any('gp/deletefont','gp/Project/deletefont');
 
 // project (每个project 相当于一个证书)
-Route::any('gp/createproject','admin/graduationPhoto.Project/createProject'); // 创建Project
-Route::get('gp/getprojectlist','admin/graduationPhoto.Project/getProjectList');
-Route::any('gp/deleteproject','admin/graduationPhoto.Project/deleteProject');
-Route::any('gp/updateproject','admin/graduationPhoto.Project/updateProject');
+Route::any('gp/createproject','gp/Project/createProject'); // 创建Project
+Route::get('gp/getprojectlist','gp/Project/getProjectList');
+Route::any('gp/deleteproject','gp/Project/deleteProject');
+Route::any('gp/updateproject','gp/Project/updateProject');
 
 // user
-Route::any('gp/user/create','admin/graduationPhoto.User/create'); // 创建证书
-Route::get('gp/getresult','admin/graduationPhoto.User/getResult'); // 获取证书链接
+Route::any('gp/user/create','gp/User/create'); // 创建证书
+Route::get('gp/getresult','gp/User/getResult'); // 获取证书链接
 
 // 项目
-Route::post('gp/deleteitem','admin/graduationPhoto.Item/deleteItem');
-Route::get('gp/getitemlist','admin/graduationPhoto.Item/getItemList');
-Route::any('gp/createitem','admin/graduationPhoto.Item/createItem');
-Route::get('gp/getiteminfo','admin/graduationPhoto.Item/getItemInfo');
-Route::any('gp/item/changestatus','admin/graduationPhoto.Item/changeStatus');
-Route::any('gp/item/changeextendurl','admin/graduationPhoto.Item/changeExtendUrl');
-Route::any('gp/item/getitembaseinfo','admin/graduationPhoto.Item/getItemBaseInfo');
-Route::any('gp/sharelink','admin/graduationPhoto.Item/shareLink');
-Route::any('gp/uploadsharepic', 'admin/graduationPhoto.UploadFile/uploadSharePic');
+Route::post('gp/deleteitem','gp/Item/deleteItem');
+Route::get('gp/getitemlist','gp/Item/getItemList');
+Route::any('gp/createitem','gp/Item/createItem');
+Route::get('gp/getiteminfo','gp/Item/getItemInfo');
+Route::any('gp/item/changestatus','gp/Item/changeStatus');
+Route::any('gp/item/changeextendurl','gp/Item/changeExtendUrl');
+Route::any('gp/item/getitembaseinfo','gp/Item/getItemBaseInfo');
+Route::any('gp/sharelink','gp/Item/shareLink');
+Route::any('gp/uploadsharepic', 'gp/UploadFile/uploadSharePic');
 
 // 登录、注册
-Route::any('gp/login','admin/graduationPhoto.Auth/login');
-Route::any('gp/signup','admin/graduationPhoto.Auth/signUp');
-Route::any('gp/checkislogin','admin/graduationPhoto.Check/checkIsLogin');
-Route::any('gp/logout', 'admin/graduationPhoto.Auth/logout');
+Route::any('gp/login','gp/Auth/login');
+Route::any('gp/signup','gp/Auth/signUp');
+Route::any('gp/checkislogin','gp/Check/checkIsLogin');
+Route::any('gp/logout', 'gp/Auth/logout');
 
-Route::any('gp/test', 'admin/graduationPhoto.Test/index');
+Route::any('gp/test', 'gp/Test/index');
