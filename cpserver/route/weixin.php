@@ -14,4 +14,3 @@ Route::any('weixin/getjsapi','admin/weixin.Getjsapi/getSignature');
 // 刷新jsapi签名
 Route::get('weixin/flashjsapi','admin/weixin.Getjsapi/getJsApiFromWeixin');
 
-Route::
