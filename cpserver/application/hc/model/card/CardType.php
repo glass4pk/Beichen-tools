@@ -55,7 +55,7 @@ class CardType extends Model
         }
     }
 
-    public function deleteCard($whereArray)
+    public function remove($whereArray)
     {
         $isOk = false;
         try {

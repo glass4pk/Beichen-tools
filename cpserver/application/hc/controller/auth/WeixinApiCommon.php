@@ -5,7 +5,7 @@
 // | Author: linchuangbin <linchuangbin@honraytech.com>
 // +----------------------------------------------------------------------
 // 只有微信端可以访问
-namespace app\hc\controller;
+namespace app\hc\controller\auth;
 
 use think\facade\Request;
 use think\Db;

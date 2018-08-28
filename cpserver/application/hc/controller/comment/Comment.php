@@ -4,19 +4,19 @@
  * @author jack <chengjunjie.jack@qq.com>
  */
 
- namespace app\hc\controller\comment;
+namespace app\hc\controller\comment;
 
- use app\hc\controller\WeixinApiCommon;
- use think\Validate;
+use app\hc\controller\auth\WeixinApiCommon;
+use think\Validate;
 
- class Comment extends WeixinApiCommon
- {
-     /**
-      * 用户添加评论
-      *
-      * @return json
-      */
-    public function add()
+class Comment extends WeixinApiCommon
+{
+    /**
+     * 用户添加评论
+    *
+    * @return json
+    */
+    public function addComment()
     {
         if (!$this->request->isPost()) {
             return;
@@ -24,54 +24,54 @@
         $param = $this->param;
         $rule = [
             "openid" => "require",
-            "card_id" => "requier",
-            "comment" => "require|max:512"
+            "c_id" => "require",
+            "comment" => "max:512"
         ];
         $message = [
             "openid.require" => "opendi缺失",
-            "card_id" => "card_id为空",
-            "comment.require" => "评论为空",
+            "c_id" => "c_id为空",
             "comment.max" => "评论最大长度为512"
         ];
         $validate = Validate::make($rule, $message);
         if (!$validate->check($param)) {
             return resultArray(["error" => $validate->getError()]);
         }
-        $commentModel = model("");
+        $commentModel = model("comment.Comment");
         $paramArray = array();
         $paramArray["openid"] = strval($param["openid"]);
-        $paramArray["card_id"] = intval($param["card_id"]);
+        $paramArray["c_id"] = intval($param["c_id"]);
         $paramArray["comment"] = strval($param["comment"]);
         $paramArray["create_timestamp"] = strtotime("now");
         $paramArray["create_time"] = date("Y-m-d H:i:s", $paramArray["create_timestamp"]);
         $paramArray["status"] = 0; // the state of comment is not pass. Default state is 0.
-        $result = $commentModel->addComment($paramArray);
+        $result = $commentModel->addOne($paramArray);
         if ($result) {
             return resultArray(["data" => "success"]);
         }
-        return resultArrray(["error" => "error"]);
+        return resultArray(["error" => "error"]);
     }
 
     /**
      * get comment list by card_id
      */
-    public function getCommentList()
+    public function getComment()
     {
         $param = $this->param;
         $rule = [
-            "card_id" => "require|number"
+            "c_id" => "require|number"
         ];
         $message = [
-            "card_id.require" => "card_id is not found"
+            "c_id" => "id错误"
         ];
         $validate = Validate::make($rule, $message);
         if (!$validate->check($param)) {
             return resultArray(["error" => $validate->getError()]);
         }
-        $commentModel = model("Comment");
+        $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray["card_id"] = intval($param["card_id"]);
-        $result = $commentModel->getCommentList($whereArray);
+        $whereArray['status'] = 1;
+        $whereArray["c_id"] = intval($param["c_id"]);
+        $result = $commentModel->getSome($whereArray);
         if ($result) {
             return resultArray(["data" => $result]);
         }
@@ -107,7 +107,7 @@
     {
 
     }
-    
+
     /**
      * 取消点赞
      *

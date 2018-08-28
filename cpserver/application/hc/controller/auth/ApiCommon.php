@@ -4,7 +4,7 @@
  * @author jack <chengjunjie.jack@qq.com>
  */
 
-namespace app\hc\controller\graduationPhoto;
+namespace app\hc\controller\auth;
 
 use think\facade\Request;
 use think\Db;

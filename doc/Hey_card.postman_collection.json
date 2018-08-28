@@ -1,0 +1,2006 @@
+{
+	"info": {
+		"_postman_id": "2ada43cd-fdd2-48d8-a761-ec42510b5ef6",
+		"name": "Hey_card",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "manage",
+			"item": [
+				{
+					"name": "cardType",
+					"item": [
+						{
+							"name": "添加卡牌类型",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "type_id",
+											"value": "2",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "2",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "pic",
+											"value": "http://127.0.0.1",
+											"description": "必选",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/addcardtype",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"addcardtype"
+									]
+								},
+								"description": "添加类型"
+							},
+							"response": [
+								{
+									"name": "添加卡牌类型-example-1",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"name": "Content-Type",
+												"value": "application/x-www-form-urlencoded",
+												"disabled": false
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "type_id",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "1",
+													"type": "text"
+												},
+												{
+													"key": "pic",
+													"value": "http://127.0.0.1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/addcardtype",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"addcardtype"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "47",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 27 Aug 2018 17:03:55 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=99",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":\"添加成功\",\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "删除卡牌类型",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "t_id",
+											"value": "1",
+											"description": "必选",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/deletecardtype",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"deletecardtype"
+									]
+								},
+								"description": "删除card_type"
+							},
+							"response": [
+								{
+									"name": "删除卡牌类型-ex1",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "t_id",
+													"value": "1",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/manage/deletecardtype",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"deletecardtype"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "42",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 27 Aug 2018 17:07:14 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=95",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":\"success\",\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "更改卡牌类型",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "pic",
+											"value": "http://127.0.0.1",
+											"description": "可选",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "name",
+											"description": "可选",
+											"type": "text"
+										},
+										{
+											"key": "t_id",
+											"value": "4",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "",
+											"value": "",
+											"type": "text",
+											"disabled": true
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/changecardtype",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"changecardtype"
+									]
+								},
+								"description": "更新card_type\n"
+							},
+							"response": [
+								{
+									"name": "更改卡牌类型-ex1",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "name",
+													"value": "name",
+													"description": "可选",
+													"type": "text"
+												},
+												{
+													"key": "type_id",
+													"value": "2",
+													"description": "必须",
+													"type": "text"
+												},
+												{
+													"key": "pic",
+													"value": "http://example.com/1.jpg",
+													"description": "可选",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/manage/changecardtype",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"changecardtype"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "42",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 27 Aug 2018 17:10:33 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=92",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":\"success\",\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "获取卡牌类型",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/getcardtype",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"getcardtype"
+									]
+								},
+								"description": "get cardtype"
+							},
+							"response": [
+								{
+									"name": "获取卡牌类型-ex1",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/manage/getcardtype",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"getcardtype"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "153",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 27 Aug 2018 17:12:43 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=91",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\"id\":15,\"name\":\"name\",\"status\":1,\"create_time\":\"2018-08-28 01:05:03\",\"pic\":\"http:\\/\\/example.com\\/1.jpg\",\"type_id\":2}],\"errmsg\":\"\"}"
+								}
+							]
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "card",
+					"item": [
+						{
+							"name": "添加卡牌",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "card_id",
+											"value": "1",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "t_id",
+											"value": "1",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "name",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "pic",
+											"value": "http://127.0.0.1/1.jpg",
+											"description": "必选",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/addcard",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"addcard"
+									]
+								},
+								"description": "添加卡牌"
+							},
+							"response": [
+								{
+									"name": "添加卡牌",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "card_id",
+													"value": "11",
+													"description": "必选",
+													"type": "text"
+												},
+												{
+													"key": "t_id",
+													"value": "4",
+													"description": "必选",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "name",
+													"description": "必选",
+													"type": "text"
+												},
+												{
+													"key": "pic",
+													"value": "http://127.0.0.1/1.jpg",
+													"description": "必选",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/addcard",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"addcard"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "36",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 06:23:17 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=82",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":\"9\",\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "删除卡牌",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "c_id",
+											"value": "9",
+											"description": "必选",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/deletecard",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"deletecard"
+									]
+								},
+								"description": "删除卡牌"
+							},
+							"response": [
+								{
+									"name": "删除卡牌",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "c_id",
+													"value": "9",
+													"description": "必选",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/deletecard",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"deletecard"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "34",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 06:23:34 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=81",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":1,\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "更改卡牌",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "c_id",
+											"value": "7",
+											"description": "必须",
+											"type": "text"
+										},
+										{
+											"key": "name",
+											"value": "name_1",
+											"description": "可选",
+											"type": "text"
+										},
+										{
+											"key": "pic",
+											"value": "http://127.0.0.1/1.jpg",
+											"description": "可选",
+											"type": "text"
+										},
+										{
+											"key": "t_id",
+											"value": "5",
+											"description": "可选",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/changecard",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"changecard"
+									]
+								},
+								"description": "更改卡牌"
+							},
+							"response": [
+								{
+									"name": "更改卡牌",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "c_id",
+													"value": "7",
+													"description": "必须",
+													"type": "text"
+												},
+												{
+													"key": "name",
+													"value": "name_1",
+													"description": "可选",
+													"type": "text"
+												},
+												{
+													"key": "pic",
+													"value": "http://127.0.0.1/1.jpg",
+													"description": "可选",
+													"type": "text"
+												},
+												{
+													"key": "t_id",
+													"value": "5",
+													"description": "可选",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/changecard",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"changecard"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "34",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 06:26:56 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=77",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":1,\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "获取卡牌",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/getcard?t_id=4",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"getcard"
+									],
+									"query": [
+										{
+											"key": "t_id",
+											"value": "4",
+											"description": "可选"
+										},
+										{
+											"key": "c_id",
+											"value": "2",
+											"description": "可选，（若设置card_id字段，则type_id也必须设置）",
+											"disabled": true
+										},
+										{
+											"key": "name",
+											"value": "name_1",
+											"description": "可选",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"description": "可选",
+											"disabled": true
+										}
+									]
+								},
+								"description": "获取卡牌"
+							},
+							"response": [
+								{
+									"name": "获取卡牌",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/getcard?t_id=4",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"getcard"
+											],
+											"query": [
+												{
+													"key": "t_id",
+													"value": "4",
+													"description": "可选"
+												},
+												{
+													"key": "c_id",
+													"value": "2",
+													"description": "可选，（若设置card_id字段，则type_id也必须设置）",
+													"disabled": true
+												},
+												{
+													"key": "name",
+													"value": "name_1",
+													"description": "可选",
+													"disabled": true
+												},
+												{
+													"key": "status",
+													"value": "1",
+													"description": "可选",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "158",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 07:21:20 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=95",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\"c_id\":1,\"t_id\":4,\"card_id\":1,\"type_id\":1,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535437115\"}],\"errmsg\":\"\"}"
+								}
+							]
+						}
+					],
+					"description": "卡牌api",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "comment",
+					"item": [
+						{
+							"name": "{{url}}/api/hc/manage/deletecomment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "cc_id",
+											"value": "1",
+											"description": "[ ]cc_id 评论的唯一id",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/deletecomment",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"deletecomment"
+									]
+								},
+								"description": "删除评论"
+							},
+							"response": []
+						}
+					],
+					"description": "评论管理类",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "upload",
+					"item": [
+						{
+							"name": "上传图片",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "http://127.0.0.1/api/hc/manage/uploadpic",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"uploadpic"
+									]
+								},
+								"description": "上传图片\n"
+							},
+							"response": []
+						}
+					],
+					"description": "上传文件",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "auth",
+					"item": [],
+					"description": "后台权限等相关api",
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "client",
+			"item": [
+				{
+					"name": "card",
+					"item": [
+						{
+							"name": "用户获取卡牌列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/client/getcard?t_id=4",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getcard"
+									],
+									"query": [
+										{
+											"key": "t_id",
+											"value": "4"
+										}
+									]
+								},
+								"description": "用户端：根据条件获取符合条件的卡牌，数量不限"
+							},
+							"response": []
+						}
+					],
+					"description": "卡牌api",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "cardType",
+					"item": [
+						{
+							"name": "用户获取卡牌类型列表",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "http://127.0.0.1/api/hc/client/getcardtype",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getcardtype"
+									]
+								},
+								"description": "用户获取卡牌类型"
+							},
+							"response": [
+								{
+									"name": "用户获取卡牌类型列表",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/client/getcardtype",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"client",
+												"getcardtype"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "253",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 07:24:35 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=91",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\"t_id\":4,\"name\":\"name\",\"type_id\":1,\"status\":1,\"create_time\":\"2018-08-28 14:04:05\",\"pic\":\"http:\\/\\/127.0.0.1\"},{\"t_id\":5,\"name\":\"2\",\"type_id\":2,\"status\":1,\"create_time\":\"2018-08-28 14:04:11\",\"pic\":\"http:\\/\\/127.0.0.1\"}],\"errmsg\":\"\"}"
+								}
+							]
+						}
+					],
+					"description": "卡牌类型api",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "comment",
+					"item": [
+						{
+							"name": "传卡牌的id获取评论，注此id不是card_id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "http://127.0.0.1/api/hc/client/getcomment?c_id=7",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getcomment"
+									],
+									"query": [
+										{
+											"key": "c_id",
+											"value": "7"
+										}
+									]
+								},
+								"description": "获取卡片的评论"
+							},
+							"response": [
+								{
+									"name": "传卡牌的id获取评论，注此id不是card_id",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/client/getcomment?cardid=12",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"client",
+												"getcomment"
+											],
+											"query": [
+												{
+													"key": "cardid",
+													"value": "12"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "564",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 03:45:08 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=85",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\" id\":3,\"openid\":\"1\",\"comment\":\"评论评论评论\",\"create_time\":\"2018-08-28 11:39:18\",\"create_timestamp\":\"1535427558\",\"status\":1,\"cardid\":12,\"like\":null,\"last_change_time\":null},{\" id\":5,\"openid\":\"1\",\"comment\":\"评论评论评论\",\"create_time\":\"2018-08-28 11:39:33\",\"create_timestamp\":\"1535427573\",\"status\":1,\"cardid\":12,\"like\":null,\"last_change_time\":null},{\" id\":6,\"openid\":\"1\",\"comment\":\"baidu\",\"create_time\":\"2018-08-28 11:42:25\",\"create_timestamp\":\"1535427745\",\"status\":1,\"cardid\":12,\"like\":null,\"last_change_time\":null}],\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "用户填写评论",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "openid",
+											"value": "1",
+											"description": "必选",
+											"type": "text"
+										},
+										{
+											"key": "c_id",
+											"value": "7",
+											"description": "fdfd",
+											"type": "text"
+										},
+										{
+											"key": "comment",
+											"value": "baiduddd",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://127.0.0.1/api/hc/client/addcomment",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"addcomment"
+									]
+								},
+								"description": "用户添加评论"
+							},
+							"response": [
+								{
+									"name": "用户填写评论",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "openid",
+													"value": "1",
+													"description": "必选",
+													"type": "text"
+												},
+												{
+													"key": "c_id",
+													"value": "7",
+													"description": "fdfd",
+													"type": "text"
+												},
+												{
+													"key": "comment",
+													"value": "baidu",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://127.0.0.1/api/hc/client/addcomment",
+											"protocol": "http",
+											"host": [
+												"127",
+												"0",
+												"0",
+												"1"
+											],
+											"path": [
+												"api",
+												"hc",
+												"client",
+												"addcomment"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "42",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 28 Aug 2018 07:27:04 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=85",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "uk2a944t0t6gu0babj3sb87chd",
+											"key": "PHPSESSID"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "dev.yes-go.cn%2Fgp",
+											"key": "host"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":\"success\",\"errmsg\":\"\"}"
+								}
+							]
+						}
+					],
+					"description": "用户评论api",
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "wechat",
+					"item": [
+						{
+							"name": "暂时不使用",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "http://127.0.0.1/api/hc/weixin/postcode",
+									"protocol": "http",
+									"host": [
+										"127",
+										"0",
+										"0",
+										"1"
+									],
+									"path": [
+										"api",
+										"hc",
+										"weixin",
+										"postcode"
+									]
+								},
+								"description": "用户同意授权，获取code,将code发送回数据库"
+							},
+							"response": []
+						}
+					],
+					"description": "微信用户信息api",
+					"_postman_isSubFolder": true
+				}
+			],
+			"description": "用户端"
+		}
+	]
+}

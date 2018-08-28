@@ -6,7 +6,7 @@ use think\Model;
 class Comment extends Model
 {
     protected $name = "card_comment";
-    
+
     public function addOne($param)
     {
         $isOk = false;
@@ -55,7 +55,7 @@ class Comment extends Model
         }
     }
 
-    public function deleteCard($whereArray)
+    public function remove($whereArray)
     {
         $isOk = false;
         try {

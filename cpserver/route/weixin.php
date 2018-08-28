@@ -1,6 +1,7 @@
 <?php
 /**
  * 微信验证接口
+ * Appid: 
  */
 use think\facade\Route;
 
@@ -12,3 +13,5 @@ Route::get('wx','admin/weixin.CheckServer/checkServer');
 Route::any('weixin/getjsapi','admin/weixin.Getjsapi/getSignature');
 // 刷新jsapi签名
 Route::get('weixin/flashjsapi','admin/weixin.Getjsapi/getJsApiFromWeixin');
+
+Route::
