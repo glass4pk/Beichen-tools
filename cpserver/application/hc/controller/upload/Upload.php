@@ -16,6 +16,9 @@ class Upload extends ApiCommon
 {
     public function pic()
     {
+        if (!$this->request->isPost()) {
+            return ;
+        }
         $file = request()->file('file');
         if (!$file) {
         	return resultArray(['error' => '请上传文件']);
