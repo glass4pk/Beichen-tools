@@ -17,6 +17,7 @@ define('PUBLIC_PATH',ROOT_PATH . 'public' . DIRECTORY_SEPARATOR);
 define('UPLOADS',PUBLIC_PATH . 'uploads' . DIRECTORY_SEPARATOR);
 define('DATA', ROOT_PATH . 'data' . DIRECTORY_SEPARATOR);
 define("CONFIG_PATH", ROOT_PATH . "config" . DIRECTORY_SEPARATOR);
+define("HC_UPLOAD_PATH", PUBLIC_PATH . "hey_card" . DIRECTORY_SEPARATOR . "static" . DIRECTORY_SEPARATOR . "upload" . DIRECTORY_SEPARATOR);
 // define('PHPEXCEL_ROOT', EXTEND_PATH . DIRECTORY_SEPARATOR . "PHPExcel");
 // 加载基础文件
 require __DIR__ . '/../thinkphp/base.php';

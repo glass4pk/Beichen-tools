@@ -36,6 +36,9 @@ Route::get("api/hc/manage/getcard", "hc/manage.Card/getSome");
 
 Route::post("api/hc/manage/deletecomment", "hc/manage.Comment/remove");
 
+// Uload
+Route::any("api/hc/manage/uploadpic", "hc/upload.Upload/pic");
+
 
 /**
  * client

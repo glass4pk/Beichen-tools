@@ -5,7 +5,7 @@
  */
 use think\facade\Route;
 
-Route::get('wx','admin/weixin.CheckServer/checkServer');
+Route::get('wx','wechat/CheckServer/checkServer');
 // 微信服务器验证接口
 // 发送群发模板消息接口
 // Route::any('manage/weixin/sendalltemplatemessage','admin/weixin.TemplateMessage/SendAllTemplateMessage');

@@ -21,9 +21,9 @@ class Upload extends ApiCommon
         	return resultArray(['error' => '请上传文件']);
         }
         
-        $info = $file->validate(['ext'=>'jpg,png,gif'])->move(PIC_SAVE_PATH);
+        $info = $file->validate(['ext'=>'jpg,png,gif'])->move(HC_UPLOAD_PATH);
         if ($info) {
-            return resultArray(['data' =>  'uploads'. DS .$info->getSaveName()]);
+            return resultArray(['data' => DIRECTORY_SEPARATOR . "hey_card" . DIRECTORY_SEPARATOR . "static" . DIRECTORY_SEPARATOR . "upload" . DIRECTORY_SEPARATOR . $info->getSaveName()]);
         }
         return resultArray(['error' =>  $file->getError()]);
     }
