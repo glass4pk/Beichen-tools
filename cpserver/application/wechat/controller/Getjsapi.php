@@ -51,7 +51,7 @@ class Getjsapi extends Common
         }
 
         try {
-            $ACCESS_TOKEN = AccessTokenMiddleware::getAccessToken();
+            $ACCESS_TOKEN = AccessTokenMiddleware::getAccessToken($this->config['appid']);
             $url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='.$ACCESS_TOKEN.'&type=jsapi';
             $result = json_decode(get_https($url));
             if (isset($result->errcode) && $result->errcode== 0){
