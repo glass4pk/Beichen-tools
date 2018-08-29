@@ -1,6 +1,6 @@
 <?php
 /**
- * 该目录为hc模块的数据库配置文件
+ * 微信accessToken、jsDk的存储数据库
  */
 
 return [
@@ -9,7 +9,7 @@ return [
     // 服务器地址
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 'hc',
+    'database'        => 'wechat',
     // 用户名
     'username'        => 'root',
     // 密码

@@ -3,6 +3,7 @@
 // echo phpinfo();
 $a = "10";
 $b = intval($a);
-echo $b;
-echo is_int($b);
-echo 'phpinfo';
+
+$a1 = [];
+$a1['b'] = 0;
+echo $a1['b'] ?? 'a';

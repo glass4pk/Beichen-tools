@@ -10,20 +10,29 @@ use think\Db;
 use think\Exception;
 use think\Validate;
 use app\common\controller\Common;
+use app\wechat\controller\config\WxConfig;
+use app\wechat\controller\AccessTokenMiddleware;
 
 class Getjsapi extends Common
 {
+    protected $config;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->config = WxConfig::getConfig();
+    }
+
     /**
-     * 从微信服务器获取jsapi_ticket并存入数据库(刷新jsapi_ticker用)
+     * 从微信服务器获取jsapi_ticket并存入数据库(只适用刷新jsapi_ticker，不能随便使用该函数)
      * @return void
      */
-    public function getJsApiFromWeixin()
+    public function flushJsApi()
     {
         if (!$this->request->isGet()) {
             return ;
         }
         
-        //---------------------------------------------------
         date_default_timezone_set('PRC');
         $param = $this->param;
         $validate = Validate::make(['noncestr'=>'require|length:20','timestamp' => 'require','signature' => 'require']);
@@ -34,18 +43,15 @@ class Getjsapi extends Common
         $timestamp = $param['timestamp'];
         $signature = $param['signature'];
         $nowTimeStamp = strtotime('now');
-        // if (($nowTimeStamp-60) > $param['timestamp'] || $param['timestamp'] > ($nowTimeStamp+60)) { // signature时间限制
-        //     return resultArray( ['error' => '禁止访问']);
-        // }
+
         $string1 = $param['timestamp'].'passcode=d2wenvldj45fhgjJVlfglfstfgdjjslys2gjf7979jlf&timestamp='.$param['noncestr'];
         $newsignature = sha1($string1);
         if($signature != $newsignature){ // 判断签名的正确性
             return resultArray( ['error' => '禁止访问']);
         }
-        // -----------------------------------------------------
 
         try {
-            $ACCESS_TOKEN = get_access_token();
+            $ACCESS_TOKEN = AccessTokenMiddleware::getAccessToken();
             $url = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token='.$ACCESS_TOKEN.'&type=jsapi';
             $result = json_decode(get_https($url));
             if (isset($result->errcode) && $result->errcode== 0){
@@ -60,13 +66,14 @@ class Getjsapi extends Common
     }
 
     /**
-     * 从数据库获取getjsapi
-     * @author jack <chengjunjie.jack@outlook.com>
+     * 从数据库获取jsapi
+     *
+     * @param integer $type
      * @return void
      */
-    private function getJsApi()
+    private function getJsApi(int $type = 1)
     {
-        $result = Db::name('jsapi_ticket')->where('type',1)->find();
+        $result = Db::name('jsapi_ticket')->where(['type' => intval($type), 'appid' => $this->config['appid']])->find();
         if ($result) {
             return $result['jsapi_ticket'];
         }
@@ -75,7 +82,7 @@ class Getjsapi extends Common
 
 
     /**
-     * 微信客户端获取js-sdk权限验证的签名
+     * js-sdk权限验证的签名算法
      *  @author jack <chengjunjie.jack@outlook.com>
      * @return void
      */

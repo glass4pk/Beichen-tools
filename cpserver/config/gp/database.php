@@ -1,6 +1,6 @@
 <?php
 /**
- * 该目录为gp模块的数据库配置文件，覆盖全局配置文件config/database.php
+ * 该目录为gp模块的数据库配置文件
  */
 
 return [
