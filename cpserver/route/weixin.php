@@ -11,3 +11,5 @@ Route::get('wx','wechat/CheckServer/checkServer');
 Route::any('weixin/getjsapi','wechat/Getjsapi/getSignature');
 // 刷新jsapi签名
 Route::get('weixin/refreshjsapi','wechat/Getjsapi/refreshJsapi');
+// post code,获取openid和用户信息
+Route::get('weixin/getopenid','wechat/GetOpenid/getOpenid');

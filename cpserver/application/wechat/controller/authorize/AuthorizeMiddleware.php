@@ -16,10 +16,7 @@ class AuthorizeMiddleware
     {
         $url = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' . $appid . '&secret=' . $secret . '&code=' . $code . '&grant_type=authorization_code';
         $response = get_https($url);
-        $result = json_decode($response);
-        if (isset($result['errcode']) && $result['errcode']) {
-            return $result['errcode'];
-        }
+        $result = json_decode($response, true);
         return $result;
     }
 
@@ -34,11 +31,7 @@ class AuthorizeMiddleware
     {
         $url = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $accessToken . '&openid=' . $openid . '&lang=' . $lang;
         $response = get_https($url);
-        $result = json_decode($response);
-        if (isset($result['errcode'])) {
-            // 获取用户信息失败, 返回微信错误码
-            return $result['errcode'];
-        }
+        $result = json_decode($response, true);
         return $result;
     }
 
@@ -53,11 +46,7 @@ class AuthorizeMiddleware
     {
         $url = 'https://api.weixin.qq.com/sns/oauth?/refresh_token?appid=' . $appid . '&grant_type=refresh_token&refresh_token' . $refresh_token;
         $response = get_https($url);
-        $result = json_decode($response);
-        if (isset($result['errcode'])) {
-            // 获取失败， 返回微信错误码
-            return $result['errcode'];
-        }
+        $result = json_decode($response, true);
         return $result;
     }
 

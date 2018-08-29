@@ -14,7 +14,7 @@ use app\wechat\controller\authorize\AuthorizeMiddleware;
  * 验证微信用户的基础类
  * @author jack <chengjunjie.jack@outlook.com>
  */
-class Openid extends Common{
+class GetOpenid extends Common{
     
     protected $config;
 
@@ -33,9 +33,6 @@ class Openid extends Common{
     protected function getBase(string $code)
     {
         $result = AuthorizeMiddleware::getAccessToken($this->config['appid'], $this->config['secret'], $code);
-        if (!isset($result['openid'])) {
-            return $result['errcode'];
-        }
         return $result;
     }
 
@@ -47,15 +44,12 @@ class Openid extends Common{
     protected function getUserInfo(string $code)
     {
         $result = AuthorizeMiddleware::getAccessToken($this->config['appid'], $this->config['secret'], $code);
-        if (!isset($result['openid'])) {
-            return $result['errcode'];
+        if (isset($result['errcode']) && $result['errcode'] != 0) {
+            return $result;
         }
         // 获取到网页接口调用凭证access_token和openid后，获取用户信息
         $userInfo = AuthorizeMiddleware::getWxUserInfo($result['access_token'], $result['openid']);
-        if (!isset($userInfo['openid'])) {
-            return $userInfo['errcode'];
-        }
-        // 返回用户信息
+        // 返回结果
         return $userInfo;
     }
 
@@ -74,11 +68,11 @@ class Openid extends Common{
         $param=$this->param;
 
         // 验证code
-        $validate = Validate::make(['code' => 'require', 'type' => 'require'], ['code' => 'code缺失', 'type' => 'type缺失']);
+        $validate = Validate::make(['code' => 'require', 'scope' => 'require'], ['code' => 'code缺失', 'scope' => 'scope缺失']);
         if (!$validate->check($param)) {
             return resultArray(['error' => $validate->getError()]);
         }
-        switch(strval($param[])) {
+        switch(strval($param['scope'])) {
             case 'snsapi_base':
                 $result = $this->getBase(strval($param['code']));
                 break;
@@ -90,18 +84,21 @@ class Openid extends Common{
         }
 
         // 如果$result有设置errcode，则说明返回了错误信息
-        if (isset($result['errcode'])) {
-            return resultArray(['error' => $result]);
+        if (isset($result['errcode']) && $result['errcode'] != 0) {
+            return resultArray(['error' => $result['errcode']]);
         }
 
         // 获取到了用户的openid
-        $authKey = user_md5(date('YmdHis_').$openid); // 生成新的authKey
+        $authKey = user_md5(date('YmdHis_').$result['openid']); // 生成新的authKey
         // 设置cookie
         cookie('authKey',$authKey,3600*24*30); // 有效期一个月
         if (sizeof($result) > 1) {
             $newResult = array();
             $newResult['openid'] = $result['openid'];
             $newResult['nickname'] = $result['nickname'] ?? null;
+            $newResult['headimgurl'] = $result['headimgurl'] ?? null;
+            $newResult['unionid'] = $result['unionid'] ?? null;
+            return resultArray(['data' => $newResult]);
         }
         return $result;
     }
