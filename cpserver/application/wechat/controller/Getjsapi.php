@@ -27,7 +27,7 @@ class Getjsapi extends Common
      * 从微信服务器获取jsapi_ticket并存入数据库(只适用刷新jsapi_ticker，不能随便使用该函数)
      * @return void
      */
-    public function flushJsApi()
+    public function refreshJsapi()
     {
         if (!$this->request->isGet()) {
             return ;

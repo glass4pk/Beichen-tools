@@ -34,7 +34,7 @@ function getSignature(){
 }
 
 function sendTemplateMessage(){
-	var url="http://"+host+"/weixin/flashjsapi"+getSignature();
+	var url="http://"+host+"/weixin/refreshjsapi"+getSignature();
 	console.log(url);
 	try{
 		http.get(url,(res)=>{

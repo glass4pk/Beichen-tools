@@ -26,7 +26,8 @@ class Upload extends ApiCommon
         
         $info = $file->validate(['ext'=>'jpg,png,jpeg,gif'])->move(HC_UPLOAD_PATH);
         if ($info) {
-            return resultArray(['data' => DIRECTORY_SEPARATOR . "hey_card" . DIRECTORY_SEPARATOR . "static" . DIRECTORY_SEPARATOR . "upload" . DIRECTORY_SEPARATOR . $info->getSaveName()]);
+            // 图片路径目前写死，后期记得修改
+            return resultArray(['data' => 'http://dev.yes-go.cn' . DIRECTORY_SEPARATOR . "hey_card" . DIRECTORY_SEPARATOR . "static" . DIRECTORY_SEPARATOR . "upload" . DIRECTORY_SEPARATOR . $info->getSaveName()]);
         }
         return resultArray(['error' =>  $file->getError()]);
     }

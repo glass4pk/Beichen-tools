@@ -10,4 +10,4 @@ Route::get('wx','wechat/CheckServer/checkServer');
 // 获取jsapi签名
 Route::any('weixin/getjsapi','wechat/Getjsapi/getSignature');
 // 刷新jsapi签名
-Route::get('weixin/flushjsapi','wechat/Getjsapi/flushJsApi');
+Route::get('weixin/refreshjsapi','wechat/Getjsapi/refreshJsapi');
