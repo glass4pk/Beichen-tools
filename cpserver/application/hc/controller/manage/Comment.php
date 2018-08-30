@@ -79,4 +79,61 @@ class Comment extends ApiCommon
     {
 
     }
+
+    /**
+     * 改变评论的启用状态
+     *
+     * @return void
+     */
+    public function enableAction()
+    {
+        if (!$this->request->isPost()) {
+            return ;
+        }
+        $param = $this->param;
+        $rule = [
+            'cc_id' => 'require|number',
+            'status' => 'require|number' // 0为禁用，1为启用
+        ];
+        $message = [];
+        $validate = Validate::make($rule, $message);
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+
+        $CardModel = model("comment.Comment");
+        $whereArray = array("cc_id" => intval($param["cc_id"]));
+        $paramArray = array('status' => intval($param['status']));
+        $isOk = $CardModel->change($whereArray, $paramArray);
+        if ($isOk) {
+            return resultArray(["data" => "success"]);
+        }
+        return resultArray(["error" => "error"]);
+    }
+
+    /**
+     * get comment list by c_id
+     */
+    public function getComment()
+    {
+        $param = $this->param;
+        $rule = [
+            "c_id" => "require|number"
+        ];
+        $message = [
+            "c_id" => "id错误"
+        ];
+        $validate = Validate::make($rule, $message);
+        if (!$validate->check($param)) {
+            return resultArray(["error" => $validate->getError()]);
+        }
+        $commentModel = model("comment.Comment");
+        $whereArray = array();
+        $whereArray["c_id"] = intval($param["c_id"]);
+        $result = $commentModel->getSome($whereArray);
+        if ($result) {
+            return resultArray(["data" => $result]);
+        }
+        return resultArray(["error" => "error"]);
+    }
 }

@@ -106,10 +106,10 @@ class Card extends ApiCommon
             "c_id" => "require|number",
             "name" => "max:20",
             "pic" => "url",
-            "t_id" => "number",
+            //"t_id" => "number",
             "card_id" => "number"
         ],[
-            "t_id" => "type_id错误",
+            //"t_id" => "type_id错误",
             "card_id" => "card_id错误",
             "pic" => "图片错误",
         ]);

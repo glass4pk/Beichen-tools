@@ -23,12 +23,10 @@ class Comment extends WeixinApiCommon
         }
         $param = $this->param;
         $rule = [
-            "openid" => "require",
             "c_id" => "require",
             "comment" => "max:512"
         ];
         $message = [
-            "openid.require" => "opendi缺失",
             "c_id" => "c_id为空",
             "comment.max" => "评论最大长度为512"
         ];
@@ -38,12 +36,13 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $paramArray = array();
-        $paramArray["openid"] = strval($param["openid"]);
+        $paramArray["openid"] = strval($this->openid);
         $paramArray["c_id"] = intval($param["c_id"]);
         $paramArray["comment"] = strval($param["comment"]);
         $paramArray["create_timestamp"] = strtotime("now");
         $paramArray["create_time"] = date("Y-m-d H:i:s", $paramArray["create_timestamp"]);
-        $paramArray["status"] = 0; // the state of comment is not pass. Default state is 0.
+        $paramArray['last_change_timestamp'] = $paramArray['create_timestamp'];
+        $paramArray["status"] = 1; // the state of comment is not pass. Default state is 0.
         $result = $commentModel->addOne($paramArray);
         if ($result) {
             return resultArray(["data" => "success"]);
@@ -52,7 +51,7 @@ class Comment extends WeixinApiCommon
     }
 
     /**
-     * get comment list by card_id
+     * get comment list by c_id
      */
     public function getComment()
     {

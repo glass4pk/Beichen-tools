@@ -5,8 +5,8 @@
 
 namespace app\hc\controller\card;
 
-use app\hc\controller\auth\WeixinApiCommon;
 use think\Validate;
+use app\hc\controller\auth\WeixinApiCommon;
 
 class Card extends WeixinApiCommon
 {

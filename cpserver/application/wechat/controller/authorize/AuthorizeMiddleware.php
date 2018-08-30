@@ -32,11 +32,15 @@ class AuthorizeMiddleware
         $url = 'https://api.weixin.qq.com/sns/userinfo?access_token=' . $accessToken . '&openid=' . $openid . '&lang=' . $lang;
         $response = get_https($url);
         $result = json_decode($response, true);
+        unset($result['privilege']);
+        $wechatUserModel = model('WechatUser');
+        // 保存用户在数据库
+        $wechatUserModel->saveUserInfo($result);
         return $result;
     }
 
     /**
-     * 刷新access_token（如果需要）
+     * 刷新网页授权调用凭证access_token（如果需要）
      *
      * @param string $appid 公众号的唯一标识
      * @param string $refresh_token 填写通过access_token获取到的refresh_token参数
@@ -51,7 +55,7 @@ class AuthorizeMiddleware
     }
 
     /**
-     * 检验授权凭证(access_token) 是否有效
+     * 检验网页授权调用凭证(access_token) 是否有效
      *
      * @param string $accessToken 网页授权接口调用凭证，注意：此access_token与基础支持的access_token不同
      * @param string $openid 用户唯一标识

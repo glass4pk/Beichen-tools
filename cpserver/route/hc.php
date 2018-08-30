@@ -34,12 +34,20 @@ Route::any("api/hc/manage/changecard", "hc/manage.Card/change");
 // 获取card列表
 Route::get("api/hc/manage/getcard", "hc/manage.Card/getSome");
 
-Route::post("api/hc/manage/deletecomment", "hc/manage.Comment/remove");
+// 评论
+// 删除评论
+Route::any("api/hc/manage/deletecomment", "hc/manage.Comment/remove");
+// 更改评论的启用状态
+Route::any('api/hc/manage/enableAction', 'hc/manage.Comment/enableAction');
+// 获取卡牌评论
+Route::get("api/hc/manage/getcomment", "hc/manage.Comment/getComment");
 
 // Uload
 Route::any("api/hc/manage/uploadpic", "hc/upload.Upload/pic");
 
-
+// login
+Route::any('api/hc/manage/login', 'hc/auth.ManageAuth/login');
+Route::any('api/hc/manage/logout', 'hc/auth.ManageAuth/logout');
 /**
  * client
  */

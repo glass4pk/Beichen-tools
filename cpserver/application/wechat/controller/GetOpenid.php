@@ -89,15 +89,19 @@ class GetOpenid extends Common{
         }
 
         // 获取到了用户的openid
-        $authKey = user_md5(date('YmdHis_').$result['openid']); // 生成新的authKey
-        // 设置cookie
-        cookie('authKey',$authKey,3600*24*30); // 有效期一个月
+        $openid = $result['openid']; // 生成新的authKey
+        /**
+         * 设置cookie
+         */
+        // 将openid以cookie的形式保存在微信客户端
+        cookie('openid', $openid, 3600*24*400); // 有效期400天
+        // 保存openid的刷新时间
+        cookie('openidRefreshTime', strtotime('now'), 3600*24*400); // 有效期400天
         if (sizeof($result) > 1) {
             $newResult = array();
             $newResult['openid'] = $result['openid'];
             $newResult['nickname'] = $result['nickname'] ?? null;
             $newResult['headimgurl'] = $result['headimgurl'] ?? null;
-            $newResult['unionid'] = $result['unionid'] ?? null;
             return resultArray(['data' => $newResult]);
         }
         return $result;

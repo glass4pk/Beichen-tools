@@ -14,6 +14,7 @@ use think\facade\Session;
 
 // 自定常量
 define('LOGIN_REDIRECT_CODE', 101); // 重新登录code
+define('UNKOWN_USER_CODE', 102); // 用户身份不明确
 define('LOGIN_FORBIT_CODE', 103); // 禁止登录code
 
 class Common extends Controller
