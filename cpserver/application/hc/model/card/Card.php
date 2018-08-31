@@ -29,7 +29,7 @@ class Card extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($whereArray)->find();
+            $isOk = $this->where($whereArray)->select()->toArray();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {

@@ -23,7 +23,7 @@ class CardType extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($whereArray)->find();
+            $isOk = $this->where($whereArray)->select()->toArray();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
@@ -35,7 +35,7 @@ class CardType extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($param)->select();
+            $isOk = $this->where($param)->select()->toArray();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {

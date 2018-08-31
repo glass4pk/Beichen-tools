@@ -25,7 +25,7 @@ class CardType extends WeixinApiCommon
     $whereArray = array();
     $dataModel = model("card.cardType");
     $result = $dataModel->getSome($whereArray);
-    if ($result) {
+    if (gettype($result) == 'array') {
         return resultArray(['data' => $result]);
     }
     return resultArray(['error' => "获取失败"]);

@@ -153,9 +153,9 @@ class CardType extends ApiCommon
         }
         
         $CardTypeModel = model("card.CardType");
-        $isOk = $CardTypeModel->get(array("id" => intval($param["id"])));
-        if ($isOk) {
-            return resultArray(["data" => $isOk]);
+        $result = $CardTypeModel->get(array("id" => intval($param["id"])));
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
         }
         return resultArray(["error" => "error"]);
     }
@@ -193,9 +193,9 @@ class CardType extends ApiCommon
             }    
         }
 
-        $isOk = $CardTypeModel->getSome($whereArray);
-        if ($isOk) {
-            return resultArray(["data" => $isOk]);
+        $result = $CardTypeModel->getSome($whereArray);
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
         }
         return resultArray(["error" => "error"]);
     }

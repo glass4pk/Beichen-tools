@@ -170,9 +170,9 @@ class Card extends ApiCommon
             unset($whereArray['t_id']);
         }
         $whereArray['status'] = 1;
-        $isOk = $CardModel->getSome($whereArray);
-        if ($isOk) {
-            return resultArray(["data" => $isOk]);
+        $result = $CardModel->getSome($whereArray);
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
         }
         return resultArray(["error" => "error"]);
     }
@@ -210,9 +210,9 @@ class Card extends ApiCommon
             }
         }
         $whereArray['status'] = 1;
-        $isOk = $CardModel->getSome($whereArray);
-        if ($isOk) {
-            return resultArray(["data" => $isOk]);
+        $result = $CardModel->getSome($whereArray);
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
         }
         return resultArray(["error" => "error"]);
     }

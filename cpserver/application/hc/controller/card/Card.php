@@ -32,8 +32,11 @@ class Card extends WeixinApiCommon
         $whereArray = [];
         $whereArray['c_id'] = intval($param['c_id']);
         $result = $dataModel->get($whereArray);
-        if ($param && sizeof($result) > 0) {
-        return resultArray(["data" => $result[0]]);
+        if (gettype($result) == 'array') {
+            if (sizeof($result) == 0) {
+                return resultArray(['data' => []]);
+            }
+            return resultArray(["data" => $result[0]]);
         }
         return resultArray(["error" => "error"]);
     }
@@ -66,7 +69,7 @@ class Card extends WeixinApiCommon
         $whereArray['status'] = 1;
         $dataModel = model("card.Card");
         $result = $dataModel->getSome($whereArray);
-        if ($result) {
+        if (gettype($result) == 'array') {
             return resultArray(['data' => $result]);
         }
         return resultArray(['error' => "获取失败"]);
@@ -103,8 +106,12 @@ class Card extends WeixinApiCommon
         $whereArray['status'] = 1;
         $dataModel = model("card.Card");
         $result = $dataModel->getSome($whereArray);
-        if ($result && sizeof($result) > 0) {
-            return resultArray(['data' => $result[rand(0, sizeof($result) - 1)]]);
+        if (gettype($result) == 'array') {
+            if (sizeof($result) == 0) {
+                return resultArray(['data' => $result]);
+            } else {
+                return resultArray(['data' => $result[rand(0, sizeof($result) - 1)]]);
+            }
         }
         return resultArray(['error' => "获取失败"]);
     }

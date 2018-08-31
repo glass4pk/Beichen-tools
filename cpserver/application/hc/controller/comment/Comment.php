@@ -71,7 +71,7 @@ class Comment extends WeixinApiCommon
         $whereArray['status'] = 1;
         $whereArray["c_id"] = intval($param["c_id"]);
         $result = $commentModel->getSome($whereArray);
-        if ($result) {
+        if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);
         }
         return resultArray(["error" => "error"]);
