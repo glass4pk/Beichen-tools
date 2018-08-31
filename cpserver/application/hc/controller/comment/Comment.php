@@ -41,7 +41,7 @@ class Comment extends WeixinApiCommon
         $paramArray["comment"] = strval($param["comment"]);
         $paramArray["create_timestamp"] = strtotime("now");
         $paramArray["create_time"] = date("Y-m-d H:i:s", $paramArray["create_timestamp"]);
-        $paramArray['last_change_timestamp'] = $paramArray['create_timestamp'];
+        $paramArray['last_change_time'] = $paramArray['create_timestamp'];
         $paramArray["status"] = 1; // the state of comment is not pass. Default state is 0.
         $result = $commentModel->addOne($paramArray);
         if ($result) {

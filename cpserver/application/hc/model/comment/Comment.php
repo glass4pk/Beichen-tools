@@ -35,7 +35,7 @@ class Comment extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($param)->select()->toArray();
+            $isOk = $this->where($param)->order('last_change_time', 'desc')->select()->toArray();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
