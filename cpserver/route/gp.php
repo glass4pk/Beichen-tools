@@ -28,7 +28,7 @@ Route::any('gp/createitem','gp/Item/createItem');
 Route::get('gp/getiteminfo','gp/Item/getItemInfo');
 Route::any('gp/item/changestatus','gp/Item/changeStatus');
 Route::any('gp/item/changeextendurl','gp/Item/changeExtendUrl');
-Route::any('gp/item/getitembaseinfo','gp/Item/getItemBaseInfo');
+Route::any('gp/item/getitembaseinfo','gp/User/getItemBaseInfo');
 Route::any('gp/sharelink','gp/Item/shareLink');
 Route::any('gp/uploadsharepic', 'gp/UploadFile/uploadSharePic');
 

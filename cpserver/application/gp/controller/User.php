@@ -155,4 +155,36 @@ class User extends Common
         }
         return resultArray(['error' => '服务器错误']);
     }
+
+    /**
+     * 用户获取项目信息
+     *
+     * @return void
+     */
+    public function getItemBaseInfo()
+    {
+        if (!$this->request->isGet()) {
+            return ;
+        }
+
+        $param = $this->param;
+        $validate = Validate::make(
+            [
+                'item_id' => 'require|number'
+            ],
+            [
+                'item_id' => 'item_id错误'
+            ]
+        );
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+
+        $itemModel = model('Item');
+        $result = $itemModel->getItem(array('gp_item_id' => intval($param['item_id'])));
+        if ($result) {
+            return resultArray(['data' => $result]);
+        }
+        return resultArray(['error' => '获取失败']);
+    }
 }
