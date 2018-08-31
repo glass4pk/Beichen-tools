@@ -130,6 +130,10 @@ class Comment extends ApiCommon
         $commentModel = model("comment.Comment");
         $whereArray = array();
         $whereArray["c_id"] = intval($param["c_id"]);
+        if ($whereArray['c_id'] == 0) {
+            unset($whereArray['c_id']);
+        }
+        $whereArray['status'] = 1;
         $result = $commentModel->getSome($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);

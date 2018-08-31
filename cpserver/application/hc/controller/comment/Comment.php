@@ -36,7 +36,7 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $paramArray = array();
-        $paramArray["openid"] = strval($this->openid);
+        $paramArray["openid"] = 'strval($this->openid)';
         $paramArray["c_id"] = intval($param["c_id"]);
         $paramArray["comment"] = strval($param["comment"]);
         $paramArray["create_timestamp"] = strtotime("now");
@@ -68,6 +68,10 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
+        $whereArray["c_id"] = intval($param["c_id"]);
+        if (intval($whereArray['c_id']) == 0) {
+            unset($whereArray['c_id']);
+        }
         $whereArray['status'] = 1;
         $whereArray["c_id"] = intval($param["c_id"]);
         $result = $commentModel->getSome($whereArray);
