@@ -24,7 +24,7 @@ class Card extends ApiCommon
 
         $validate = Validate::make([
             "t_id" => "require|number",
-            "card_id" => "require|number",
+            "card_id" => "require",
             "name" => "require|max:20",
             "pic" => "require|url"
         ],[
@@ -52,7 +52,7 @@ class Card extends ApiCommon
         $insertWhere["last_change_time"] = strtotime("now");
         $insertWhere["name"] = strval($param["name"]);
         $insertWhere["t_id"] = intval($param["t_id"]);
-        $insertWhere["card_id"] = intval($param["card_id"]);
+        $insertWhere["card_id"] = strval($param["card_id"]);
 
         $isOk = $CardModel->addOne($insertWhere);
         if ($isOk) {
