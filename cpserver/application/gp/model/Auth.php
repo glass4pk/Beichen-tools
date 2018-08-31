@@ -25,73 +25,7 @@ class Auth extends Common
 	protected $insert = [
 		'status' => 1,
 	];  
-	/**
-	 * 获取用户所属所有用户组
-	 * @param  array   $param  [description]
-	 */
-    public function groups()
-    {
-        return $this->belongsToMany('group', '__ADMIN_ACCESS__', 'group_id', 'user_id');
-    }
 
-    /**
-     * [getDataList 列表]
-     * @AuthorHTL
-     * @DateTime  2017-02-10T22:19:57+0800
-     * @param     [string]                   $keywords [关键字]
-     * @param     [number]                   $page     [当前页数]
-     * @param     [number]                   $limit    [t每页数量]
-     * @return    [array]                             [description]
-     */
-	public function getDataList($keywords, $page, $limit)
-	{
-		$map = [];
-		if ($keywords) {
-			$map['username|realname'] = ['like', '%'.$keywords.'%'];
-		}
-
-		// 默认除去超级管理员
-		$map['user.id'] = array('neq', 1);
-		$dataCount = $this->alias('user')->where($map)->count('id');
-		
-		$list = $this
-				->where($map)
-				->alias('user')
-				->join('__ADMIN_STRUCTURE__ structure', 'structure.id=user.structure_id', 'LEFT')
-				->join('__ADMIN_POST__ post', 'post.id=user.post_id', 'LEFT');
-		
-		// 若有分页
-		if ($page && $limit) {
-			$list = $list->page($page, $limit);
-		}
-
-		$list = $list 
-				->field('user.*,structure.name as s_name, post.name as p_name')
-				->select();
-		
-		$data['list'] = $list;
-		$data['dataCount'] = $dataCount;
-		
-		return $data;
-	}
-
-	/**
-	 * [getDataById 根据主键获取详情]
-	 * @linchuangbin
-	 * @DateTime  2017-02-10T21:16:34+0800
-	 * @param     string                   $id [主键]
-	 * @return    [array]                       
-	 */
-	public function getDataById($id = '')
-	{
-		$data = $this->get($id);
-		if (!$data) {
-			$this->error = '暂无此数据';
-			return false;
-		}
-		$data['groups'] = $this->get($id)->groups;
-		return $data;
-	}
 	/**
 	 * 创建用户
 	 * @param  array   $param  [description]
@@ -131,51 +65,6 @@ class Auth extends Common
 		}
 	}
 
-	/**
-	 * 通过id修改用户
-	 * @param  array   $param  [description]
-	 */
-	public function updateDataById($param, $id)
-	{
-		// 不能操作超级管理员
-		if ($id == 1) {
-			$this->error = '非法操作';
-			return false;
-		}
-		$checkData = $this->get($id);
-		if (!$checkData) {
-			$this->error = '暂无此数据';
-			return false;
-		}
-		if (empty($param['groups'])) {
-			$this->error = '请至少勾选一个用户组';
-			return false;
-		}
-		$this->startTrans();
-
-		try {
-			Db::name('admin_access')->where('user_id', $id)->delete();
-			foreach ($param['groups'] as $k => $v) {
-				$userGroup['user_id'] = $id;
-				$userGroup['group_id'] = $v;
-				$userGroups[] = $userGroup;
-			}
-			Db::name('admin_access')->insertAll($userGroups);
-
-			if (!empty($param['password'])) {
-				$param['password'] = user_md5($param['password']);
-			}
-			 $this->allowField(true)->save($param, ['id' => $id]);
-			 $this->commit();
-			 return true;
-
-		} catch(\Exception $e) {
-			$this->rollback();
-			$this->error = '编辑失败';
-			return false;
-		}
-	}
-
 
 	/**
 	 * 后台管理注册
@@ -186,7 +75,9 @@ class Auth extends Common
 	 * @param string $mobile
 	 * @return boolean
 	 */
-	public function signup($username, $password,$email,$mobile){
+	public function signup($username, $password,$email,$mobile)
+	{
+		return 'error';
 		if (!$username) {
 			$this->error = '帐号不能为空';
 			return false;
