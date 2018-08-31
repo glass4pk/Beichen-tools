@@ -677,13 +677,13 @@
 									"formdata": [
 										{
 											"key": "card_id",
-											"value": "1",
+											"value": "1-1",
 											"description": "必选",
 											"type": "text"
 										},
 										{
 											"key": "t_id",
-											"value": "8",
+											"value": "4",
 											"description": "必选",
 											"type": "text"
 										},
@@ -1181,13 +1181,13 @@
 							]
 						},
 						{
-							"name": "获取卡牌",
+							"name": "获取特定卡牌类型的卡牌列表",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/manage/getcard?t_id=3",
+									"raw": "{{url}}/api/hc/manage/getcardlist?t_id=0",
 									"host": [
 										"{{url}}"
 									],
@@ -1195,31 +1195,13 @@
 										"api",
 										"hc",
 										"manage",
-										"getcard"
+										"getcardlist"
 									],
 									"query": [
 										{
 											"key": "t_id",
-											"value": "3",
-											"description": "可选"
-										},
-										{
-											"key": "c_id",
-											"value": "8",
-											"description": "可选，（若设置card_id字段，则type_id也必须设置）",
-											"disabled": true
-										},
-										{
-											"key": "name",
-											"value": "name_1",
-											"description": "可选",
-											"disabled": true
-										},
-										{
-											"key": "status",
-											"value": "1",
-											"description": "可选",
-											"disabled": true
+											"value": "0",
+											"description": "【必选】值为0获取全部类型的卡牌"
 										}
 									]
 								},
@@ -1227,13 +1209,13 @@
 							},
 							"response": [
 								{
-									"name": "获取卡牌",
+									"name": "获取特定卡牌类型的卡牌列表",
 									"originalRequest": {
 										"method": "GET",
 										"header": [],
 										"body": {},
 										"url": {
-											"raw": "{{url}}/api/hc/manage/getcard?t_id=4",
+											"raw": "{{url}}/api/hc/manage/getcardlist?t_id=0",
 											"host": [
 												"{{url}}"
 											],
@@ -1241,31 +1223,13 @@
 												"api",
 												"hc",
 												"manage",
-												"getcard"
+												"getcardlist"
 											],
 											"query": [
 												{
 													"key": "t_id",
-													"value": "4",
-													"description": "可选"
-												},
-												{
-													"key": "c_id",
-													"value": "2",
-													"description": "可选，（若设置card_id字段，则type_id也必须设置）",
-													"disabled": true
-												},
-												{
-													"key": "name",
-													"value": "name_1",
-													"description": "可选",
-													"disabled": true
-												},
-												{
-													"key": "status",
-													"value": "1",
-													"description": "可选",
-													"disabled": true
+													"value": "0",
+													"description": "【必选】值为0获取全部类型的卡牌"
 												}
 											]
 										}
@@ -1300,7 +1264,7 @@
 										},
 										{
 											"key": "Content-Length",
-											"value": "158",
+											"value": "412",
 											"name": "Content-Length",
 											"description": "The length of the response body in octets (8-bit bytes)"
 										},
@@ -1312,13 +1276,13 @@
 										},
 										{
 											"key": "Date",
-											"value": "Tue, 28 Aug 2018 07:21:20 GMT",
+											"value": "Fri, 31 Aug 2018 05:10:27 GMT",
 											"name": "Date",
 											"description": "The date and time that the message was sent"
 										},
 										{
 											"key": "Keep-Alive",
-											"value": "timeout=3600000, max=95",
+											"value": "timeout=3600000, max=79",
 											"name": "Keep-Alive",
 											"description": "Custom header"
 										},
@@ -1337,13 +1301,22 @@
 									],
 									"cookie": [
 										{
-											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
 											"httpOnly": false,
 											"domain": "127.0.0.1",
 											"path": "/",
 											"secure": false,
-											"value": "uk2a944t0t6gu0babj3sb87chd",
-											"key": "PHPSESSID"
+											"value": "oZ7E4wmPDi-reRGXQA9TwLDP2uJ8",
+											"key": "openid"
+										},
+										{
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "1535604799",
+											"key": "openidRefreshTime"
 										},
 										{
 											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
@@ -1351,11 +1324,163 @@
 											"domain": "127.0.0.1",
 											"path": "/",
 											"secure": false,
-											"value": "dev.yes-go.cn%2Fgp",
-											"key": "host"
+											"value": "5uaenife6osb8nrbmkl8u47uu3",
+											"key": "PHPSESSID"
 										}
 									],
-									"body": "{\"errcode\":0,\"data\":[{\"c_id\":1,\"t_id\":4,\"card_id\":1,\"type_id\":1,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535437115\"}],\"errmsg\":\"\"}"
+									"body": "{\"errcode\":0,\"data\":[{\"c_id\":4,\"t_id\":1,\"card_id\":\"3\",\"type_id\":1,\"name\":\"n\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535604249\"},{\"c_id\":8,\"t_id\":3,\"card_id\":\"2\",\"type_id\":2,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535604002\"},{\"c_id\":11,\"t_id\":4,\"card_id\":\"1-1\",\"type_id\":3,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535687498\"}],\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "获取卡牌详细信息",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/getcardinfo?c_id=4",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"getcardinfo"
+									],
+									"query": [
+										{
+											"key": "c_id",
+											"value": "4",
+											"description": "卡牌id"
+										}
+									]
+								},
+								"description": "获取卡牌的详细信息"
+							},
+							"response": [
+								{
+									"name": "获取卡牌详细信息",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "{{url}}/api/hc/manage/getcardinfo?c_id=4",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"manage",
+												"getcardinfo"
+											],
+											"query": [
+												{
+													"key": "c_id",
+													"value": "4",
+													"description": "卡牌id"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "157",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 05:09:42 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=83",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "oZ7E4wmPDi-reRGXQA9TwLDP2uJ8",
+											"key": "openid"
+										},
+										{
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "1535604799",
+											"key": "openidRefreshTime"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "5uaenife6osb8nrbmkl8u47uu3",
+											"key": "PHPSESSID"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\"c_id\":4,\"t_id\":1,\"card_id\":\"3\",\"type_id\":1,\"name\":\"n\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535604249\"}],\"errmsg\":\"\"}"
 								}
 							]
 						}
@@ -1715,7 +1840,7 @@
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/client/getcard?t_id=1",
+									"raw": "{{url}}/api/hc/client/getcard?t_id=0",
 									"host": [
 										"{{url}}"
 									],
@@ -1728,11 +1853,164 @@
 									"query": [
 										{
 											"key": "t_id",
-											"value": "1"
+											"value": "0",
+											"description": "【必选】若t_id为0则获取所有类型的卡牌"
 										}
 									]
 								},
 								"description": "用户端：根据条件获取符合条件的卡牌，数量不限"
+							},
+							"response": [
+								{
+									"name": "用户获取卡牌列表",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"body": {},
+										"url": {
+											"raw": "{{url}}/api/hc/client/getcard?t_id=0",
+											"host": [
+												"{{url}}"
+											],
+											"path": [
+												"api",
+												"hc",
+												"client",
+												"getcard"
+											],
+											"query": [
+												{
+													"key": "t_id",
+													"value": "0",
+													"description": "【必选】若t_id为0则获取所有类型的卡牌"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Access-Control-Allow-Headers",
+											"value": "x-requested-with,content-type",
+											"name": "Access-Control-Allow-Headers",
+											"description": "Used in response to a preflight request to indicate which HTTP headers can be used when making the actual request."
+										},
+										{
+											"key": "Access-Control-Allow-Methods",
+											"value": "GET, POST",
+											"name": "Access-Control-Allow-Methods",
+											"description": "Specifies the method or methods allowed when accessing the resource. This is used in response to a preflight request."
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*",
+											"name": "Access-Control-Allow-Origin",
+											"description": "Specifies a URI that may access the resource. For requests without credentials, the server may specify '*' as a wildcard, thereby allowing any origin to access the resource."
+										},
+										{
+											"key": "Connection",
+											"value": "Keep-Alive",
+											"name": "Connection",
+											"description": "Options that are desired for the connection"
+										},
+										{
+											"key": "Content-Length",
+											"value": "412",
+											"name": "Content-Length",
+											"description": "The length of the response body in octets (8-bit bytes)"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8",
+											"name": "Content-Type",
+											"description": "The mime type of this content"
+										},
+										{
+											"key": "Date",
+											"value": "Fri, 31 Aug 2018 05:14:48 GMT",
+											"name": "Date",
+											"description": "The date and time that the message was sent"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=3600000, max=76",
+											"name": "Keep-Alive",
+											"description": "Custom header"
+										},
+										{
+											"key": "Server",
+											"value": "Apache/2.4.32 (Win64) PHP/7.1.20 OpenSSL/1.0.2n",
+											"name": "Server",
+											"description": "A name for the server"
+										},
+										{
+											"key": "X-Powered-By",
+											"value": "PHP/7.1.20",
+											"name": "X-Powered-By",
+											"description": "Specifies the technology (ASP.NET, PHP, JBoss, e.g.) supporting the web application (version details are often in X-Runtime, X-Version, or X-AspNet-Version)"
+										}
+									],
+									"cookie": [
+										{
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "oZ7E4wmPDi-reRGXQA9TwLDP2uJ8",
+											"key": "openid"
+										},
+										{
+											"expires": "Fri Oct 04 2019 12:53:17 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "1535604799",
+											"key": "openidRefreshTime"
+										},
+										{
+											"expires": "Tue Jan 19 2038 11:14:07 GMT+0800 (China Standard Time)",
+											"httpOnly": false,
+											"domain": "127.0.0.1",
+											"path": "/",
+											"secure": false,
+											"value": "5uaenife6osb8nrbmkl8u47uu3",
+											"key": "PHPSESSID"
+										}
+									],
+									"body": "{\"errcode\":0,\"data\":[{\"c_id\":4,\"t_id\":1,\"card_id\":\"3\",\"type_id\":1,\"name\":\"n\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535604249\"},{\"c_id\":8,\"t_id\":3,\"card_id\":\"2\",\"type_id\":2,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535604002\"},{\"c_id\":11,\"t_id\":4,\"card_id\":\"1-1\",\"type_id\":3,\"name\":\"name\",\"pic\":\"http:\\/\\/127.0.0.1\\/1.jpg\",\"last_change_time\":\"1535687498\"}],\"errmsg\":\"\"}"
+								}
+							]
+						},
+						{
+							"name": "用户随机获取一张卡牌",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/client/getcardrandom?t_id=0",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getcardrandom"
+									],
+									"query": [
+										{
+											"key": "t_id",
+											"value": "0",
+											"description": "【必选】值为0时，则不分卡牌类型随机获取卡牌"
+										}
+									]
+								},
+								"description": "用户随机获取卡牌列表"
 							},
 							"response": []
 						}

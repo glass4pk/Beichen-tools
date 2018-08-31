@@ -43,28 +43,69 @@ class Card extends WeixinApiCommon
     */
     public function getSome()
     {
-    $param = $this->param;
-    $rule = [
-        "t_id" => "require|number"
-    ];
-    $message = [
-        "t_id" => "t_id错误",
-    ];
-    $validate = Validate::make($rule, $message);
-    if (!$validate->check($param)) {
-        return resultArray(['error' => $validate->getError()]);
+        $param = $this->param;
+        $rule = [
+            "t_id" => "require|number"
+        ];
+        $message = [
+            "t_id" => "t_id错误",
+        ];
+        $validate = Validate::make($rule, $message);
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+        //
+        $paramList = ["t_id"];
+        $whereArray = array();
+        foreach ($paramList as $one) {
+            $whereArray[$one] = $param[$one];
+        }
+        if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
+            unset($whereArray['t_id']);
+        }
+        $whereArray['status'] = 1;
+        $dataModel = model("card.Card");
+        $result = $dataModel->getSome($whereArray);
+        if ($result) {
+            return resultArray(['data' => $result]);
+        }
+        return resultArray(['error' => "获取失败"]);
     }
-    //
-    $paramList = ["t_id"];
-    $whereArray = array();
-    foreach ($paramList as $one) {
-        $whereArray[$one] = $param[$one];
-    }
-    $dataModel = model("card.Card");
-    $result = $dataModel->getSome($whereArray);
-    if ($result) {
-        return resultArray(['data' => $result]);
-    }
-    return resultArray(['error' => "获取失败"]);
+
+    /**
+     * 传t_id随机获取一张卡牌
+     * t_id为0时，不分卡牌类型获取一张卡牌
+     *
+     * @return void
+     */
+    public function getOneRandom()
+    {
+        $param = $this->param;
+        $rule = [
+            "t_id" => "require|number"
+        ];
+        $message = [
+            "t_id" => "t_id错误",
+        ];
+        $validate = Validate::make($rule, $message);
+        if (!$validate->check($param)) {
+            return resultArray(['error' => $validate->getError()]);
+        }
+        //
+        $paramList = ["t_id"];
+        $whereArray = array();
+        foreach ($paramList as $one) {
+            $whereArray[$one] = $param[$one];
+        }
+        if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
+            unset($whereArray['t_id']);
+        }
+        $whereArray['status'] = 1;
+        $dataModel = model("card.Card");
+        $result = $dataModel->getSome($whereArray);
+        if ($result && sizeof($result) > 0) {
+            return resultArray(['data' => $result[rand(0, sizeof($result) - 1)]]);
+        }
+        return resultArray(['error' => "获取失败"]);
     }
 }

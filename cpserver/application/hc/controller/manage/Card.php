@@ -149,14 +149,9 @@ class Card extends ApiCommon
         $param = $this->param;
 
         $validate = Validate::make([
-            "c_id" => "number",
-            "status" => "number",
             "t_id" => "number",
             "name" => "max:20"
-
         ],[
-            "c_id" => "card_id错误",
-            "status" => "status must be number",
             "t_id" => "type_id错误",
             "name" => "name错误"
         ]);
@@ -167,13 +162,56 @@ class Card extends ApiCommon
         $CardModel = model("card.Card");
 
         $whereArray = array();
-        $paramList = ["c_id", "name", "status", "t_id"];
+        $paramList = ["name", "t_id"];
         foreach ($paramList as $one) {
             if (isset($param[$one])) {
                 $whereArray[$one] = $param[$one];
-            }    
+            }
         }
+        if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
+            unset($whereArray['t_id']);
+        }
+        $whereArray['status'] = 1;
+        $isOk = $CardModel->getSome($whereArray);
+        if ($isOk) {
+            return resultArray(["data" => $isOk]);
+        }
+        return resultArray(["error" => "error"]);
+    }
 
+    /**
+     * 获取单个结果
+     *
+     * @return void
+     */
+    public function getOne()
+    {
+        if (!$this->request->isGet()) {
+            return ;
+        }
+        $param = $this->param;
+
+        $validate = Validate::make([
+            "c_id" => "require|number",
+            "name" => "max:20"
+        ],[
+            "c_id" => "card_id错误",
+            "name" => "name错误"
+        ]);
+        if (!$validate->check($param)) {
+            return resultArray(["error" => $validate->getError()]);   
+        }
+        
+        $CardModel = model("card.Card");
+
+        $whereArray = array();
+        $paramList = ["c_id", "name"];
+        foreach ($paramList as $one) {
+            if (isset($param[$one])) {
+                $whereArray[$one] = $param[$one];
+            }
+        }
+        $whereArray['status'] = 1;
         $isOk = $CardModel->getSome($whereArray);
         if ($isOk) {
             return resultArray(["data" => $isOk]);

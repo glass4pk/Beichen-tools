@@ -32,7 +32,9 @@ Route::any("api/hc/manage/deletecard", "hc/manage.Card/deleteById");
 // 更新card
 Route::any("api/hc/manage/changecard", "hc/manage.Card/change");
 // 获取card列表
-Route::get("api/hc/manage/getcard", "hc/manage.Card/getSome");
+Route::get("api/hc/manage/getcardlist", "hc/manage.Card/getSome");
+// 获取card info
+Route::get("api/hc/manage/getcardinfo", "hc/manage.Card/getOne");
 
 // 评论
 // 删除评论
@@ -53,6 +55,8 @@ Route::any('api/hc/manage/logout', 'hc/auth.ManageAuth/logout');
  */
 // 获取卡牌
 Route::get("api/hc/client/getcard", "hc/card.Card/getSome");
+// 随机获取卡牌
+Route::get("api/hc/client/getcardrandom", "hc/card.Card/getOneRandom");
 // 获取卡牌类型
 Route::get("api/hc/client/getcardtype", "hc/card.CardType/getSome");
 // 获取卡牌评论
