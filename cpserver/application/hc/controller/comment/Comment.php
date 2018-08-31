@@ -69,11 +69,10 @@ class Comment extends WeixinApiCommon
         $commentModel = model("comment.Comment");
         $whereArray = array();
         $whereArray["c_id"] = intval($param["c_id"]);
-        if (intval($whereArray['c_id']) == 0) {
+        if ($whereArray['c_id'] == 0) {
             unset($whereArray['c_id']);
         }
         $whereArray['status'] = 1;
-        $whereArray["c_id"] = intval($param["c_id"]);
         $result = $commentModel->getSome($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);

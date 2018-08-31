@@ -44,16 +44,16 @@ class Comment extends ApiCommon
         $param = $this->param;
 
         $validate = Validate::make([
-            "cc_id" => "number"
+            "comment_id" => "number"
         ],[
-            "cc_id" => "cc_id错误"
+            "comment_id" => "comment_id错误"
         ]);
         if (!$validate->check($param)) {
             return resultArray(["error" => $validate->getError()]);   
         }
         
         $CardModel = model("comment.Comment");
-        $isOk = $CardModel->remove(array("cc_id" => intval($param["cc_id"])));
+        $isOk = $CardModel->remove(array("comment_id" => intval($param["comment_id"])));
         if ($isOk) {
             return resultArray(["data" => "success"]);
         }
@@ -92,7 +92,7 @@ class Comment extends ApiCommon
         }
         $param = $this->param;
         $rule = [
-            'cc_id' => 'require|number',
+            'comment_id' => 'require|number',
             'status' => 'require|number' // 0为禁用，1为启用
         ];
         $message = [];
@@ -102,7 +102,7 @@ class Comment extends ApiCommon
         }
 
         $CardModel = model("comment.Comment");
-        $whereArray = array("cc_id" => intval($param["cc_id"]));
+        $whereArray = array("comment_id" => intval($param["comment_id"]));
         $paramArray = array('status' => intval($param['status']));
         $isOk = $CardModel->change($whereArray, $paramArray);
         if ($isOk) {
