@@ -29,7 +29,7 @@ class Card extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($whereArray)->select()->toArray();
+            $isOk = $this->where($whereArray)->order('last_change_timestamp', 'desc')->select()->toArray();
         } catch(Exceptionn $e) {
             $isOk = false;
         } finally {
@@ -51,7 +51,7 @@ class Card extends Model
                 }
                 $index ++;
             }
-            $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql;
+            $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql . ' ORDER BY last_change_time DESC';
             $isOk = Db::query($sql);
             //$isOk = Db::table($this->name)->where($param)->alias("c")->join("card_type t", "c.t_id = t.t_id")->field(["t.pic", "t.name", "t.status", "t.create_time"], true)->select();
         } catch(Exceptionn $e) {
