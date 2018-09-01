@@ -81,7 +81,9 @@
             var url = window.location.href;
             if (url.split('redirect=').length > 1) {
                 // 检测上一个页面
-                window.location.href = url.split('redirect=')[1].split('&')[0];
+                window.location.replace(url.split('redirect=')[1].split('&')[0]);
+            } else {
+                document.getElementById('main').style.visibility = 'visible';
             }
         }
 
@@ -207,7 +209,7 @@
     <!-- <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script> -->
 </head>
 <body>
-    <div id='main'>
+    <div id='main' style='visibility: hidden'>
         <div class="scale">
             <img id='backgroundpic' src='static/image/background.jpg'>
         </div>
