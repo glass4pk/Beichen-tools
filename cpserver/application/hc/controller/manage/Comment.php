@@ -116,23 +116,26 @@ class Comment extends ApiCommon
      */
     public function getComment()
     {
+        $eachPageNums = 100; // 默认每页的数量为100；
         $param = $this->param;
         $rule = [
-            "c_id" => "require|number"
+            "c_id" => "require|number",
+            'page' => 'number',
+            'nums' => 'number',
+            'order' => 'alpha' // last_change_time 的排序规则
         ];
-        $message = [
-            "c_id" => "id错误"
-        ];
-        $validate = Validate::make($rule, $message);
+        $validate = Validate::make($rule);
         if (!$validate->check($param)) {
             return resultArray(["error" => $validate->getError()]);
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray["c_id"] = intval($param["c_id"]);
-        if ($whereArray['c_id'] == 0) {
-            unset($whereArray['c_id']);
+        $whereArray['order'] = $param['order'] ?? 'desc';
+        if ($param['c_id'] != 0) {
+            $whereArray['c_id'] = intval($param['c_id']);
         }
+        $whereArray['limit_num'] = $param['nums'] ?? $eachPageNums;
+        $whereArray['limit_offet'] = isset($param['page']) ? ((intval($param['page']) - 1) * $whereArray['limit_num']) : 0;
         $whereArray['status'] = 1;
         $result = $commentModel->getSome($whereArray);
         if (gettype($result) == 'array') {
