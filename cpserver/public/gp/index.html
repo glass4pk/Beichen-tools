@@ -96,7 +96,6 @@
                     var result = JSON.parse(e.target.responseText);
                     if (result.errcode === 0) {
                         var extendurl = window.location.href + '&redirect=' + result.data.extend_url; // 跳转
-                        alert(extendurl);
                         var share_title = result.data.share_title
                         var share_content = result.data.share_content
                         var share_pic = result.data.share_pic
