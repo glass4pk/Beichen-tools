@@ -59,11 +59,11 @@ class User extends Common
         }
         try {
             // 检查是否存在用户
-            $search = $this->where(['username' => $data['username'], 'phone' => $data['phone']])->find();
+            $search = $this->where(['gp_item_id' => $data['gp_item_id'], 'phone' => $data['phone']])->find();
             if (sizeof($search) > 0) { // 存在用户
                 $credential_id = $search['credential_id'];
                 $credential_id = $credential_id . ';' . intval($data['credential_id']);
-                $result = $this->where(['username' => $data['username'], 'phone' => $data['phone']])->update(['credential_id' => $credential_id]);
+                $result = $this->where(['gp_item_id' => $data['gp_item_id'], 'phone' => $data['phone']])->update(['credential_id' => $credential_id]);
             } else { // 不存在用户
                 $result = $this->insert($data);
             }
