@@ -27,9 +27,9 @@ if (!function_exists('resultArray')) {
             $array['data'] = '';
             $array['error'] = '服务器错误';
         }
-        debug('end');
-        echo debug('begin', 'end', 6) . 's<br>';
-        echo debug('begin', 'end', 'm') . 'kb<br>';
+        //debug('end');
+        //echo debug('begin', 'end', 6) . 's<br>';
+        //echo debug('begin', 'end', 'm') . 'kb<br>';
         return json([
             'errcode'  => $code,
             'data'  => $array['data'],
