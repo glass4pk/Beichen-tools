@@ -54,9 +54,9 @@ class User extends Common
             return resultArray(['error' => '用户异常']);
         }
 
-        // if (isset($userData['result_id']) || $userData['result_id']) {
-        //     return resultArray(['data' => $userData['result_id']]);
-        // }
+        if (isset($userData['result_id']) || $userData['result_id']) {
+            return resultArray(['data' => $userData['result_id']]);
+        }
 
         // 获取毕业证信息
         $objectModel = model('Project');
