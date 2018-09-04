@@ -27,6 +27,7 @@ class Common extends Controller
     
     public function __construct()
     {
+        debug('begin');
         parent::__construct();
 
         // 解决跨域问题

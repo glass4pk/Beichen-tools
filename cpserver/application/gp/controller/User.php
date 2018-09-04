@@ -7,6 +7,7 @@ namespace app\gp\controller;
 
 use think\facade\Validate;
 use app\common\controller\Common;
+use think\facade\Debug;
 
 class User extends Common
 {
@@ -111,7 +112,6 @@ class User extends Common
                 // 
             }
         }
-
         // 生成result_id
         $result_id = date('YmdHis',strtotime('now')) + str_int_rand(5);
         // 插入图片记录到数据库gp_result表
