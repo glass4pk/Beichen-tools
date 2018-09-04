@@ -97,6 +97,7 @@
                     if (result.errcode === 0) {
                         var extendurl = window.location.href + '&redirect=' + result.data.extend_url; // 跳转
                         var share_title = result.data.share_title
+                        document.title = share_title;
                         var share_content = result.data.share_content
                         var share_pic = result.data.share_pic
                         wx.ready(function(){
