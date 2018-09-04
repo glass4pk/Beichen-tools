@@ -122,4 +122,26 @@ class Comment extends WeixinApiCommon
     {
 
     }
+
+    /**
+     * 通过comment_id获取评论
+     *
+     * @return void
+     */
+    public function getCommentByCommentId()
+    {
+        $param = $this->param;
+        if (!isset($param['comment_id']) || is_int(intval($param[$param['comment_id']]))) {
+            return resultArray(['error' => 'comment_id错误！']);
+        }
+        $commentModel = model("comment.Comment");
+        $whereArray = array();
+        $whereArray['comment_id'] = intval($param['comment_id']);
+        $whereArray['status'] = 1;
+        $result = $commentModel->getOne($whereArray);
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
+        }
+        return resultArray(["error" => "error"]);
+    }
 }

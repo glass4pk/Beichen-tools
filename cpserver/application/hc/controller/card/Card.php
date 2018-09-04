@@ -48,20 +48,20 @@ class Card extends WeixinApiCommon
     {
         $param = $this->param;
         $rule = [
-            "t_id" => "require|number"
+            "t_id" => "number",
+            "c_id" => "number",
         ];
-        $message = [
-            "t_id" => "t_id错误",
-        ];
-        $validate = Validate::make($rule, $message);
+        $validate = Validate::make($rule);
         if (!$validate->check($param)) {
             return resultArray(['error' => $validate->getError()]);
         }
         //
-        $paramList = ["t_id"];
+        $paramList = ["t_id", 'c_id'];
         $whereArray = array();
         foreach ($paramList as $one) {
-            $whereArray[$one] = $param[$one];
+            if (isset($param[$one])) {
+                $whereArray[$one] = $param[$one];
+            }
         }
         if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
             unset($whereArray['t_id']);

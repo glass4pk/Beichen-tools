@@ -37,6 +37,12 @@ class Card extends Model
         }
     }
 
+    /**
+     * 根据条件获取卡牌列表
+     *
+     * @param [type] $param
+     * @return void
+     */
     public function getSome($param)
     {
         $isOk = false;
