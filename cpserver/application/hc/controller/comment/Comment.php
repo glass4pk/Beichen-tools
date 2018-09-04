@@ -144,4 +144,16 @@ class Comment extends WeixinApiCommon
         }
         return resultArray(["error" => "error"]);
     }
+
+    /**
+     * 回复评论
+     *
+     * @return void
+     */
+    public function replayComment()
+    {
+        if ($this->request->isPost()) {
+            return ;
+        }
+    }
 }
