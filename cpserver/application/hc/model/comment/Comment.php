@@ -42,7 +42,7 @@ class Comment extends Model
     {
         $isOk = false;
         try {
-            $order = $param['order'] ?? 'desc'; // 默认排序为desc
+            $order = $param['order'] ?? 'asc'; // 默认排序为desc
             $limit_offet = $param['limit_offet'] ?? 0;
             $limit_num = $param['limit_num'] ?? 100;
             $whereSql = '';

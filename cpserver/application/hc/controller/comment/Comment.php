@@ -69,7 +69,7 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray['order'] = $param['order'] ?? 'desc';
+        $whereArray['order'] = $param['order'] ?? 'asc';
         if ($param['c_id'] != 0) {
             $whereArray['c_id'] = intval($param['c_id']);
         }
