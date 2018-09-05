@@ -45,36 +45,36 @@
     <div id="content">
         <img id="img_header" src="static/images/P1_bg.png" >
         <ul id="block_buttons">
-            <li>
-                <a id="btn_toType_1" class="" href="card.html?t_id=1">
-                    <img src="static/images/buttons/button_1.png" />
-                </a>
-            </li>
-            <li>
-                <a id="btn_toType_2" class="" href="card.html?t_id=2">
-                    <img src="static/images/buttons/button_2.png" />
-                </a>
-            </li>
-            <li>
-                <a id="btn_toType_3" class="" href="card.html?t_id=3">
-                    <img src="static/images/buttons/button_3.png" />
-                </a>
-            </li>
-            <li>
-                <a id="btn_toType_4" class="" href="card.html?t_id=4">
-                    <img src="static/images/buttons/button_4.png" />
-                </a>
-            </li>
-            <li>
-                <a id="btn_toType_5" class="" href="card.html?t_id=5">
-                    <img src="static/images/buttons/button_5.png" />
-                </a>
-            </li>
-            <li>
-                <a id="btn_toType_0" class="" href="card.html?t_id=0">
-                    <img src="static/images/buttons/button_0.png" />
-                </a>
-            </li>
+            <!--<li>-->
+                <!--<a id="btn_toType_1" class="" href="card.html?t_id=1">-->
+                    <!--<img src="static/images/buttons/button_1.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_2" class="" href="card.html?t_id=2">-->
+                    <!--<img src="static/images/buttons/button_2.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_3" class="" href="card.html?t_id=3">-->
+                    <!--<img src="static/images/buttons/button_3.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_4" class="" href="card.html?t_id=4">-->
+                    <!--<img src="static/images/buttons/button_4.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_5" class="" href="card.html?t_id=5">-->
+                    <!--<img src="static/images/buttons/button_5.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_0" class="" href="card.html?t_id=0">-->
+                    <!--<img src="static/images/buttons/button_0.png" />-->
+                <!--</a>-->
+            <!--</li>-->
         </ul>
 
     </div>
@@ -85,6 +85,22 @@
 
     var cardType = [];
 
+
+    //判断授权登录
+//    let thisUrl = window.location.href;
+    let thisUrl = config.hostUrl + window.location.pathname;
+
+    if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") == undefined ){
+        //未授权,且未跳转回来
+        window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa46386d571e05bac&redirect_uri='+thisUrl+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect');
+    }
+    else if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") != undefined) {
+        //授权跳转回来,设置cookie
+        Tools.setCookie("openid",Tools.getQuery("code"),30)
+    }
+    else {
+
+    }
 
 
     $(document).ready(function(){
