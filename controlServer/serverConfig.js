@@ -7,6 +7,7 @@ module.exports={
         value:"djfldj4flgjJVlfglfjjsljf7979jlf",
         host:'dev.yes-go.cn',
 		db:"gz-cdb-pndu2wzn.sql.tencentcdb.com",
+		port: 62146,
 		dbuser:"root",
 		dbpassword:"Hanzikeji456",
 		database:"wechat"

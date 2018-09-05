@@ -15,6 +15,7 @@ function saveResult(result){
 	console.log("accessToken: "  + result);
 	let connection=mysql.createConnection({
 		host:config['db'],
+		port: config['port'];
 		user:config['dbuser'],
 		password:config['dbpassword'],
 		database:config['database']
