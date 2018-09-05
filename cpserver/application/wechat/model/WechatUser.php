@@ -30,6 +30,7 @@ class WechatUser extends Model
                 $isOk = $this->insert($paramArray);
             }
         } catch(Exception $e) {
+            var_dump($e);
             $isOk = false;
         } finally {
             return $isOk;
