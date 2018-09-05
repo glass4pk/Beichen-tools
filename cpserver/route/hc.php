@@ -66,4 +66,8 @@ Route::get("api/hc/client/getcomment", "hc/comment.Comment/getComment");
 // 用户添加卡牌评论
 Route::post("api/hc/client/addcomment", "hc/comment.Comment/addComment");
 // 传comment_id获取comment
-Route::get("api/hc/client/getcommentbyid", "hc/manage.Comment/getCommentByCommentId");
+Route::get("api/hc/client/getcommentbyid", "hc/comment.Comment/getCommentByCommentId");
+// 传comment_id，添加回复评论
+Route::any("api/hc/client/replaycomment", "hc/comment.Comment/replayComment");
+// 传comment_id，获取回复评论列表
+Route::get("api/hc/client/getreplaycomment", 'hc/comment.Comment/getReplayComment');

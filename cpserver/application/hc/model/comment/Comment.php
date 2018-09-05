@@ -141,4 +141,67 @@ class Comment extends Model
             return $isOk;
         }
     }
+
+    /**
+     * 根据添加查询comment
+     *
+     * @param array $param
+     * @return void
+     */
+    public function search(array $param)
+    {
+        $isOk = false;
+        try {
+            $isOk = $this->where($param)->select();
+        } catch (Exception $e) {
+            $isOk = false;
+
+        } finally {
+            return $isOk;
+        }
+    }
+
+        /**
+     * 获取评论
+     *
+     * @param array $param 查询参数
+     * @return void
+     */
+    public function getReplays(array $param)
+    {
+        $isOk = false;
+        try {
+            $order = $param['order'] ?? 'asc'; // 默认排序为desc
+            $limit_offet = $param['limit_offet'] ?? 0;
+            $limit_num = $param['limit_num'] ?? 100;
+            $whereSql = '';
+            if (isset($param['replay_comment_id'])) {
+                $whereSql = 'replay_comment_id = ' . $param['replay_comment_id'];
+            }
+            if (isset($param['status'])) {
+                $sql = 'select c.comment_id,c.c_id,
+                        c.t_id,c.card_id,c.name,c.comment,c.like,c.last_change_time,c.openid,
+                        d.unionid,d.nickname,d.sex,d.headimgurl 
+                        from ( SELECT a.comment_id,a.c_id,a.openid,a.comment,a.like,a.last_change_time,
+                        b.card_id,b.t_id,b.name from card_comment as a INNER JOIN card as b on a.c_id=b.c_id 
+                        where a.status = 1 and b.status = 1 ' . (($whereSql == '') ? '' : 'and a.' . $whereSql) . ' order by a.last_change_time ' . $order . ' limit ' . $limit_offet . ',' . $limit_num . 
+                        ') as c INNER JOIN wechat.wechat_user d on c.openid = d.openid 
+                        where d.status = 1';
+            } else { // 若$param 没有status参数，则获取所有status的数据
+                // $sql = 'select c.comment_id,c.c_id,c.t_id,c.card_id,c.name,c.comment,c.like,c.last_change_time,c.openid,d.unionid,d.nickname,d.sex,d.headimgurl from ( SELECT a.comment_id,a.c_id,a.openid,a.comment,a.like,a.last_change_time,b.card_id,b.t_id,b.name from card_comment as a INNER JOIN card as b on a.c_id=b.c_id) as c INNER JOIN wechat.wechat_user d on c.openid = d.openid';    
+                $sql = 'select c.comment_id,c.c_id,
+                        c.t_id,c.card_id,c.name,c.comment,c.like,c.last_change_time,c.openid,
+                        d.unionid,d.nickname,d.sex,d.headimgurl 
+                        from ( SELECT a.comment_id,a.c_id,a.openid,a.comment,a.like,a.last_change_time,
+                        b.card_id,b.t_id,b.name from card_comment as a INNER JOIN card as b on a.c_id=b.c_id ' . (($whereSql == '') ? 'where a.' . $whereSql : '' ) . ' order by a.last_change_time ' . $order . ' limit ' . $limit_offet . ',' . $limit_num . 
+                        ') as c INNER JOIN wechat.wechat_user d on c.openid = d.openid 
+                        where d.status = 1';
+            }
+            $isOk = Db::query($sql);
+        } catch(Exceptionn $e) {
+            $isOk = false;
+        } finally {
+            return $isOk;
+        }
+    }
 }

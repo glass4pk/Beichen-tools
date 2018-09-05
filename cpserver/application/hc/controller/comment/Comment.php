@@ -36,13 +36,14 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $paramArray = array();
-        $paramArray["openid"] = 'strval($this->openid)';
+        $paramArray["openid"] = $this->openid;
         $paramArray["c_id"] = intval($param["c_id"]);
         $paramArray["comment"] = strval($param["comment"]);
         $paramArray["create_timestamp"] = strtotime("now");
         $paramArray["create_time"] = date("Y-m-d H:i:s", $paramArray["create_timestamp"]);
         $paramArray['last_change_time'] = $paramArray['create_timestamp'];
         $paramArray["status"] = 1; // the state of comment is not pass. Default state is 0.
+        $paramArray['replay_comment_id'] = 0; // 主评论
         $result = $commentModel->addOne($paramArray);
         if ($result) {
             return resultArray(["data" => "success"]);
@@ -76,6 +77,7 @@ class Comment extends WeixinApiCommon
         $whereArray['limit_num'] = $param['nums'] ?? $eachPageNums;
         $whereArray['limit_offet'] = isset($param['page']) ? ((intval($param['page']) - 1) * $whereArray['limit_num']) : 0;
         $whereArray['status'] = 1;
+        $paramArray['replay_comment_id'] = 0; // 主评论
         $result = $commentModel->getSome($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);
@@ -131,7 +133,7 @@ class Comment extends WeixinApiCommon
     public function getCommentByCommentId()
     {
         $param = $this->param;
-        if (!isset($param['comment_id']) || is_int(intval($param[$param['comment_id']]))) {
+        if (!isset($param['comment_id']) || !is_int(intval($param['comment_id']))) {
             return resultArray(['error' => 'comment_id错误！']);
         }
         $commentModel = model("comment.Comment");
@@ -152,8 +154,75 @@ class Comment extends WeixinApiCommon
      */
     public function replayComment()
     {
-        if ($this->request->isPost()) {
-            return ;
+        if (!$this->request->isPost()) {
+            return;
         }
+        $param = $this->param;
+        $rule = [
+            "comment_id" => "require|number",
+            'comment' => "require"
+        ];
+        $validate = Validate::make($rule, $param);
+        if (!$validate->check($param)) {
+            return resultArray(["error" => $validate->getError()]);
+        }
+        $commentModel = model("comment.Comment");
+        $paramArray = array();
+        $paramArray["openid"] = $this->openid;
+        // $paramArray["c_id"] = intval($param["c_id"]);
+        $paramArray["comment"] = strval($param["comment"]);
+        $paramArray["create_timestamp"] = strtotime("now");
+        $paramArray["create_time"] = date("Y-m-d H:i:s", $paramArray["create_timestamp"]);
+        $paramArray['last_change_time'] = $paramArray['create_timestamp'];
+        $paramArray["status"] = 1; // the state of comment is not pass. Default state is 0.
+        $paramArray['replay_comment_id'] = intval($param['comment_id']); // 主评论
+        // 查询comment_id，如果不存在就返回错误
+        $searchCommentId = $commentModel->search(['comment_id' => intval($param['comment_id']), 'replay_comment_id' => 0]);
+        if ($searchCommentId) {
+            $searchCommentId = $searchCommentId->toArray();
+        }
+        if (gettype($searchCommentId) != 'array' || sizeof($searchCommentId) < 1) {
+            return resultArray(['error' => 'comment_id error']);
+        }
+        $paramArray['c_id'] = $searchCommentId[0]['c_id'];
+        $result = $commentModel->addOne($paramArray);
+        if ($result) {
+            return resultArray(["data" => $result]);
+        }
+        return resultArray(["error" => "error"]);
+    }
+
+    /**
+     * 获取指定评论的回复评论列表
+     *
+     * @return void
+     */
+    public function getReplayComment()
+    {
+        $param = $this->param;
+        $eachPageNums = 500; // 默认每页的数量为100；
+        $param = $this->param;
+        $rule = [
+            "comment_id" => "require|number",
+            'page' => 'number',
+            'nums' => 'number',
+            'order' => 'alpha' // last_change_time 的排序规则
+        ];
+        $validate = Validate::make($rule);
+        if (!$validate->check($param)) {
+            return resultArray(["error" => $validate->getError()]);
+        }
+        $commentModel = model("comment.Comment");
+        $whereArray = array();
+        $whereArray['order'] = $param['order'] ?? 'asc';
+        $whereArray['limit_num'] = $param['nums'] ?? $eachPageNums;
+        $whereArray['limit_offet'] = isset($param['page']) ? ((intval($param['page']) - 1) * $whereArray['limit_num']) : 0;
+        $whereArray['status'] = 1;
+        $whereArray['replay_comment_id'] = intval($param['comment_id']); // 主评论
+        $result = $commentModel->getReplays($whereArray);
+        if (gettype($result) == 'array') {
+            return resultArray(["data" => $result]);
+        }
+        return resultArray(["error" => "error"]);
     }
 }
