@@ -16,6 +16,11 @@
         #img_cardImg {
             width:200px;
         }
+        #img_fullsize {
+            width:100%;
+            display:block;
+            margin:0 auto;
+        }
     </style>
 
     <!--JS-->
@@ -155,6 +160,28 @@
 </div>
 
 
+<!-- Modal - 查看大图 -->
+<div class="modal fade" id="modal_fullsize" tabindex="-1" role="dialog" aria-labelledby="title_fullsize">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <!--<div class="modal-header">-->
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+                <!--<h4 class="modal-title" id="title_fullsize">查看大图</h4>-->
+            <!--</div>-->
+            <div class="modal-body">
+
+                <img id="img_fullsize" src="" />
+
+            </div>
+            <!--<div class="modal-footer">-->
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+
 </body>
 
 <script type="text/javascript">
@@ -235,7 +262,7 @@
                 if(json.errcode == 0){
                     let str = "";
                     for(let i=0;i<json.data.length;i++){
-                        str +=  '<tr><td>'+json.data[i].card_id+'</td><td>'+json.data[i].name+'</td><td><img class="img-thumbnail card-press" src="'+json.data[i].pic+'"></td><td>'+cardType[json.data[i].t_id].name+'</td>'
+                        str +=  '<tr><td>'+json.data[i].card_id+'</td><td>'+json.data[i].name+'</td><td><img class="img-thumbnail card-press btn-fullsize" src="'+json.data[i].pic+'"></td><td>'+cardType[json.data[i].t_id].name+'</td>'
                             +   '<td><button class="btn btn-default edit" cardId="'+json.data[i].card_id+'" cardName="'+json.data[i].name+'" cardImg="'+json.data[i].pic+'" cardType="'+json.data[i].t_id+'" cid="'+json.data[i].c_id+'">编辑</button>'
                             +   '<button class="btn btn-default delete" cid="'+json.data[i].c_id+'">删除</button></td>'
                             +   '</tr>';
@@ -245,6 +272,7 @@
                     $("#table_cardList tbody").html(str);
                     //绑定点击事件
                     bindEditCard();
+                    bindFullsize();
                 }
                 else {
                     alert("卡牌数据加载失败,"+json.errmsg);
@@ -311,6 +339,15 @@
 
         $("#sub_search").click(function(){
            initCardList();
+        });
+    }
+
+    var bindFullsize = function(){
+        $(".btn-fullsize").unbind();
+        $(".btn-fullsize").click(function(){
+            let src = $(this).attr("src");
+            $("#img_fullsize").attr("src",src);
+            $("#modal_fullsize").modal();
         });
     }
 
