@@ -23,13 +23,13 @@ class WechatUser extends Model
                 $paramArray['last_change_timestamp'] = strtotime('now');
                 // 刷新数据库
                 $isOk = $this->where(['openid' => $paramArray['openid']])->update($paramArray);
-                var_dump( "isOk == true:" . $isOk);
+                // var_dump( "isOk == true:" . $isOk);
             } else {
                 // 新用户插入基类
                 $paramArray['create_timestamp'] = strtotime('now');
                 $paramArray['last_change_timestamp'] = $paramArray['create_timestamp'];
                 $isOk = $this->insert($paramArray);
-                var_dump("insert" . $isOk);
+                // var_dump("insert" . $isOk);
             }
         } catch(Exception $e) {
             //var_dump($e);
