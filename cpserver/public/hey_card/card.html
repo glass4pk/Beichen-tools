@@ -342,6 +342,7 @@
                         alert("提交留言成功");
                         $("#dialog_leaveMessage").modal("hide");
                         $("#dialog_leaveMessage #txt_message").val("");
+                        initMessage();
                     }
                     else {
                         alert("提交留言,"+json.errmsg)
