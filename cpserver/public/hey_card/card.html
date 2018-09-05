@@ -6,6 +6,10 @@
 
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.7/css/bootstrap.min.css">
+
+
+
     <style type="text/css">
         body {
             background-image:url(static/images/P2_bg.png);
@@ -41,12 +45,71 @@
                     display:block;
                     width:100%;
                 }
+        #block_message {
+            width:80%;
+            color:#FFFFFF;
+            margin:0 auto;
+            /*font-size:18px;*/
+        }
+
+            #block_message .title {
+                font-size:34px;
+            }
+
+        #btn_showSubmitMessage {
+            width:30%;
+            display:block;
+            float:right;
+            background:#E6DD21;
+            border-radius: 5px;
+            color:#000000;
+            text-align: center;
+            height:1.5em;
+            line-height:1.5em;
+            font-size: 34px;
+        }
+            #messageList {
+                width:100%;
+                padding: 20px 0;
+            }
+            #messageList .item {
+                border-radius: 10px;
+                background-color:#666666;
+                padding:30px 40px;
+                margin-bottom:25px;
+            }
+
+                #messageList .item .text {
+                    font-size:32px;
+                    /*line-height:1.5em;*/
+                    padding-bottom:15px;
+                }
+
+                #messageList .item .publisher .head {
+                    display:block;
+                    float:left;
+                    width:50px;
+                    height:50px;
+                    border-radius: 50%;
+                    margin-right:15px;
+
+                }
+                #messageList .item .publisher .name {
+                    height:50px;
+                    line-height: 50px;
+                    font-size:32px;
+                }
+        #dialog_leaveMessage .modal-dialog h4, #dialog_leaveMessage .modal-dialog button, #dialog_leaveMessage .modal-dialog textarea {
+            font-size:32px;
+        }
 
     </style>
 
     <!--JS-->
     <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="static/bootstrap-3.3.7/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="static/js/global.js"></script>
 
 </head>
 <body>
@@ -57,44 +120,201 @@
 
         <div id="block_buttons">
             <img id="img_hint" src="static/images/P2_hint.png">
-            <a id="btn_home" class="btns" href="index.html">
-                <img src="static/images/P2_btn_home.png" />
-            </a>
-            <a id="btn_again" class="btns" href="card.html">
-                <img src="static/images/P2_btn_again.png" />
-            </a>
+            <!--<a id="btn_home" class="btns" href="index.html">-->
+                <!--<img src="static/images/P2_btn_home.png" />-->
+            <!--</a>-->
+            <!--<a id="btn_again" class="btns" href="card.html">-->
+                <!--<img src="static/images/P2_btn_again.png" />-->
+            <!--</a>-->
+        </div>
+
+        <!--留言区-->
+        <div id="block_message" class="">
+            <p class="title">
+                <span>大家的想法:</span>
+                <a id="btn_showSubmitMessage" data-toggle="modal" data-target="#dialog_leaveMessage">发表想法</a>
+            </p>
+
+            <ul id="messageList" class="">
+                <!--<li class="item">-->
+                    <!--<p class="text">如果你无法简洁的表达你的想法，那只说明你还不够了解它。如果你无法简洁的表达你的想法，那只说明你还不够了解它。如果你无法简洁的表达你的想法，那只说明你还不够了解它。</p>-->
+                    <!--<div class="publisher">-->
+                        <!--<img class="head" src="https://pro.modao.cc/uploads3/images/1657/16575186/raw_1516269408.png" />-->
+                        <!--<p class="name">薛定谔的猫儿</p>-->
+                    <!--</div>-->
+                <!--</li>-->
+                <!--<li class="item">-->
+                    <!--<p class="text">如果你无法简洁的表达你的想法，那只说明你还不够了解它。如果你无法简洁的表达你的想法，那只说明你还不够了解它。如果你无法简洁的表达你的想法，那只说明你还不够了解它。</p>-->
+                    <!--<div class="publisher">-->
+                        <!--<img class="head" src="https://pro.modao.cc/uploads3/images/1657/16575186/raw_1516269408.png" />-->
+                        <!--<p class="name">薛定谔的猫儿</p>-->
+                    <!--</div>-->
+                <!--</li>-->
+            </ul>
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade bs-example-modal-lg" id="dialog_leaveMessage" tabindex="-1" role="dialog" aria-labelledby="lbl_leaveMessage">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="lbl_leaveMessage">发表你的想法</h4>
+                </div>
+                <div class="modal-body">
+                    <textarea id="txt_message" class="form-control" rows="5" placeholder="最多可以输入800字"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="sub_message" type="button" class="btn btn-primary">保存</button>
+                </div>
+            </div>
         </div>
     </div>
+
+
 </body>
 
 <script type="text/javascript">
 
     var Global = {
-        cardTotal : 12,
-        cardType : 0,
-        cardTypeTotal : 5,
+        card : {
+            t_id :0,
+            c_id:-1
+        },
         isCardTypeRandom : 0
     };
-//    console.log(window.location.href.split("?").length)
-    //获取当前卡的类别
-    if(window.location.href.split("?").length > 1){
-        Global.cardType = window.location.href.split("?")[1].split("=")[1];
+
+    console.log(Tools.getQuery("t_id"));
+
+    //渲染卡片
+    var initCardInfo = function(){
+        $("#img_card").attr("src",Global.card.pic);
+    };
+
+
+    //加载留言
+    var initMessage = function(){
+
+       let url = "/api/hc/client/getcomment?c_id=" + Global.card.c_id;
+//        let url = "/api/hc/client/getcomment?c_id=28";
+
+        $.ajax({
+            method:"get",
+            url: config.hostUrl + url,
+            data:{},
+            success:function(json){
+                if(json.errcode == 0){
+                    console.log("加载留言成功");
+                    console.log(json);
+
+                    let str = "";
+
+                    for(let i=0;i<json.data.length;i++){
+                        str += '<li class="item" comment-id="'+json.data[i].comment_id+'">'
+                                +  '<p class="text">'+json.data[i].comment+'</p>'
+                                +  '<div class="publisher">'
+                                +  '<img class="head" src="'+json.data[i].headimgurl+'" />'
+                                +  '<p class="name">'+json.data[i].nickname+'</p>'
+                                +  '</div></li>';
+                    }
+                    $("#messageList").html(str);
+
+                }
+                else {
+                    console.log("加载留言失败,"+json.errmsg)
+                }
+                //渲染页面
+                initCardInfo()
+            },
+            error:function(){
+
+            }
+        });
     }
-
-    //如果卡的类别为0,则随机抽取一个卡号
-    if(Global.cardType == 0){
-        Global.cardType = Math.floor(Math.random() * Global.cardTypeTotal + 1);
-        Global.isCardTypeRandom = 1;
-    }
-
-    //随机抽一张卡号
-    Global.cardNum = Math.floor(Math.random() * Global.cardTotal + 1);
-//    console.log(Global.cardNum);
-
 
     $(document).ready(function(){
-        //抽卡,改变卡的路径
-        $("#img_card").attr("src","static/images/cards/"+Global.cardType+"/"+Global.cardNum+".png");
+
+
+
+        //加载页面路径参数数据
+        if(Tools.getQuery("t_id")){
+            Global.card.t_id = Tools.getQuery("t_id");
+            let url = "";
+
+            if(Tools.getQuery("c_id") == undefined){
+                //没有c_id,随机这个类别的一张抽卡
+                url = "/api/hc/client/getcardrandom?t_id=" + Global.card.t_id;
+                $.ajax({
+                    method:"get",
+                    url: config.hostUrl + url,
+                    data:{},
+                    success:function(json){
+                        console.log(json);
+                        if(json.errcode == 0){
+                            console.log("随机抽卡成功");
+                            console.log(json);
+                            Global.card = json.data;
+
+                            //渲染页面
+                            initCardInfo();
+
+                            //加载留言
+                            initMessage();
+                        }
+                        else {
+                            console.log("抽卡失败,"+json.errmsg)
+                        }
+
+                    },
+                    error:function(){
+
+                    }
+                });
+
+            }
+            else {
+                Global.card.c_id = Tools.getQuery("c_id");
+                //获取这张卡的信息
+
+                url = "/api/hc/client/getcard?t_id=" + Global.card.t_id + "&c_id=" + Global.card.c_id;
+                $.ajax({
+                    method:"get",
+                    url: config.hostUrl + url,
+                    data:{},
+                    success:function(json){
+                        console.log(json);
+                        if(json.errcode == 0){
+                            console.log("读取卡牌信息成功");
+                            console.log(json);
+                            Global.card = json.data[0];
+
+                            //渲染页面
+                            initCardInfo();
+
+                            //加载留言
+                            initMessage();
+                        }
+                        else {
+                            console.log("抽卡失败,"+json.errmsg)
+                        }
+
+                    },
+                    error:function(){
+
+                    }
+                });
+
+
+            }
+
+            //加载卡的信息
+        }
+
+
 
         //绑定再抽一次按钮
         if(Global.isCardTypeRandom){
@@ -103,6 +323,37 @@
         else {
             $("#btn_again").attr("href","card.html?cardType=" + Global.cardType);
         }
+
+        //点击提交留言
+        $("#sub_message").click(function(){
+
+            let ajaxData = {
+                comment : $("#dialog_leaveMessage #txt_message").val(),
+                c_id : Global.card.c_id
+            }
+            let url = "/api/hc/client/addcomment";
+            $.ajax({
+                method:"POST",
+                url: config.hostUrl + url,
+                data:ajaxData,
+                success:function(json){
+                    console.log(json);
+                    if(json.errcode == 0){
+                        alert("提交留言成功");
+                        $("#dialog_leaveMessage").modal("hide");
+                        $("#dialog_leaveMessage #txt_message").val("");
+                    }
+                    else {
+                        alert("提交留言,"+json.errmsg)
+                    }
+
+                },
+                error:function(){
+
+                }
+            });
+
+        });
 
         //加载微信分享
         $.ajax({
