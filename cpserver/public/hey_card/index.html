@@ -95,8 +95,27 @@
         window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa46386d571e05bac&redirect_uri='+thisUrl+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect');
     }
     else if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") != undefined) {
-        //授权跳转回来,设置cookie
-        Tools.setCookie("openid",Tools.getQuery("code"),30)
+        //授权跳转回来,通过接口设置cookie
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/weixin/getopenid?code="+Tools.getQuery("code")+"&scope=snsapi_userinfo",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+                    Tools.setCookie("wechat_nickname",json.data.nickname,365);
+                    Tools.setCookie("wechat_headimgurl",json.data.headimgurl,365);
+                }
+                else {
+                    console.log("通过code获取openid失败");
+                    window.location.replace(thisUrl);
+                }
+            },
+            error:function(){
+                console.log("ajax接口请求失败");
+                window.location.replace(thisUrl);
+            }
+        });
     }
     else {
 
