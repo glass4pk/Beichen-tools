@@ -7,15 +7,15 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => '127.0.0.1',
+    'hostname'        => 'gz-cdb-pndu2wzn.sql.tencentcdb.com',
     // 数据库名
     'database'        => 'gp',
     // 用户名
     'username'        => 'root',
     // 密码
-    'password'        => 'BeiChen_dev??who_has_$$.',
+    'password'        => 'Hanzikeji456',
     // 端口
-    'hostport'        => '3306',
+    'hostport'        => '62146',
     // 连接dsn
     'dsn'             => '',
     // 数据库连接参数

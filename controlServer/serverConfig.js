@@ -6,9 +6,10 @@ module.exports={
         key:"passcode",
         value:"djfldj4flgjJVlfglfjjsljf7979jlf",
         host:'dev.yes-go.cn',
-		db:"127.0.0.1",
+		db:"gz-cdb-pndu2wzn.sql.tencentcdb.com",
+		port: 62146,
 		dbuser:"root",
-		dbpassword:"BeiChen_dev??who_has_$$.",
+		dbpassword:"Hanzikeji456",
 		database:"wechat"
 	}
 };
