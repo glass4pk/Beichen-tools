@@ -9,6 +9,6 @@ module.exports={
 		db:"127.0.0.1",
 		dbuser:"root",
 		dbpassword:"BeiChen_dev??who_has_$$.",
-		database:"cpmapping"
+		database:"wechat"
 	}
 };

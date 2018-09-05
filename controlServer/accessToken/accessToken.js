@@ -24,7 +24,7 @@ function saveResult(result){
 	connection.query(sql,function(err,result){
 		 // 结束会话
 		if(err) {
-		    console.log(err);
+		    console.log(Date() + " error: " + err);
 		};
 		connection.end(); 
 	});
@@ -36,7 +36,7 @@ function saveResult(result){
  */
 function firstGetAccessToken(){
 	var url="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+config["appid"]+"&secret="+config["appsecret"];
-	console.log(url);
+	// console.log(url);
 	try{
 		https.get(url,(res)=>{
 			var data="";
@@ -49,10 +49,10 @@ function firstGetAccessToken(){
 			});
 		});
 		
-		console.log('第一次结束');
+		console.log(Date() + '第一次结束');
     }
     catch (e){ 
-    	console.log('第一次出现异常');
+    	console.log(Date() + '第一次出现异常');
     }
 }
 
@@ -71,10 +71,10 @@ setInterval(function(){
 				saveResult(result);
 			});
 		});
-		console.log("ok");
+		console.log(Date() + "success");
     }
     catch (e){
-    	console.log("出现异常");
+    	console.log(Date() + "出现异常");
     }
 
 },1000*update_time);

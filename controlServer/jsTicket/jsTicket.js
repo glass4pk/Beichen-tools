@@ -47,17 +47,16 @@ function sendTemplateMessage(){
 				try{
 					result=JSON.parse(data);
 					console.log(result);
-					console.log('success');
+					console.log(Date() + 'success');
 				}
 				catch(e){
-					console.log('失败');
+					console.log(Date() + '失败');
 				}	
 			});
 		});
     }
     catch (e){
-		console.log(e);
-    	console.log('第一次出现异常');
+		console.log(Date() + ' 出现异常 ' + e);
     }
 }
 
