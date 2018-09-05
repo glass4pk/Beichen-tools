@@ -35,7 +35,7 @@ class AuthorizeMiddleware
         unset($result['privilege']);
         $wechatUserModel = model('WechatUser');
         // 保存用户在数据库
-        var_dump($result);
+        // var_dump($result);
         $wechatUserModel->saveUserInfo($result);
         return $result;
     }
