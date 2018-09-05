@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嘿卡</title>
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        #table_cardType tbody td img{
+            background:#000000;
+            width:263px;
+            height:71px;
+        }
+    </style>
+
+    <!--JS-->
+    <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="static/js/vue.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap-3.3.7/js/bootstrap.min.js" ></script>
+    <script type="text/javascript" src="static/js/ajaxFileUpload.js" ></script>
+
+    <script type="text/javascript" src="static/js/global.js" ></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)">嘿卡管理后台</a>
+        </div>
+    </div>
+</nav>
+
+    <div id="content" class="row">
+        <div class="col-md-2">
+            <div class="alert alert-info" role="alert">卡牌管理</div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="cardType.html">卡牌类型管理</a></li>
+                <li role="presentation"><a href="cardList.html">卡牌管理</a></li>
+                <li role="presentation"><a href="messageList.html">留言管理</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">卡牌类型管理</div>
+                <div class="panel-body">
+                    <p><button class="btn btn-primary" id="btn_newCardType">新建类型</button></p>
+                </div>
+                <table class="table" id="table_cardType">
+                    <thead>
+                        <tr><th>编号</th><th>类型名称</th><th>类型图片</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                        <!--<tr><td>1</td><td>三观蹦迪</td><td><img style="background:#000000" src="../static/images/buttons/button_1.png"></td>-->
+                            <!--<td><button class="btn btn-link edit" cardTypeId="1" cardTypeName="脑洞狂欢" cardTypeImg="../static/images/buttons/button_1.png">编辑</button></td>-->
+                        <!--</tr>-->
+                        <!--<tr><td>2</td><td>脑洞狂欢</td><td><img style="background:#000000" src="../static/images/buttons/button_2.png"></td><td>-->
+                            <!--<button class="btn btn-link edit" cardTypeId="2" cardTypeName="故事胶囊" cardTypeImg="../static/images/buttons/button_2.png">编辑</button></td>-->
+                        <!--</tr>-->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal_editCardType" tabindex="-1" role="dialog" aria-labelledby="title_editCardType">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="title_editCardType">编辑卡牌类型</h4>
+            </div>
+            <div class="modal-body row">
+                <form class="col-md-10 .col-md-offset-1">
+                    <div class="form-group">
+                        <label >卡牌类型编号:<span class="" id="txt_cardTypeId">-1</span></label>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="txt_cardTypeName">卡牌类型名称</label>
+                        <input type="email" class="form-control" id="txt_cardTypeName" placeholder="">
+                    </div>
+
+                    <input type="hidden" id="hid_t_id"/>
+
+                    <div class="form-group">
+                        <label for="file_cardTypeImg">卡牌类型按钮</label>
+
+                        <input type="file" id="file_cardTypeImg" style="display:none" name="file" accept="image/*" type="file" />
+
+                        <p class="help-block">点击图片上传,图片规格:263x71</p>
+                        <img id="img_cardTypeImg" src="static/images/upload-hint-button.png" style="background:#000000;width:263px;height:71px;"/>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="btn_saveCardType">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+
+    var hostUrl = config.hostUrl;
+    var submitType = "new";
+
+    var bindNewCardType = function(){
+        $("#btn_newCardType").click(function(){
+            let cardTypeId = $("#table_cardType td .edit").length+1;
+            //展示模态框
+            $("#modal_editCardType").modal({});
+            $("#txt_cardTypeId").text(cardTypeId);
+            $("#txt_cardTypeName").val("");
+            $("#img_cardTypeImg").attr("src","static/images/upload-hint-button.png");
+            submitType = "new";
+        })
+    }
+
+    var bindEditCardType = function(){
+        $("#table_cardType td .edit").click(function(){
+            let cardTypeId = $(this).attr("cardTypeId");
+//            alert(cardTypeId)
+            let cardTypeName = $(this).attr("cardTypeName");
+            let cardTypeImg = $(this).attr("cardTypeImg");
+            let cardTypeTid = $(this).attr("tId");
+            //展示模态框
+            $("#modal_editCardType").modal({});
+            $("#txt_cardTypeId").text(cardTypeId);
+            $("#txt_cardTypeName").val(cardTypeName);
+            $("#img_cardTypeImg").attr("src",cardTypeImg);
+            $("#hid_t_id").val(cardTypeTid);
+            submitType = "edit";
+
+
+        });
+    };
+
+    var bindDeleteCardType = function(){
+        $("#table_cardType td .delete").click(function(){
+
+        });
+    }
+
+    var bindCardTypeList = function(){
+        $.ajax({
+            url:hostUrl + "/api/hc/manage/getcardtype",
+            method:"get",
+            data:{},
+            success:function(json){
+                console.log(json);
+
+                if(json.errcode == 0){
+                    let str = "";
+                    let arr = json.data;
+                    for(let i=0;i<arr.length;i++){
+                        str += '<tr><td>'+arr[i].type_id+'</td><td>'+arr[i].name+'</td><td><img style="background:#000000" src="'+arr[i].pic+'"></td>'
+                            +  '<td><button class="btn btn-link edit" cardTypeId="'+arr[i].type_id+'" cardTypeName="'+arr[i].name+'" cardTypeImg="'+arr[i].pic+'" tId="'+arr[i].t_id+'">编辑</button>'
+                            +  '<button class="btn btn-link delete" cardTypeId="'+arr[i].type_id+'" >删除</button></td>'
+                            +  '</tr>'
+                    }
+
+                    $("#table_cardType tbody").html(str);
+                }
+                else {
+                    alert("数据加载错误,"+json.errmsg);
+                }
+
+
+                //加载数据后,绑定按钮事件
+                bindEditCardType();
+            },
+            error:function(json){
+                console.log("读取信息失败");
+            }
+        });
+    }
+
+    var getObjectURL = function(file) {
+        var url = null ;
+        if (window.createObjectURL!=undefined) { // basic
+            url = window.createObjectURL(file) ;
+        } else if (window.URL!=undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file) ;
+        } else if (window.webkitURL!=undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file) ;
+        }
+        return url ;
+    }
+
+
+    $(document).ready(function(){
+        console.log("loading list");
+        //加载卡片类型列表
+        bindCardTypeList();
+
+        bindNewCardType();
+
+
+        //图片上传
+        $("#img_cardTypeImg").click(function(){
+            $("#file_cardTypeImg").click();
+            $("#file_cardTypeImg").on("change",function(){
+                let objUrl = getObjectURL(this.files[0]) ; //获取图片的路径，该路径不是图片在本地的路径
+                if (objUrl) {
+                    $("#img_cardTypeImg").attr("src", objUrl) ; //将图片路径存入src中，显示出图片
+                }
+
+                let imageForm = new FormData();
+                imageForm.append("file", $("#file_cardTypeImg").get(0).files[0]);
+
+                $.ajax({
+                    type: 'POST',
+                    url: config.hostUrl+"/api/hc/manage/uploadpic",
+                    data: imageForm,
+                    processData: false,  // 告诉jQuery不要去处理发送的数据
+                    contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+                    success: function (data) {
+
+                        console.log(data);
+                        if(data.errcode==0){
+
+                            $("#img_cardTypeImg").attr("src", data.data) ; //将图片路径存入src中，显示出图片
+//                            alert("上传成功");
+                        }
+                        else {
+                            alert("上传图片失败,"+data.errmsg);
+                        }
+
+                    },
+                    error: function () {
+                        console.log("upload error");
+                    }
+                });
+
+            });
+        });
+
+
+
+        //点击保存
+        $("#btn_saveCardType").click(function(){
+            let ajaxData = {
+                type_id:$("#txt_cardTypeId").html(),
+                name:$("#txt_cardTypeName").val(),
+                pic:$("#img_cardTypeImg").attr("src"),
+                t_id:$("#hid_t_id").val()
+            }
+            let url = ""
+            if(submitType == "new"){
+                url = "/api/hc/manage/addcardtype";
+            }
+            else if(submitType == "edit"){
+                url = "/api/hc/manage/changecardtype";
+            }
+            $.ajax({
+                url:hostUrl + url,
+                method:"POST",
+                data:ajaxData,
+                success:function(json){
+                    console.log(json);
+                    if(json.errcode == 0){
+                        alert("保存成功");
+                        $("#modal_editCardType").modal('hide');
+                        bindCardTypeList();
+                    }
+                    else {
+                        alert("保存失败,"+json.errmsg);
+                    }
+
+//                    history.go(-1);
+
+                },
+                error:function(json){
+                    alert("保存失败");
+                    console.log(json);
+                }
+            });
+
+        });
+
+    });
+
+</script>
+
+<!--<script>-->
+    <!--var _hmt = _hmt || [];-->
+    <!--(function() {-->
+        <!--var hm = document.createElement("script");-->
+        <!--hm.src = "https://hm.baidu.com/hm.js?dd9f36504b1b1dd792c8952982096697";-->
+        <!--var s = document.getElementsByTagName("script")[0];-->
+        <!--s.parentNode.insertBefore(hm, s);-->
+    <!--})();-->
+<!--</script>-->
+
+</html>

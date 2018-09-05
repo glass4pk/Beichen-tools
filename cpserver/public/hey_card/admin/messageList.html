@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嘿卡</title>
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <style type="text/css">
+        td .card-press {
+            background-color:#000000;
+            width:100px;
+            display:block;
+        }
+        #img_cardImg {
+            width:200px;
+        }
+
+        #table_messageList td{
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .comment_head {
+            width:25px;
+            height:25px;
+            display:block;
+            float:left;
+            margin-right:5px;
+        }
+    </style>
+
+    <!--JS-->
+    <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="static/js/vue.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap-3.3.7/js/bootstrap.min.js" ></script>
+
+    <script type="text/javascript" src="static/js/global.js" ></script>
+
+</head>
+<body>
+
+<nav class="navbar navbar-default navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="javascript:void(0)">嘿卡管理后台</a>
+        </div>
+    </div>
+</nav>
+
+    <div id="content" class="row">
+        <div class="col-md-2">
+            <div class="alert alert-info" role="alert">卡牌管理</div>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><a href="cardType.html">卡牌类型管理</a></li>
+                <li role="presentation"><a href="cardList.html">卡牌管理</a></li>
+                <li role="presentation" class="active"><a href="messageList.html">留言管理</a></li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">留言管理</div>
+                <div class="panel-body">
+                    <form class="col-md-12 ">
+                        <div class="form-groud col-md-3">
+                            <label for="search_cardNum">卡牌编号</label>
+                            <input type="text" class="form-control" id="search_cardNum" placeholder="">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_cardTitle">卡牌标题</label>
+                            <input type="text" class="form-control" id="search_cardTitle" placeholder="">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_cardType">卡牌类型</label>
+
+                            <select class="form-control" id="search_cardType">
+                                <!--<option value="0">全部</option>-->
+                                <!--<option value="1">三观蹦迪</option>-->
+                                <!--<option value="2">脑洞狂欢</option>-->
+
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3">
+                            <button class="btn btn-default">搜索</button>
+                        </div>
+                    </form>
+
+                    <div class="">
+                        <button class="btn btn-primary" id="btn_newCard">新建卡牌</button>
+                    </div>
+                </div>
+                <table class="table" id="table_messageList">
+                    <thead>
+                        <tr><th>留言编号</th><th>卡牌名称</th><th>留言者</th><th>留言摘要</th><th>留言时间</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td>1-1</td><td>张三</td><td>2018-11-11 15:00:00</td>
+                            <td><button class="btn btn-link">查看留言</button><button class="btn btn-link">查看留言回复</button></td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+<!-- 查看留言弹窗 -->
+<div class="modal fade" id="modal_viewMessage" tabindex="-1" role="dialog" aria-labelledby="title_viewMessage">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="title_viewMessage">查看留言</h4>
+            </div>
+            <div class="modal-body row">
+                <form class="col-md-10 .col-md-offset-1">
+
+                    <input type="hidden" class="comment_id"/>
+
+                    <div class="form-group">
+                        <label >留言内容</label>
+                        <p class="comment">加载中...</p>
+                    </div>
+                    <div class="form-group">
+                        <label >留言用户信息</label>
+                        <p class=""><img class="comment_head" src="" /><span class="comment_name">昵称</span></p>
+                    </div>
+                    <div class="form-group">
+                        <label >留言时间</label>
+                        <p class="comment_time">加载中</p>
+                    </div>
+                    <div class="form-group">
+                        <label >所属卡片</label>
+                        <p><span class="comment_card">加载中</span></p>
+                        <p><a class="btn btn-default toViewCard">查看卡牌信息</a></p>
+                    </div>
+
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <!--<button id="btn_saveCard" type="button" class="btn btn-primary">保存</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+
+    var cardType = [];
+    var search = {
+        cardType : 0,
+        card_id:0,
+        c_id:0
+    };
+    var curMessage = {
+        comment_id : "",
+        comment : ""
+    };
+    var messageList = [];
+
+
+
+    var bindMessageList = function(){
+
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/api/hc/manage/getcomment?c_id="+search.c_id,
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+
+                    let str = "";
+
+                    for(let i=0;i<json.data.length;i++){
+
+                        //留言装载到页面数组
+                        messageList[parseInt(json.data[i].comment_id)] = json.data[i];
+
+                        let time = "";
+                        time = Tools.timestampToTime(json.data[i].last_change_time);
+                        let comment_short = json.data[i].comment;
+
+                        if(comment_short.length > 50){
+                            comment_short = comment_short.slice(0,50) + "...";
+                        }
+
+                        //设置页面
+                        str +=   '<tr><td>'+json.data[i].comment_id+'</td><td class="card_id" c_id="'+json.data[i].c_id+'">'+json.data[i].name+'</td><td>'+json.data[i].nickname+'</td>'
+                            +    '<td class="col-md-4" style="text-overflow:ellipsis;text-align: left">'+ comment_short +'</td>'
+                            +    '<td class="time">'+time+'</td>'
+                            +    '<td><button class="btn btn-link viewComment" comment-id="'+json.data[i].comment_id+'">查看留言</button>'
+                            +    '</tr>';
+                    }
+                    $("#table_messageList tbody").html(str);
+                    bindEditMessage();
+//                    bindViewCard();
+
+                }
+                else {
+                    alert("加载留言数据失败,"+json.errmsg);
+                }
+                //
+            },
+            error:function(){
+
+            }
+        });
+    };
+
+    //查看留言详情
+    var bindEditMessage = function(){
+        $("#table_messageList tbody .viewComment").click(function(){
+            //加载当前留言信息
+            let comment_id = parseInt($(this).attr("comment-id"));
+            curMessage = messageList[comment_id];
+
+            //展示弹窗
+            console.log("curMessage",curMessage);
+            $("#modal_viewMessage").modal({});
+
+
+
+//            window.open("messageDetail.html?comment_id="+comment_id);
+
+            //加载留言信息到弹窗
+            $("#modal_viewMessage .comment_id").val(curMessage.comment_id);
+            $("#modal_viewMessage .comment").text(curMessage.comment);
+            $("#modal_viewMessage .comment_head").attr("src",curMessage.headimgurl);
+            $("#modal_viewMessage .comment_name").text(curMessage.nickname);
+            $("#modal_viewMessage .comment_time").text(Tools.timestampToTime(curMessage.last_change_time));
+            $("#modal_viewMessage .comment_card").text(curMessage.name)
+            $("#modal_viewMessage .toViewCard").attr("c_id",curMessage.c_id);
+
+        });
+    }
+
+    var bindViewCard = function(){
+        $("#modal_viewMessage .toViewCard").click(function(){
+            //获取c_id
+            let c_id = $(this).attr("c_id");
+            alert("开发中");
+
+
+        });
+    }
+
+    //获取弹出框下拉列表的内容
+    $.ajax({
+        method:"get",
+        url:config.hostUrl + "/api/hc/manage/getcardtype",
+        data:{},
+        success:function(json){
+            console.log(json);
+            if(json.errcode == 0){
+
+                let str = "";
+
+                for(let i=0;i<json.data.length;i++){
+                    //设置页面
+                    str += '<option value="'+json.data[i].t_id+'">'+json.data[i].name+'</option>';
+                    //改造卡牌类别数组的映射关系
+                    cardType[json.data[i].t_id]={
+                        type_id:json.data[i].type_id,
+                        name:json.data[i].name
+                    };
+                }
+
+                //自动调整类别编号
+                $("#sel_cardType").change(function(){
+                    let txt = cardType[$("#sel_cardType").val()].type_id + "-";
+                    $("#txt_cardId").val(txt);
+                });
+
+                str ='<option value="0">全部</option>' + str;
+                $("#search_cardType").html(str);
+
+            }
+            else {
+                console.log("加载卡牌类型数据失败,"+json.errmsg)
+            }
+            //
+        },
+        error:function(){
+
+        }
+    });
+
+    $(document).ready(function(){
+        bindMessageList();
+        bindViewCard()
+
+
+    });
+
+</script>
+
+<!--<script>-->
+    <!--var _hmt = _hmt || [];-->
+    <!--(function() {-->
+        <!--var hm = document.createElement("script");-->
+        <!--hm.src = "https://hm.baidu.com/hm.js?dd9f36504b1b1dd792c8952982096697";-->
+        <!--var s = document.getElementsByTagName("script")[0];-->
+        <!--s.parentNode.insertBefore(hm, s);-->
+    <!--})();-->
+<!--</script>-->
+
+</html>

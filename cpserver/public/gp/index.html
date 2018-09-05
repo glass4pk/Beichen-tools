@@ -176,7 +176,8 @@
                     }
                 }
                 else {
-                    alert("jsapi调用失败");
+                    alert("太多人访问了,请稍后再试!");
+//                    alert("jsapi调用失败");
                 }
             }
             xhr.send(JSON.stringify(data));
@@ -198,6 +199,9 @@
                     var result = JSON.parse(e.target.responseText);
                     if (result.errcode === 0) {
                         window.location.href ='credential.html?item_id=' + item_id + '&result_id=' + result.data;
+                    }
+                    else {
+                        alert("找不到你的纪录,有没有输错手机号呢?");
                     }
                 }
                 // console.log(e);

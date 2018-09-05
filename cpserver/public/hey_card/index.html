@@ -37,6 +37,8 @@
     <!--JS-->
     <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="static/js/global.js"></script>
+
 </head>
 <body>
 
@@ -44,32 +46,32 @@
         <img id="img_header" src="static/images/P1_bg.png" >
         <ul id="block_buttons">
             <li>
-                <a id="btn_toType_1" class="" href="card.html?type=1">
+                <a id="btn_toType_1" class="" href="card.html?t_id=1">
                     <img src="static/images/buttons/button_1.png" />
                 </a>
             </li>
             <li>
-                <a id="btn_toType_2" class="" href="card.html?type=2">
+                <a id="btn_toType_2" class="" href="card.html?t_id=2">
                     <img src="static/images/buttons/button_2.png" />
                 </a>
             </li>
             <li>
-                <a id="btn_toType_3" class="" href="card.html?type=3">
+                <a id="btn_toType_3" class="" href="card.html?t_id=3">
                     <img src="static/images/buttons/button_3.png" />
                 </a>
             </li>
             <li>
-                <a id="btn_toType_4" class="" href="card.html?type=4">
+                <a id="btn_toType_4" class="" href="card.html?t_id=4">
                     <img src="static/images/buttons/button_4.png" />
                 </a>
             </li>
             <li>
-                <a id="btn_toType_5" class="" href="card.html?type=5">
+                <a id="btn_toType_5" class="" href="card.html?t_id=5">
                     <img src="static/images/buttons/button_5.png" />
                 </a>
             </li>
             <li>
-                <a id="btn_toType_0" class="" href="card.html?type=0">
+                <a id="btn_toType_0" class="" href="card.html?t_id=0">
                     <img src="static/images/buttons/button_0.png" />
                 </a>
             </li>
@@ -81,7 +83,84 @@
 
 <script type="text/javascript">
 
+    var cardType = [];
+
+
+
     $(document).ready(function(){
+
+
+        //加载卡牌类型列表
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/api/hc/client/getcardtype",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+
+                    let str = "";
+
+                    for(let i=0;i<json.data.length;i++){
+                        //设置页面
+                        str += '<li><a id="btn_toType_'+json.data[i].t_id+'" tid="'+json.data[i].t_id+'" class="button" href="javascript:void(0)">'
+                            +  '<img src="'+json.data[i].pic+'" />'
+                            +  '</a></li>'
+
+
+                        //改造卡牌类别数组的映射关系
+                        cardType[json.data[i].t_id]={
+                            type_id:json.data[i].type_id,
+                            name:json.data[i].name,
+                            pic:json.data[i].pic
+                        };
+                    }
+
+                    str += '<li><a id="btn_toType_0" tid="0" class="button" href="javascript:void(0)">'
+                        +  '<img src="static/images/buttons/button_0.png" />'
+                        +  '</a></li>';
+
+                    $("#block_buttons").html(str);
+
+                    //加载按钮事件
+                    $("#block_buttons .button").click(function(){
+                        let t_id = $(this).attr("tid");
+                        let url = "/api/hc/client/getcardrandom?t_id=" + t_id;
+                        $.ajax({
+                            method:"get",
+                            url: config.hostUrl + url,
+                            data:{},
+                            success:function(json){
+                                console.log(json);
+                                if(json.errcode == 0){
+                                    console.log("随机抽卡成功");
+                                    console.log(json);
+                                    window.location.href = "card.html?t_id="+json.data.t_id+"&c_id="+json.data.c_id;
+
+                                }
+                                else {
+                                    console.log("抽卡失败,"+json.errmsg)
+                                }
+
+                            },
+                            error:function(){
+
+                            }
+                        });
+                    });
+
+
+                }
+                else {
+                    console.log("加载卡牌类型数据失败,"+json.errmsg)
+                }
+                //
+            },
+            error:function(){
+
+            }
+        });
+
 
         //加载微信分享
         $.ajax({
