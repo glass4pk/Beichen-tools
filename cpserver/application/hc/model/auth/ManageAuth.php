@@ -8,6 +8,7 @@ namespace app\hc\model\auth;
 use think\Db;
 use think\Model;
 use com\verify\HonrayVerify;
+use think\Exception;
 
 define("CACHE_EXPIRE", 1200);
 
