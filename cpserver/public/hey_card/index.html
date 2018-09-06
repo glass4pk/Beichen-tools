@@ -85,46 +85,7 @@
 
     var cardType = [];
 
-
-    //判断授权登录
-//    let thisUrl = window.location.href;
-    let thisUrl = config.hostUrl + window.location.pathname;
-
-    if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") == undefined ){
-        //未授权,且未跳转回来
-        window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa46386d571e05bac&redirect_uri='+thisUrl+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect');
-    }
-    else if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") != undefined) {
-        //授权跳转回来,通过接口设置cookie
-        $.ajax({
-            method:"get",
-            url:config.hostUrl + "/weixin/getopenid?code="+Tools.getQuery("code")+"&scope=snsapi_userinfo",
-            data:{},
-            success:function(json){
-                console.log(json);
-                if(json.errcode == 0){
-                    Tools.setCookie("wechat_nickname",json.data.nickname,365);
-                    Tools.setCookie("wechat_headimgurl",json.data.headimgurl,365);
-                }
-                else {
-                    console.log("通过code获取openid失败");
-                    window.location.replace(thisUrl);
-                }
-            },
-            error:function(){
-                console.log("ajax接口请求失败");
-                window.location.replace(thisUrl);
-            }
-        });
-    }
-    else {
-
-    }
-
-
-    $(document).ready(function(){
-
-
+    var bindCardType = function(){
         //加载卡牌类型列表
         $.ajax({
             method:"get",
@@ -139,8 +100,8 @@
                     for(let i=0;i<json.data.length;i++){
                         //设置页面
                         str += '<li><a id="btn_toType_'+json.data[i].t_id+'" tid="'+json.data[i].t_id+'" class="button" href="javascript:void(0)">'
-                            +  '<img src="'+json.data[i].pic+'" />'
-                            +  '</a></li>'
+                                +  '<img src="'+json.data[i].pic+'" />'
+                                +  '</a></li>'
 
 
                         //改造卡牌类别数组的映射关系
@@ -152,8 +113,8 @@
                     }
 
                     str += '<li><a id="btn_toType_0" tid="0" class="button" href="javascript:void(0)">'
-                        +  '<img src="static/images/buttons/button_0.png" />'
-                        +  '</a></li>';
+                            +  '<img src="static/images/buttons/button_0.png" />'
+                            +  '</a></li>';
 
                     $("#block_buttons").html(str);
 
@@ -195,7 +156,47 @@
 
             }
         });
+    }
 
+    //判断授权登录
+//    let thisUrl = window.location.href;
+    let thisUrl = config.hostUrl + window.location.pathname;
+
+    if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") == undefined ){
+        //未授权,且未跳转回来
+        window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa46386d571e05bac&redirect_uri='+thisUrl+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect');
+    }
+    else if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") != undefined) {
+        //授权跳转回来,通过接口设置cookie
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/weixin/getopenid?code="+Tools.getQuery("code")+"&scope=snsapi_userinfo",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+                    Tools.setCookie("wechat_nickname",json.data.nickname,365);
+                    Tools.setCookie("wechat_headimgurl",json.data.headimgurl,365);
+                    console.log("去请求卡牌类型")
+                    bindCardType();
+                }
+                else {
+                    console.log("通过code获取openid失败");
+                    window.location.replace(thisUrl);
+                }
+            },
+            error:function(){
+                console.log("ajax接口请求失败");
+                window.location.replace(thisUrl);
+            }
+        });
+    }
+    else {
+        bindCardType();
+    }
+
+
+    $(document).ready(function(){
 
         //加载微信分享
         $.ajax({
