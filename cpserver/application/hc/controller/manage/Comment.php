@@ -130,7 +130,7 @@ class Comment extends ApiCommon
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray['order'] = $param['order'] ?? 'asc';
+        $whereArray['order'] = $param['order'] ?? 'desc';
         if ($param['c_id'] != 0) {
             $whereArray['c_id'] = intval($param['c_id']);
         }

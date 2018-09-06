@@ -13,10 +13,14 @@ class WeixinApiCommon extends Common
         parent::__construct();
         // $this->openid = "test_openid"; // 测试openid，delete it when product.
         // 获取cookie，三个cookie都长久保存与微信客户端中
-        if (!cookie('openid')) {
-            exit(json_encode(['errcode' => UNKOWN_USER_CODE, 'data' => '', 'errmsg' => '没有openid']));
+        if ($_SERVER['HTTP_HOST'] == '127.0.0.1') {
+            $this->openid = 'oZ7E4wmPDi-reRGXQA9TwLDP2uJ8';
+        } else {
+            if (!cookie('openid')) {
+                exit(json_encode(['errcode' => UNKOWN_USER_CODE, 'data' => '', 'errmsg' => '没有openid']));
+            }
+            $this->openid = cookie('openid');
+            $this->openidRefreshTime = cookie('openidRefreshTime');
         }
-        $this->openid = cookie('openid');
-        $this->openidRefreshTime = cookie('openidRefreshTime');
     }
 }
