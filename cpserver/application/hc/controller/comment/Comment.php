@@ -70,14 +70,14 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray['order'] = $param['order'] ?? 'asc';
+        $whereArray['order'] = $param['order'] ?? 'desc';
         if ($param['c_id'] != 0) {
             $whereArray['c_id'] = intval($param['c_id']);
         }
         $whereArray['limit_num'] = $param['nums'] ?? $eachPageNums;
         $whereArray['limit_offet'] = isset($param['page']) ? ((intval($param['page']) - 1) * $whereArray['limit_num']) : 0;
         $whereArray['status'] = 1;
-        $paramArray['replay_comment_id'] = 0; // 主评论
+        $whereArray['replay_comment_id'] = 0; // 主评论
         $result = $commentModel->getSome($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);
@@ -214,7 +214,7 @@ class Comment extends WeixinApiCommon
         }
         $commentModel = model("comment.Comment");
         $whereArray = array();
-        $whereArray['order'] = $param['order'] ?? 'asc';
+        $whereArray['order'] = $param['order'] ?? 'desc';
         $whereArray['limit_num'] = $param['nums'] ?? $eachPageNums;
         $whereArray['limit_offet'] = isset($param['page']) ? ((intval($param['page']) - 1) * $whereArray['limit_num']) : 0;
         $whereArray['status'] = 1;
