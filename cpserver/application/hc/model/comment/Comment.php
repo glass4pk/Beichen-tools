@@ -3,6 +3,7 @@ namespace app\hc\model\Comment;
 
 use think\Model;
 use think\Db;
+use think\Exception;
 
 class Comment extends Model
 {
@@ -13,7 +14,7 @@ class Comment extends Model
         $isOk = false;
         try {
             $isOk = $this->insertGetId($param);
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -25,7 +26,7 @@ class Comment extends Model
     //     $isOk = false;
     //     try {
     //         $isOk = $this->where($whereArray)->select()->toArray();
-    //     } catch(Exceptionn $e) {
+    //     } catch(Exception $e) {
     //         $isOk = false;
     //     } finally {
     //         return $isOk;
@@ -69,7 +70,7 @@ class Comment extends Model
                         where d.status = 1';
             }
             $isOk = Db::query($sql);
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -93,7 +94,7 @@ class Comment extends Model
         $isOk = false;
         try {
             $isOk = $this->where($whereArray)->delete();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -135,7 +136,7 @@ class Comment extends Model
                         where d.status = 1';
             }
             $isOk = Db::query($sql);
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -198,7 +199,7 @@ class Comment extends Model
                         where d.status = 1';
             }
             $isOk = Db::query($sql);
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;

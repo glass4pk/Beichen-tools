@@ -3,6 +3,7 @@ namespace app\hc\model\card;
 
 use think\Model;
 use think\Db;
+use think\Exception;
 
 class Card extends Model
 {
@@ -18,7 +19,7 @@ class Card extends Model
             } else {
                 $isOk = $this->insertGetId($param);
             }
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -30,7 +31,7 @@ class Card extends Model
         $isOk = false;
         try {
             $isOk = $this->where($whereArray)->order('last_change_timestamp', 'desc')->select()->toArray();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -60,7 +61,7 @@ class Card extends Model
             $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql . ' ORDER BY last_change_time DESC';
             $isOk = Db::query($sql);
             //$isOk = Db::table($this->name)->where($param)->alias("c")->join("card_type t", "c.t_id = t.t_id")->field(["t.pic", "t.name", "t.status", "t.create_time"], true)->select();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -84,7 +85,7 @@ class Card extends Model
         $isOk = false;
         try {
             $isOk = $this->where($whereArray)->delete();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;

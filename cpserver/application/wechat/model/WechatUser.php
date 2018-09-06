@@ -3,6 +3,7 @@
 namespace app\wechat\model;
 
 use think\Model;
+use think\Exception;
 
 class WechatUser extends Model
 {

@@ -2,6 +2,7 @@
 namespace app\hc\model\card;
 
 use think\Model;
+use think\Exception;
 
 class CardType extends Model
 {
@@ -12,7 +13,7 @@ class CardType extends Model
         $isOk = false;
         try {
             $isOk = $this->insertGetId($param);
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -24,7 +25,7 @@ class CardType extends Model
         $isOk = false;
         try {
             $isOk = $this->where($whereArray)->select()->toArray();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -36,7 +37,7 @@ class CardType extends Model
         $isOk = false;
         try {
             $isOk = $this->where($param)->select()->toArray();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
@@ -60,7 +61,7 @@ class CardType extends Model
         $isOk = false;
         try {
             $isOk = $this->where($whereArray)->delete();
-        } catch(Exceptionn $e) {
+        } catch(Exception $e) {
             $isOk = false;
         } finally {
             return $isOk;
