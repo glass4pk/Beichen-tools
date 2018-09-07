@@ -46,19 +46,17 @@ class Card extends Model
      */
     public function getSome($param)
     {
+        $order = strtoupper($param['order'] ?? 'desc');
+        $limit = $param['limit'] ?? 1000; // 每页的数量
+        $page = isset($param['page']) ? $param['page'] - 1 : 0; // 页码：起始页码为0
         $isOk = false;
         try {
             $whereSql = "";
-            $index  = 0;
-            foreach ($param as $k => $v) {
-                if (!$index) {
-                    $whereSql = "a." .  $k . " = " . $v;
-                } else {
-                    $whereSql = $whereSql . " and " . "a." . $k . " = " . $v;
-                }
-                $index ++;
-            }
-            $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql . ' ORDER BY last_change_time DESC';
+            $whereSql = 'a.status = ' . $param['status'];
+            $whereSql = $whereSql . (isset($param['t_id']) ? ' and a.t_id = ' . $param['t_id'] : '');
+            $whereSql = $whereSql . (isset($param['type_id']) ? ' and  b.type_id = ' . $param['type_id'] : '');
+            $whereSql = $whereSql . (isset($param['name']) ? ' and a.name like "%' . $param['name'] . '%" ': '');
+            $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql .  ' ORDER BY a.last_change_time ' . $order . ' limit ' . $page * $limit . ',' . $limit;
             $isOk = Db::query($sql);
             //$isOk = Db::table($this->name)->where($param)->alias("c")->join("card_type t", "c.t_id = t.t_id")->field(["t.pic", "t.name", "t.status", "t.create_time"], true)->select();
         } catch(Exception $e) {

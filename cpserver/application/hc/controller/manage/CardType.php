@@ -176,7 +176,9 @@ class CardType extends ApiCommon
             "t_id" => "number",
             "status" => "number",
             "name" => "max:20",
-            "type_id" => "number"
+            "type_id" => "number",
+            'limit' => 'number', // 每页的数量
+            'page' => 'number' // 页码，起始页码为1
 
         ]);
         if (!$validate->check($param)) {
@@ -186,13 +188,23 @@ class CardType extends ApiCommon
         $CardTypeModel = model("card.CardType");
 
         $whereArray = array();
-        $paramList = ["t_id", "name", "status", "type_id"];
+        $paramList = ["t_id", "name", "status", "type_id", 'order', 'limit', 'page'];
         foreach ($paramList as $one) {
+            // 如果设置order字段
+            if ($one == 'order' && isset($param[$one])) {
+                // order字段的值只能是desc或asc
+                if (strval($param[$one]) != 'desc' ||  strval($param[$one]) != 'asc') {
+                    continue;
+                }
+            }
             if (isset($param[$one])) {
                 $whereArray[$one] = $param[$one];
-            }    
+            }
         }
-
+        // 如果t_id = 0则默认获取全部类型
+        if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
+            unset($whereArray['t_id']);
+        }
         $result = $CardTypeModel->getSome($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);

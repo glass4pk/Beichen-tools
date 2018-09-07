@@ -34,6 +34,9 @@ class CardType extends Model
 
     public function getSome($param)
     {
+        $order = $param['order'] ?? 'desc';
+        $page = isset($param['page']) ? $param['page'] - 1 : 0; // 页码：起始页码为0
+        $limit = $param['limit'] ?? 500; // 每页的数量
         $isOk = false;
         try {
             $isOk = $this->where($param)->select()->toArray();
