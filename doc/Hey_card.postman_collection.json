@@ -26,7 +26,7 @@
 									"formdata": [
 										{
 											"key": "type_id",
-											"value": "1",
+											"value": "2",
 											"description": "必选",
 											"type": "text"
 										},
@@ -203,7 +203,7 @@
 									"formdata": [
 										{
 											"key": "t_id",
-											"value": "3",
+											"value": "5",
 											"description": "必选",
 											"type": "text"
 										}
@@ -367,7 +367,7 @@
 										},
 										{
 											"key": "t_id",
-											"value": "4",
+											"value": "6",
 											"description": "必选",
 											"type": "text"
 										},
@@ -535,7 +535,7 @@
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/manage/getcardtype",
+									"raw": "{{url}}/api/hc/manage/getcardtype?t_id=0",
 									"host": [
 										"{{url}}"
 									],
@@ -544,6 +544,13 @@
 										"hc",
 										"manage",
 										"getcardtype"
+									],
+									"query": [
+										{
+											"key": "t_id",
+											"value": "0",
+											"description": "【可选】如果t_id为0 获取全部"
+										}
 									]
 								},
 								"description": "get cardtype"
@@ -677,13 +684,13 @@
 									"formdata": [
 										{
 											"key": "card_id",
-											"value": "1-1",
+											"value": "6-6",
 											"description": "必选",
 											"type": "text"
 										},
 										{
 											"key": "t_id",
-											"value": "4",
+											"value": "6",
 											"description": "必选",
 											"type": "text"
 										},
@@ -1026,6 +1033,18 @@
 											"value": "http://127.0.0.1/1.jpg",
 											"description": "可选",
 											"type": "text"
+										},
+										{
+											"key": "t_id",
+											"value": "4",
+											"description": "【可选】t_id需要与card_id同步出现，防止数据不一致",
+											"type": "text"
+										},
+										{
+											"key": "card_id",
+											"value": "4-1",
+											"description": "【可选】t_id需要与card_id同步出现，防止数据不一致",
+											"type": "text"
 										}
 									]
 								},
@@ -1181,7 +1200,7 @@
 							]
 						},
 						{
-							"name": "获取特定卡牌类型的卡牌列表",
+							"name": "获取符合指定条件的卡牌列表",
 							"request": {
 								"method": "GET",
 								"header": [],
@@ -1201,7 +1220,31 @@
 										{
 											"key": "t_id",
 											"value": "0",
-											"description": "【必选】值为0获取全部类型的卡牌"
+											"description": "【可选】值为0获取全部类型的卡牌"
+										},
+										{
+											"key": "name",
+											"value": "污污仓库",
+											"description": "【可选】",
+											"disabled": true
+										},
+										{
+											"key": "type_id",
+											"value": "5",
+											"description": "【可选】",
+											"disabled": true
+										},
+										{
+											"key": "limit",
+											"value": "1000",
+											"description": "【可选】每页的数量，默认1000",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "【可选】页码，起始为1",
+											"disabled": true
 										}
 									]
 								},
@@ -1339,7 +1382,7 @@
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/manage/getcardinfo?c_id=4",
+									"raw": "{{url}}/api/hc/manage/getcardinfo?c_id=71",
 									"host": [
 										"{{url}}"
 									],
@@ -1352,8 +1395,8 @@
 									"query": [
 										{
 											"key": "c_id",
-											"value": "4",
-											"description": "卡牌id"
+											"value": "71",
+											"description": "【必选】卡牌id"
 										}
 									]
 								},
@@ -1500,9 +1543,9 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "cc_id",
+											"key": "comment_id",
 											"value": "5",
-											"description": "[ ]cc_id 评论的唯一id",
+											"description": "[ ]comment_id评论的唯一id",
 											"type": "text"
 										}
 									]
@@ -1532,7 +1575,7 @@
 									"mode": "formdata",
 									"formdata": [
 										{
-											"key": "cc_id",
+											"key": "comment_id",
 											"value": "5",
 											"description": "【必须】评论id",
 											"type": "text"
@@ -1567,7 +1610,7 @@
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/manage/getcomment?c_id=2",
+									"raw": "{{url}}/api/hc/manage/getcomment?c_id=0&page=1&nums=10",
 									"host": [
 										"{{url}}"
 									],
@@ -1580,11 +1623,61 @@
 									"query": [
 										{
 											"key": "c_id",
-											"value": "2",
-											"description": "卡牌c_id "
+											"value": "0",
+											"description": "【可选】卡牌c_id "
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "【可选】页数，从1开始计"
+										},
+										{
+											"key": "nums",
+											"value": "10",
+											"description": "【可选】每页的数量"
+										},
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "【可选】时间的排序规则，默认为desc，可选值【desc】、【asc】",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "1",
+											"description": "【可选】评论状态，默认为1",
+											"disabled": true
 										}
 									]
 								}
+							},
+							"response": []
+						},
+						{
+							"name": "获取评论的详细信息",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/manage/getcommentbyid?comment_id=62",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"manage",
+										"getcommentbyid"
+									],
+									"query": [
+										{
+											"key": "comment_id",
+											"value": "62"
+										}
+									]
+								},
+								"description": "传comment_id获取评论的详细信息"
 							},
 							"response": []
 						}
@@ -1834,13 +1927,13 @@
 					"name": "card",
 					"item": [
 						{
-							"name": "用户获取卡牌列表",
+							"name": "用户获取卡牌",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/client/getcard?t_id=0",
+									"raw": "{{url}}/api/hc/client/getcard?t_id=15",
 									"host": [
 										"{{url}}"
 									],
@@ -1853,8 +1946,14 @@
 									"query": [
 										{
 											"key": "t_id",
-											"value": "0",
-											"description": "【必选】若t_id为0则获取所有类型的卡牌"
+											"value": "15",
+											"description": "【可选】若t_id为0则获取所有类型的卡牌"
+										},
+										{
+											"key": "c_id",
+											"value": "62",
+											"description": "【可选】",
+											"disabled": true
 										}
 									]
 								},
@@ -2168,7 +2267,7 @@
 								"header": [],
 								"body": {},
 								"url": {
-									"raw": "{{url}}/api/hc/client/getcomment?c_id=2",
+									"raw": "{{url}}/api/hc/client/getcomment?c_id=0",
 									"host": [
 										"{{url}}"
 									],
@@ -2181,7 +2280,26 @@
 									"query": [
 										{
 											"key": "c_id",
-											"value": "2"
+											"value": "0",
+											"description": "【必选】0为获取全部卡牌的评论"
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"description": "【可选】页数，也1为开始",
+											"disabled": true
+										},
+										{
+											"key": "nums",
+											"value": "20",
+											"description": "【可选】每页的数量",
+											"disabled": true
+										},
+										{
+											"key": "order",
+											"value": null,
+											"description": "【可选】排序的规则，",
+											"disabled": true
 										}
 									]
 								},
@@ -2316,13 +2434,13 @@
 									"formdata": [
 										{
 											"key": "comment",
-											"value": "111",
+											"value": "now_11",
 											"description": "评论",
 											"type": "text"
 										},
 										{
 											"key": "c_id",
-											"value": "3",
+											"value": "28",
 											"description": "【必填】卡牌的唯一id",
 											"type": "text"
 										}
@@ -2475,6 +2593,96 @@
 									"body": "{\"errcode\":0,\"data\":\"success\",\"errmsg\":\"\"}"
 								}
 							]
+						},
+						{
+							"name": "获取评论的详细信息",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/client/getcommentbyid?comment_id=64",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getcommentbyid"
+									],
+									"query": [
+										{
+											"key": "comment_id",
+											"value": "64",
+											"description": "【必须】"
+										}
+									]
+								},
+								"description": "传comment_id获取用户评论的详细内容"
+							},
+							"response": []
+						},
+						{
+							"name": "用户回复评论",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/client/replaycomment?comment_id=46&comment=this comment_id is 46, write by jack",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"replaycomment"
+									],
+									"query": [
+										{
+											"key": "comment_id",
+											"value": "46"
+										},
+										{
+											"key": "comment",
+											"value": "this comment_id is 46, write by jack"
+										}
+									]
+								},
+								"description": "传comment_id，用户回复评论"
+							},
+							"response": []
+						},
+						{
+							"name": "用户获取一条评论的回复评论",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {},
+								"url": {
+									"raw": "{{url}}/api/hc/client/getreplaycomment?comment_id=64",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"hc",
+										"client",
+										"getreplaycomment"
+									],
+									"query": [
+										{
+											"key": "comment_id",
+											"value": "64",
+											"description": "【必须】"
+										}
+									]
+								},
+								"description": "传comment_id,用户获取一条评论的回复评论"
+							},
+							"response": []
 						}
 					],
 					"description": "用户评论api",
@@ -2506,7 +2714,7 @@
 									]
 								},
 								"url": {
-									"raw": "{{url}}/weixin/getopenid?code=0818zZZj0D4s8m15TzYj045a0k08zZZK&scope=snsapi_userinfo",
+									"raw": "{{url}}/weixin/getopenid?code=0712TJfC1kQXg40jQ1eC1DQ6gC12TJfv&scope=snsapi_userinfo",
 									"host": [
 										"{{url}}"
 									],
@@ -2517,7 +2725,7 @@
 									"query": [
 										{
 											"key": "code",
-											"value": "0818zZZj0D4s8m15TzYj045a0k08zZZK",
+											"value": "0712TJfC1kQXg40jQ1eC1DQ6gC12TJfv",
 											"description": "【必选】"
 										},
 										{
