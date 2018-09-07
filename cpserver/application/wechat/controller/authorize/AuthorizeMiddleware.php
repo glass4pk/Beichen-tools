@@ -1,6 +1,7 @@
 <?php
 
 namespace app\wechat\controller\authorize;
+use app\wechat\controller\config\WxConfig;
 
 class AuthorizeMiddleware
 {
@@ -34,6 +35,8 @@ class AuthorizeMiddleware
         $result = json_decode($response, true);
         unset($result['privilege']);
         $wechatUserModel = model('WechatUser');
+        $config = WxConfig::getConfig();
+        $result['appid'] = $config['appid'];
         // 保存用户在数据库
         // var_dump($result);
         $wechatUserModel->saveUserInfo($result);

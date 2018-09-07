@@ -148,10 +148,10 @@ class Card extends ApiCommon
 
         $validate = Validate::make([
             "t_id" => "number",
-            "name" => "max:20"
-        ],[
-            "t_id" => "type_id错误",
-            "name" => "name错误"
+            "name" => "max:20",
+            "type_id" => "number",
+            'limit' => 'number',
+            'page' => 'number' // 起始页码为1
         ]);
         if (!$validate->check($param)) {
             return resultArray(["error" => $validate->getError()]);   
@@ -160,12 +160,20 @@ class Card extends ApiCommon
         $CardModel = model("card.Card");
 
         $whereArray = array();
-        $paramList = ["name", "t_id"];
+        $paramList = ["name", "t_id", 'type_id', 'order', 'limit', 'page'];
         foreach ($paramList as $one) {
+            // 如果设置order字段
+            if ($one == 'order' && isset($param[$one])) {
+                // order字段的值只能是desc或asc
+                if (strval($param[$one]) != 'desc' ||  strval($param[$one]) != 'asc') {
+                    continue;
+                }
+            }
             if (isset($param[$one])) {
                 $whereArray[$one] = $param[$one];
             }
         }
+        // 如果t_id = 0则默认获取全部类型
         if (isset($whereArray['t_id']) && intval($whereArray['t_id']) == 0) {
             unset($whereArray['t_id']);
         }
@@ -210,7 +218,7 @@ class Card extends ApiCommon
             }
         }
         $whereArray['status'] = 1;
-        $result = $CardModel->getSome($whereArray);
+        $result = $CardModel->getOne($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);
         }
