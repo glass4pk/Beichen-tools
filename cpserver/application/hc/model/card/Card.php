@@ -30,7 +30,7 @@ class Card extends Model
     {
         $isOk = false;
         try {
-            $isOk = $this->where($whereArray)->order('last_change_timestamp', 'desc')->select()->toArray();
+            $isOk = $this->where($whereArray)->order('last_change_time', 'desc')->select()->toArray();
         } catch(Exception $e) {
             $isOk = false;
         } finally {

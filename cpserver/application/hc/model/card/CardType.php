@@ -42,7 +42,7 @@ class CardType extends Model
             $isOk = $this->where($param)->select()->toArray();
         } catch(Exception $e) {
             $isOk = false;
-        } finally {
+        } finally { 
             return $isOk;
         }
     }

@@ -218,7 +218,7 @@ class Card extends ApiCommon
             }
         }
         $whereArray['status'] = 1;
-        $result = $CardModel->getSome($whereArray);
+        $result = $CardModel->getOne($whereArray);
         if (gettype($result) == 'array') {
             return resultArray(["data" => $result]);
         }
