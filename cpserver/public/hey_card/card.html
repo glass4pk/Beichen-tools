@@ -239,12 +239,11 @@
     $(document).ready(function(){
 
 
-
         //根据参数,抽卡
         Global.card.c_id = Tools.getQuery("c_id");
         Global.card.t_id = Tools.getQuery("t_id");
 
-        console.log("正在加载一张卡的信息",t_id,c_id);
+        console.log("正在加载一张卡的信息",Global.card.t_id,Global.card.c_id);
 
         //获取这张卡的信息
 
