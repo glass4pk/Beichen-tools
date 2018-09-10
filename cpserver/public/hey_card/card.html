@@ -247,7 +247,7 @@
 
         //获取这张卡的信息
 
-        url = "/api/hc/client/getcard?c_id=" + Global.card.c_id;
+        url = "/api/hc/client/getcard?c_id=" + Global.card.c_id + "&t_id=" + Global.card.t_id;
         $.ajax({
             method:"get",
             url: config.hostUrl + url,
