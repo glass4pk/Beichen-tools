@@ -239,81 +239,41 @@
     $(document).ready(function(){
 
 
+        //根据参数,抽卡
+        Global.card.c_id = Tools.getQuery("c_id");
+        Global.card.t_id = Tools.getQuery("t_id");
 
-        //加载页面路径参数数据
-        if(Tools.getQuery("t_id")){
-            Global.card.t_id = Tools.getQuery("t_id");
-            let url = "";
+        console.log("正在加载一张卡的信息",Global.card.t_id,Global.card.c_id);
 
-            if(Tools.getQuery("c_id") == undefined){
-                //没有c_id,随机这个类别的一张抽卡
-                url = "/api/hc/client/getcardrandom?t_id=" + Global.card.t_id;
-                $.ajax({
-                    method:"get",
-                    url: config.hostUrl + url,
-                    data:{},
-                    success:function(json){
-                        console.log(json);
-                        if(json.errcode == 0){
-                            console.log("随机抽卡成功");
-                            console.log(json);
-                            Global.card = json.data;
+        //获取这张卡的信息
 
-                            //渲染页面
-                            initCardInfo();
+        url = "/api/hc/client/getcard?c_id=" + Global.card.c_id + "&t_id=" + Global.card.t_id;
+        $.ajax({
+            method:"get",
+            url: config.hostUrl + url,
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+                    console.log("读取卡牌信息成功");
+                    console.log(json);
+                    Global.card = json.data[0];
 
-                            //加载留言
-                            initMessage();
-                        }
-                        else {
-                            console.log("抽卡失败,"+json.errmsg)
-                        }
+                    //渲染页面
+                    initCardInfo();
 
-                    },
-                    error:function(){
+                    //加载留言
+                    initMessage();
+                }
+                else {
+                    console.log("抽卡失败,"+json.errmsg)
+                }
 
-                    }
-                });
+            },
+            error:function(){
 
             }
-            else {
-                Global.card.c_id = Tools.getQuery("c_id");
-                //获取这张卡的信息
-
-                url = "/api/hc/client/getcard?t_id=" + Global.card.t_id + "&c_id=" + Global.card.c_id;
-                $.ajax({
-                    method:"get",
-                    url: config.hostUrl + url,
-                    data:{},
-                    success:function(json){
-                        console.log(json);
-                        if(json.errcode == 0){
-                            console.log("读取卡牌信息成功");
-                            console.log(json);
-                            Global.card = json.data[0];
-
-                            //渲染页面
-                            initCardInfo();
-
-                            //加载留言
-                            initMessage();
-                        }
-                        else {
-                            console.log("抽卡失败,"+json.errmsg)
-                        }
-
-                    },
-                    error:function(){
-
-                    }
-                });
-
-
-            }
-
-            //加载卡的信息
-        }
-
+        });
 
 
         //绑定再抽一次按钮
@@ -439,16 +399,6 @@
 
 
     });
-</script>
-
-<script>
-    var _hmt = _hmt || [];
-    (function() {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?dd9f36504b1b1dd792c8952982096697";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();
 </script>
 
 

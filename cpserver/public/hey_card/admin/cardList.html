@@ -21,6 +21,12 @@
             display:block;
             margin:0 auto;
         }
+        table tbody td {
+            vertical-align: middle;
+        }
+        table tbody td .btn{
+            margin-right:10px;
+        }
     </style>
 
     <!--JS-->
@@ -59,14 +65,14 @@
                 <div class="panel-heading">卡牌管理</div>
                 <div class="panel-body">
                     <div class="col-md-12 ">
-                        <!--<div class="form-groud col-md-3">-->
-                            <!--<label for="search_cardNum">卡牌编号</label>-->
-                            <!--<input type="text" class="form-control" id="search_cardNum" placeholder="">-->
-                        <!--</div>-->
-                        <!--<div class="form-group col-md-3">-->
-                            <!--<label for="search_cardTitle">卡牌标题</label>-->
-                            <!--<input type="text" class="form-control" id="search_cardTitle" placeholder="">-->
-                        <!--</div>-->
+                        <div class="form-groud col-md-3">
+                            <label for="search_cardId">卡牌编号</label>
+                            <input type="text" class="form-control" id="search_cardId" placeholder="">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="search_cardName">卡牌标题</label>
+                            <input type="text" class="form-control" id="search_cardName" placeholder="">
+                        </div>
                         <div class="form-group col-md-3">
                             <label for="search_cardType">卡牌类型</label>
 
@@ -171,10 +177,39 @@
             <div class="modal-body">
 
                 <img id="img_fullsize" src="" />
+                <p>访问链接:<span id="lbl_cardLink"></span></p>
 
             </div>
             <!--<div class="modal-footer">-->
                 <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
+
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+<!-- Modal - 查看留言 -->
+<div class="modal fade" id="modal_comment" tabindex="-1" role="dialog" aria-labelledby="title_comment">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="title_comment">卡牌留言</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table" id="table_commentList">
+                    <thead>
+                        <tr><th>留言ID</th><th>留言者</th><th>留言摘要</th><th>留言时间</th><th>操作</th></tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+
+
+            </div>
+            <!--<div class="modal-footer">-->
+            <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
 
             <!--</div>-->
         </div>
@@ -190,7 +225,9 @@
     var submitType = "new";
     var cardType = [];
     var search = {
-        cardType : 0
+        cardType : 0,
+        card_id : "",
+        card_name : ""
     };
 
     //获取弹出框下拉列表的内容
@@ -251,20 +288,22 @@
         })
     }
 
-    var initCardList = function(){
+    var initCardList = function(ajaxData){
 
         $.ajax({
-            url:config.hostUrl + "/api/hc/manage/getcardlist?t_id="+search.cardType,
+            url:config.hostUrl + "/api/hc/manage/getcardlist",
             method:"GET",
-            data:{},
+            data:ajaxData,
             success:function(json){
                 console.log(json);
                 if(json.errcode == 0){
                     let str = "";
                     for(let i=0;i<json.data.length;i++){
-                        str +=  '<tr><td>'+json.data[i].card_id+'</td><td>'+json.data[i].name+'</td><td><img class="img-thumbnail card-press btn-fullsize" src="'+json.data[i].pic+'"></td><td>'+cardType[json.data[i].t_id].name+'</td>'
+                        str +=  '<tr><td>'+json.data[i].card_id+'</td><td>'+json.data[i].name+'</td><td><img class="img-thumbnail card-press btn-fullsize" src="'+json.data[i].pic+'" tid="'+json.data[i].t_id+'" cid="'+json.data[i].c_id+'"></td><td>'+cardType[json.data[i].t_id].name+'</td>'
                             +   '<td><button class="btn btn-default edit" cardId="'+json.data[i].card_id+'" cardName="'+json.data[i].name+'" cardImg="'+json.data[i].pic+'" cardType="'+json.data[i].t_id+'" cid="'+json.data[i].c_id+'">编辑</button>'
-                            +   '<button class="btn btn-default delete" cid="'+json.data[i].c_id+'">删除</button></td>'
+                                +   '<button class="btn btn-default view-comment" cid="'+json.data[i].c_id+'">查看留言</button>'
+
+                                +   '<button class="btn btn-default delete" cid="'+json.data[i].c_id+'">删除</button></td>'
                             +   '</tr>';
                     }
 
@@ -273,6 +312,7 @@
                     //绑定点击事件
                     bindEditCard();
                     bindFullsize();
+
                 }
                 else {
                     alert("卡牌数据加载失败,"+json.errmsg);
@@ -325,28 +365,103 @@
                         }
                     },
                     error: function () {
+
                     }
                 });
             }
         });
 
+        //查看留言按钮
+        $("#table_cardList td .view-comment").click(function(){
+            let cid = $(this).attr('cid');
+
+            $.ajax({
+                url: config.hostUrl + "/api/hc/manage/getcomment",
+                method: "GET",
+                data: {
+                    c_id:cid
+                },
+                success: function (json) {
+                    if(json.errcode == 0){
+                        let str = "";
+
+                        for(let i=0;i<json.data.length;i++){
+
+                            let time = "";
+                            time = Tools.timestampToTime(json.data[i].last_change_time);
+                            let comment_short = json.data[i].comment;
+
+                            if(comment_short.length > 50){
+                                comment_short = comment_short.slice(0,50) + "...";
+                            }
+
+                            //设置页面
+                            str +=   '<tr><td>'+json.data[i].comment_id+'</td><td>'+json.data[i].nickname+'</td>'
+                                    +    '<td class="col-md-4" style="text-overflow:ellipsis;text-align: left">'+ comment_short +'</td>'
+                                    +    '<td class="time">'+time+'</td>'
+                                    +    '<td><button class="btn btn-link viewComment" comment-id="'+json.data[i].comment_id+'">留言详情</button>'
+                                    +    '</tr>';
+                        }
+                        $("#table_commentList tbody").html(str);
+
+                        $("#modal_comment").modal({});
+
+                        //绑定查看留言
+
+                    }
+                    else {
+                        alert("读取留言数据失败,"+json.errmsg);
+                    }
+                },
+                error: function () {
+
+                }
+            });
+
+        });
+
     };
 
+    //绑定搜索相关事件
     var bindSearch = function(){
         $("#search_cardType").change(function(){
             search.cardType = $(this).val();
         });
 
+        $("#search_cardId").change(function(){
+            search.card_id = $(this).val();
+        });
+        $("#search_cardName").change(function(){
+            search.card_name = $(this).val();
+        });
+
+
         $("#sub_search").click(function(){
-           initCardList();
+            let ajaxData = {
+                t_id : search.cardType
+            }
+            if(search.card_id != ""){
+                ajaxData.card_id = search.card_id;
+            }
+            if(search.card_name != ""){
+                ajaxData.card_name = search.card_name;
+            }
+            initCardList(ajaxData);
         });
     }
 
+    //绑定缩略图
     var bindFullsize = function(){
         $(".btn-fullsize").unbind();
         $(".btn-fullsize").click(function(){
             let src = $(this).attr("src");
+            let c_id = $(this).attr("cid");
+            let t_id = $(this).attr("tid");
+
             $("#img_fullsize").attr("src",src);
+
+            $("#lbl_cardLink").text(config.hostUrl + "/hey_card/card.html?c_id="+c_id+"&t_id="+t_id);
+
             $("#modal_fullsize").modal();
         });
     }
@@ -363,7 +478,7 @@
         return url ;
     }
 
-    $(document).ready(function(){
+       $(document).ready(function(){
         bindNewCard();
         initCardList();
         bindSearch();

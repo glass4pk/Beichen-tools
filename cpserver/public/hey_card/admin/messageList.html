@@ -19,7 +19,7 @@
 
         #table_messageList td{
             vertical-align: middle;
-            text-align: center;
+
         }
 
         .comment_head {
@@ -28,6 +28,11 @@
             display:block;
             float:left;
             margin-right:5px;
+        }
+
+        .comment_card_img {
+            width:100%;
+            display: block;
         }
     </style>
 
@@ -120,25 +125,29 @@
                 <h4 class="modal-title" id="title_viewMessage">查看留言</h4>
             </div>
             <div class="modal-body row">
-                <form class="col-md-10 .col-md-offset-1">
+                <form class="col-md-12 ">
 
                     <input type="hidden" class="comment_id"/>
 
                     <div class="form-group">
-                        <label >留言内容</label>
+                        <h4 >留言内容</h4>
                         <p class="comment">加载中...</p>
                     </div>
+                    <hr/>
                     <div class="form-group">
-                        <label >留言用户信息</label>
+                        <h4 >留言用户信息</h4>
                         <p class=""><img class="comment_head" src="" /><span class="comment_name">昵称</span></p>
                     </div>
+                    <hr/>
                     <div class="form-group">
-                        <label >留言时间</label>
+                        <h4 >留言时间</h4>
                         <p class="comment_time">加载中</p>
                     </div>
+                    <hr/>
                     <div class="form-group">
-                        <label >所属卡片</label>
+                        <h4 >所属卡片</h4>
                         <p><span class="comment_card">加载中</span></p>
+                        <p><img class="comment_card_img" src=""/></p>
                         <p><a class="btn btn-default toViewCard">查看卡牌信息</a></p>
                     </div>
 
@@ -203,6 +212,7 @@
                             +    '<td class="col-md-4" style="text-overflow:ellipsis;text-align: left">'+ comment_short +'</td>'
                             +    '<td class="time">'+time+'</td>'
                             +    '<td><button class="btn btn-link viewComment" comment-id="'+json.data[i].comment_id+'">查看留言</button>'
+                            +    '<button class="btn btn-link deleteComment" comment-id="'+json.data[i].comment_id+'">删除留言</button></td>'
                             +    '</tr>';
                     }
                     $("#table_messageList tbody").html(str);
@@ -223,6 +233,8 @@
 
     //查看留言详情
     var bindEditMessage = function(){
+
+        //查看留言
         $("#table_messageList tbody .viewComment").click(function(){
             //加载当前留言信息
             let comment_id = parseInt($(this).attr("comment-id"));
@@ -231,8 +243,6 @@
             //展示弹窗
             console.log("curMessage",curMessage);
             $("#modal_viewMessage").modal({});
-
-
 
 //            window.open("messageDetail.html?comment_id="+comment_id);
 
@@ -244,6 +254,61 @@
             $("#modal_viewMessage .comment_time").text(Tools.timestampToTime(curMessage.last_change_time));
             $("#modal_viewMessage .comment_card").text(curMessage.name)
             $("#modal_viewMessage .toViewCard").attr("c_id",curMessage.c_id);
+
+
+
+            //请求留言的图片
+            $.ajax({
+                method:"GET",
+                url:config.hostUrl + "/api/hc/manage/getcardinfo",
+                data:{
+                    c_id:curMessage.c_id
+                },
+                success:function(json){
+                    console.log(json);
+                    if(json.errcode == 0){
+
+                        $("#modal_viewMessage .comment_card_img").attr("src",json.data[0].pic);
+                    }
+                    else {
+                        console.log("图片加载失败,"+json.errmsg);
+                    }
+                    //
+                },
+                error:function(){
+                    console.log("图片加载失败,"+"请检查网络");
+                }
+            });
+
+        });
+
+        //删除留言
+        $("#table_messageList tbody .deleteComment").click(function(){
+            let comment_id = parseInt($(this).attr("comment-id"));
+
+            if(confirm("确定删除这条留言?")){
+                $.ajax({
+                    method:"POST",
+                    url:config.hostUrl + "/api/hc/manage/deletecomment",
+                    data:{
+                        comment_id:comment_id
+                    },
+                    success:function(json){
+                        console.log(json);
+                        if(json.errcode == 0){
+                            alert("删除成功");
+                            bindMessageList();
+                        }
+                        else {
+                            alert("删除失败,"+json.errmsg);
+                        }
+                        //
+                    },
+                    error:function(){
+                        alert("删除失败,"+"请检查网络");
+                    }
+                });
+            }
 
         });
     }
