@@ -56,6 +56,7 @@ class Card extends Model
             $whereSql = $whereSql . (isset($param['t_id']) ? ' and a.t_id = ' . $param['t_id'] : '');
             $whereSql = $whereSql . (isset($param['type_id']) ? ' and  b.type_id = ' . $param['type_id'] : '');
             $whereSql = $whereSql . (isset($param['name']) ? ' and a.name like "%' . $param['name'] . '%" ': '');
+            $whereSql = $whereSql . (isset($param['c_id']) ? ' and a.c_id = ' . $param['c_id'] : '');
             $sql = "select a.c_id, a.t_id, a.card_id, b.type_id , a.name, a.pic, a.last_change_time from card a inner join card_type b on a.t_id = b.t_id where " . $whereSql .  ' ORDER BY a.last_change_time ' . $order . ' limit ' . $page * $limit . ',' . $limit;
             $isOk = Db::query($sql);
             //$isOk = Db::table($this->name)->where($param)->alias("c")->join("card_type t", "c.t_id = t.t_id")->field(["t.pic", "t.name", "t.status", "t.create_time"], true)->select();
