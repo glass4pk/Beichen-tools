@@ -242,6 +242,9 @@
 
         //加载页面路径参数数据
         if(Tools.getQuery("t_id")){
+
+            console.log("正在随机抽一张卡");
+
             Global.card.t_id = Tools.getQuery("t_id");
             let url = "";
 
@@ -278,6 +281,10 @@
             }
             else {
                 Global.card.c_id = Tools.getQuery("c_id");
+                Global.card.t_id = Tools.getQuery("t_id");
+
+                console.log("正在加载一张卡的信息");
+
                 //获取这张卡的信息
 
                 url = "/api/hc/client/getcard?t_id=" + Global.card.t_id + "&c_id=" + Global.card.c_id;
