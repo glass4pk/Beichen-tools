@@ -85,9 +85,43 @@
 
 <script type="text/javascript">
 
-
+    var cardType = [];
 
     var initData = function(){
+
+        //加载当前卡牌类型名称
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/api/hc/client/getcardtype",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+
+                    let str = "";
+
+                    for(let i=0;i<json.data.length;i++){
+
+                        //改造卡牌类别数组的映射关系
+                        cardType[json.data[i].t_id]={
+                            type_id:json.data[i].type_id,
+                            name:json.data[i].name,
+                            pic:json.data[i].pic
+                        };
+                    }
+
+                    $("#title").text(cardType[Tools.getQuery("t_id")].name);
+
+                }
+                else {
+                    console.log("加载卡牌类型数据失败,"+json.errmsg)
+                }
+                //
+            },
+            error:function(){
+
+            }
+        });
 
         //加载卡牌列表
         $.ajax({
@@ -105,9 +139,8 @@
                     for(let i=0;i<json.data.length;i++){
                         //设置页面
                         str += '<li><a tid="'+json.data[i].t_id+'" cid="'+json.data[i].c_id+'" class="button" href="card.html?t_id='+json.data[i].t_id+'&c_id='+json.data[i].c_id+'">'
+                                +  json.data[i].name
                                 +  '</a></li>'
-
-
 
                     }
 
