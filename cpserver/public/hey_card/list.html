@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嘿卡</title>
+
+    <!--CSS-->
+    <link rel="stylesheet" type="text/css" href="static/css/common.css">
+    <style type="text/css">
+        body {
+            background-color:#000000;
+        }
+        #img_header {
+            display:block;
+            width:100%;
+        }
+        #block_buttons {
+            width:80%;
+            margin:50px auto;
+        }
+            #block_buttons li {
+                display:block;
+                width:50%;
+                float:left;
+                margin-bottom:25px;
+            }
+                #block_buttons li a {
+                    display:block;
+                }
+                #block_buttons li a img {
+                    display:block;
+                    width:90%;
+                    margin:0 5%;
+                }
+    </style>
+
+    <!--JS-->
+    <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    <script type="text/javascript" src="static/js/global.js"></script>
+
+</head>
+<body>
+
+    <div id="content">
+        <img id="img_header" src="static/images/P1_bg.png" >
+        <ul id="block_buttons">
+            <!--<li>-->
+                <!--<a id="btn_toType_1" class="" href="card.html?t_id=1">-->
+                    <!--<img src="static/images/buttons/button_1.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_2" class="" href="card.html?t_id=2">-->
+                    <!--<img src="static/images/buttons/button_2.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_3" class="" href="card.html?t_id=3">-->
+                    <!--<img src="static/images/buttons/button_3.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_4" class="" href="card.html?t_id=4">-->
+                    <!--<img src="static/images/buttons/button_4.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_5" class="" href="card.html?t_id=5">-->
+                    <!--<img src="static/images/buttons/button_5.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+            <!--<li>-->
+                <!--<a id="btn_toType_0" class="" href="card.html?t_id=0">-->
+                    <!--<img src="static/images/buttons/button_0.png" />-->
+                <!--</a>-->
+            <!--</li>-->
+        </ul>
+
+    </div>
+
+</body>
+
+<script type="text/javascript">
+
+    var cardType = [];
+
+    var bindCardType = function(){
+        //加载卡牌类型列表
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/api/hc/client/getcardtype",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+
+                    let str = "";
+
+                    for(let i=0;i<json.data.length;i++){
+                        //设置页面
+                        str += '<li><a id="btn_toType_'+json.data[i].t_id+'" tid="'+json.data[i].t_id+'" class="button" href="javascript:void(0)">'
+                                +  '<img src="'+json.data[i].pic+'" />'
+                                +  '</a></li>'
+
+
+                        //改造卡牌类别数组的映射关系
+                        cardType[json.data[i].t_id]={
+                            type_id:json.data[i].type_id,
+                            name:json.data[i].name,
+                            pic:json.data[i].pic
+                        };
+                    }
+
+                    str += '<li><a id="btn_toType_0" tid="0" class="button" href="javascript:void(0)">'
+                            +  '<img src="static/images/buttons/button_0.png" />'
+                            +  '</a></li>';
+
+                    $("#block_buttons").html(str);
+
+                    //加载按钮事件
+                    $("#block_buttons .button").click(function(){
+                        let t_id = $(this).attr("tid");
+                        let url = "/api/hc/client/getcardrandom?t_id=" + t_id;
+                        $.ajax({
+                            method:"get",
+                            url: config.hostUrl + url,
+                            data:{},
+                            success:function(json){
+                                console.log(json);
+                                if(json.errcode == 0){
+                                    console.log("随机抽卡成功");
+                                    console.log(json);
+                                    window.location.href = "card.html?t_id="+json.data.t_id+"&c_id="+json.data.c_id;
+
+                                }
+                                else {
+                                    console.log("抽卡失败,"+json.errmsg)
+                                }
+
+                            },
+                            error:function(){
+
+                            }
+                        });
+                    });
+
+
+                }
+                else {
+                    console.log("加载卡牌类型数据失败,"+json.errmsg)
+                }
+                //
+            },
+            error:function(){
+
+            }
+        });
+    }
+
+    //判断授权登录
+//    let thisUrl = window.location.href;
+    let thisUrl = config.hostUrl + window.location.pathname;
+
+    if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") == undefined ){
+        //未授权,且未跳转回来
+        window.location.replace('https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa46386d571e05bac&redirect_uri='+thisUrl+'&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect');
+    }
+    else if(Tools.getCookie("openid") === undefined && Tools.getQuery("code") != undefined) {
+        //授权跳转回来,通过接口设置cookie
+        $.ajax({
+            method:"get",
+            url:config.hostUrl + "/weixin/getopenid?code="+Tools.getQuery("code")+"&scope=snsapi_userinfo",
+            data:{},
+            success:function(json){
+                console.log(json);
+                if(json.errcode == 0){
+                    Tools.setCookie("wechat_nickname",json.data.nickname,365);
+                    Tools.setCookie("wechat_headimgurl",json.data.headimgurl,365);
+                    console.log("去请求卡牌类型")
+                    bindCardType();
+                }
+                else {
+                    console.log("通过code获取openid失败");
+                    window.location.replace(thisUrl);
+                }
+            },
+            error:function(){
+                console.log("ajax接口请求失败");
+                window.location.replace(thisUrl);
+            }
+        });
+    }
+    else {
+        bindCardType();
+    }
+
+
+    $(document).ready(function(){
+
+        //加载微信分享
+        $.ajax({
+            method:"post",
+            url:"http://dev.yes-go.cn/weixin/getjsapi",
+            data:{
+//                url:"http://dev.yes-go.cn/hey_card/"
+                url:window.location.href
+            },
+            success:function(json){
+//                alert("api调用成功");
+                //加载JS-SDK
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: 'wxa46386d571e05bac', // 必填，公众号的唯一标识
+                    timestamp: json.data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr: json.data.nonceStr, // 必填，生成签名的随机串
+                    signature: json.data.signature,// 必填，签名
+                    jsApiList: [
+                        "onMenuShareTimeline",
+                        "onMenuShareAppMessage",
+                        "onMenuShareWeibo",
+                        "onMenuShareQQ"
+                    ] // 必填，需要使用的JS接口列表
+                });
+
+                //设置微信初始化
+                wx.ready(function(){
+                    //alert("wx.ready");
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareTimeline({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg?v=1', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareAppMessage({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg?v=1', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareWeibo({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                    //设置朋友圈分享逻辑
+                    wx.onMenuShareQQ({
+                        title: '我想问你一个问题', // 分享标题
+                        link: 'http://dev.yes-go.cn/hey_card/', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                        desc: '「嘿卡」：通过不同类型的问题，了解身边的人',
+                        imgUrl: 'http://dev.yes-go.cn/hey_card/static/images/img_share_black.jpg', // 分享图标
+                        success: function () {
+                            // 用户点击了分享后执行的回调函数
+                        }
+                    });
+
+                });
+            },
+            error:function(){
+//                alert("api调用失败");
+            }
+        });
+    });
+
+</script>
+
+
+</html>

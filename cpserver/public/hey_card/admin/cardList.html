@@ -177,8 +177,9 @@
             <div class="modal-body">
 
                 <img id="img_fullsize" src="" />
-                <p>访问链接:<span id="lbl_cardLink"></span></p>
-
+                <!--<p>访问链接:<span id="lbl_cardLink"></span></p>-->
+                <h4>访问链接:</h4>
+                <p><input class="form-control" type="text" id="lbl_cardLink"/></p>
             </div>
             <!--<div class="modal-footer">-->
                 <!--<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>-->
@@ -460,8 +461,8 @@
 
             $("#img_fullsize").attr("src",src);
 
-            $("#lbl_cardLink").text(config.hostUrl + "/hey_card/card.html?c_id="+c_id+"&t_id="+t_id);
-
+//            $("#lbl_cardLink").text(config.hostUrl + "/hey_card/card.html?c_id="+c_id+"&t_id="+t_id);
+            $("#lbl_cardLink").val(config.hostUrl + "/hey_card/card.html?c_id="+c_id+"&t_id="+t_id);
             $("#modal_fullsize").modal();
         });
     }
