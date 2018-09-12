@@ -53,6 +53,22 @@
             display:block;
         }
 
+        #lbl_cardType_title {
+            width: 13em;
+            color: #FFFFFF;
+            background-color: #2b3ff5;
+            letter-spacing: 1.5em;
+            font-size: 22px;
+            padding: 10px 30px;
+            border-radius: 25px;
+            white-space: nowrap;
+            overflow: hidden;
+            transform: rotate(-7deg);
+            position: absolute;
+            left: 19%;
+            top:24%;
+        }
+
         .swiper-slide {
 
         }
@@ -102,6 +118,8 @@
             display:none;
         }
 
+
+
     </style>
 
     <!--JS-->
@@ -118,6 +136,8 @@
         <!--<img id="img_header" src="static/images/img_list_head.jpg" >-->
         <!--<h2 id="title">三观蹦迪</h2>-->
         <img id="img_cardType_title" src="static/images/img_cardType_title.png" />
+
+        <p id="lbl_cardType_title">脑洞狂欢系列</p>
 
         <div class="swiper-container">
             <div class="swiper-wrapper" id="card_list">
@@ -193,7 +213,7 @@
                         };
                     }
 
-                    $("#title").text(cardType[Tools.getQuery("t_id")].name);
+                    $("#lbl_cardType_title").text(cardType[Tools.getQuery("t_id")].name + "系列");
 
                 }
                 else {
@@ -244,6 +264,15 @@
 
                         str += item;
 
+                    }
+
+                    if(json.data.length % 4 == 1 || json.data.length % 4 == 3 ){
+                        //最后一页到左上角或左下角
+                        str += '</div></div>';
+                    }
+                    else if(json.data.length % 4 == 2 ){
+                        //最后一页到右上角
+                        str += '</div>';
                     }
 
 
