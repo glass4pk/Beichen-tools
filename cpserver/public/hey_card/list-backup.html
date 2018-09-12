@@ -6,8 +6,8 @@
 
     <!--CSS-->
     <link rel="stylesheet" type="text/css" href="static/css/common.css">
-    <!--<link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.7/css/bootstrap.min.css">-->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap-3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.x.x/css/swiper.min.css">
 
     <style type="text/css">
         body {
@@ -47,120 +47,40 @@
                 #block_buttons li a img {
 
                 }
-
-        #img_cardType_title {
-            width:100%;
-            display:block;
-        }
-
-        .swiper-slide {
-
-        }
-
-        .swiper-slide .row {
-            width:80%;
-            margin:0 auto;
-            padding-top:5%;
-            overflow: auto;
-        }
-            .swiper-slide .row .btn-link {
-                display: block;
-                width:50%;
-                float:left;
-            }
-                .swiper-slide .row .btn-link img{
-                    display: block;
-                    width:80%;
-                    margin:0 auto;
-                }
-
-        .nav-button {
-            position: relative;
-            height:80px;
-        }
-
-        .swiper-button-prev, .swiper-button-next {
-            width: 80px;
-            height: 80px;
-            /*border: 3px solid #2b3ff5;*/
-            border-radius: 50%;
-            background-size: 80px 80px;
-            margin-top:0;
-            top:50%;
-            outline: none;
-        }
-
-        .swiper-button-prev {
-            background-image:url(static/images/btn_prev.png);
-            left:37%;
-        }
-        .swiper-button-next {
-            background-image:url(static/images/btn_next.png);
-            right:37%;
-        }
-        .my-button-hidden {
-            display:none;
-        }
-
     </style>
 
     <!--JS-->
     <script type="text/javascript" src="static/js/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
-    <!--<script type="text/javascript" src="static/bootstrap-3.3.7/js/bootstrap.min.js" ></script>-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.0.2/js/swiper.min.js"></script>
+    <script type="text/javascript" src="static/bootstrap-3.3.7/js/bootstrap.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.x.x/js/swiper.min.js"></script>
     <script type="text/javascript" src="static/js/global.js"></script>
 
 </head>
 <body>
 
     <div id="content">
-        <!--<img id="img_header" src="static/images/img_list_head.jpg" >-->
-        <!--<h2 id="title">三观蹦迪</h2>-->
-        <img id="img_cardType_title" src="static/images/img_cardType_title.png" />
+        <img id="img_header" src="static/images/img_list_head.jpg" >
+        <h2 id="title">三观蹦迪</h2>
 
-        <div class="swiper-container">
-            <div class="swiper-wrapper" id="card_list">
-                <div class="swiper-slide">
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                </div>
-                <div class="swiper-slide">
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                    <div class="row">
-                        <a class="btn-link"><img src="static/images/cards/1/1.png" /></a>
-                        <a class="btn-link"><img src="static/images/cards/1/2.png" /></a>
-                    </div>
-                </div>
-            </div>
+        <ul id="block_buttons">
+            <li>
+                <a id="btn_toType_1" class="" href="card.html?t_id=1">脑洞狂欢01 梦境</a>
+            </li>
+            <li>
+                <a id="" class="" href="card.html?t_id=1">脑洞狂欢01 梦境</a>
+            </li>
+            <li>
+                <a id="" class="" href="card.html?t_id=1">脑洞狂欢01 梦境</a>
+            </li>
+            <li>
+                <a id="" class="" href="card.html?t_id=1">脑洞狂欢01 梦境</a>
+            </li>
+            <li>
+                <a id="" class="" href="card.html?t_id=1">脑洞狂欢01 梦境</a>
+            </li>
 
-        </div>
-
-        <!-- 导航按钮 -->
-        <div class="nav-button">
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
-
+        </ul>
 
     </div>
 
@@ -221,38 +141,41 @@
 
                     for(let i=0;i<json.data.length;i++){
                         //设置页面
-
-                        let item = ' <a class="btn-link" href="card.html?t_id='+json.data[i].t_id+'&c_id='+json.data[i].c_id+'"><img src="'+json.data[i].pic+'" /></a>';
-
-                        if(i%2 == 0){
-                            //左边的
-                            item = '<div class="row">' + item;
-                        }
-                        else {
-                            //右边的
-                            item = item + '</div>'
-                        }
-
-                        if(i%4 == 0){
-                            //每一个slider的第一个
-                            item = '<div class="swiper-slide">' + item;
-                        }
-                        else if(i%4 == 3){
-                            //每个slider的最后一个
-                            item = item + '</div>'
-                        }
-
-                        str += item;
+                        str += '<li><a tid="'+json.data[i].t_id+'" cid="'+json.data[i].c_id+'" class="button" href="card.html?t_id='+json.data[i].t_id+'&c_id='+json.data[i].c_id+'">'
+                                +  json.data[i].name
+                                +  '</a></li>'
 
                     }
 
 
-                    $("#card_list").html(str);
+                    $("#block_buttons").html(str);
 
-
-                    initSwiper();
-
-
+                    //加载按钮事件
+//                    $("#block_buttons .button").click(function(){
+//                        let t_id = $(this).attr("tid");
+//                        let url = "/api/hc/client/getcardrandom?t_id=" + t_id;
+//                        $.ajax({
+//                            method:"get",
+//                            url: config.hostUrl + url,
+//                            data:{},
+//                            success:function(json){
+//                                console.log(json);
+//                                if(json.errcode == 0){
+//                                    console.log("随机抽卡成功");
+//                                    console.log(json);
+//                                    window.location.href = "card.html?t_id="+json.data.t_id+"&c_id="+json.data.c_id;
+//
+//                                }
+//                                else {
+//                                    console.log("抽卡失败,"+json.errmsg)
+//                                }
+//
+//                            },
+//                            error:function(){
+//
+//                            }
+//                        });
+//                    });
 
 
                 }
@@ -265,25 +188,6 @@
 
             }
         });
-
-
-    }
-
-    var initSwiper = function(){
-        var mySwiper = new Swiper ('.swiper-container', {
-
-            loop: false,
-
-            // 如果需要前进后退按钮
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-
-
-            },
-
-
-        })
     }
 
     //判断授权登录
@@ -305,7 +209,7 @@
                 if(json.errcode == 0){
                     Tools.setCookie("wechat_nickname",json.data.nickname,365);
                     Tools.setCookie("wechat_headimgurl",json.data.headimgurl,365);
-                    console.log("去请求卡牌类型");
+                    console.log("去请求卡牌类型")
 
                     initData();
                 }
